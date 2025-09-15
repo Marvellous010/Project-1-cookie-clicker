@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cookie Clicker</title>
+</head>
+<body>
+    <h1>Cookie Clicker</h1>
+    <button onclick="clickCookie()">Click me!</button>
+    <p id="cookieCount">0</p>
+    <script>
+        let cookieCount = 0;
+        function clickCookie() {
+            cookieCount++;
+            document.getElementById("cookieCount").innerHTML = cookieCount;
+        }
+    </script>
+</body>
+</html>        
