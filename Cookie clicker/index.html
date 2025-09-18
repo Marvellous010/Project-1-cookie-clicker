@@ -3,37 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cookie Clicker</title>
+    <title>Zonnebloem Kweker</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <div class="sky"></div>
+    <div class="clouds">
+        <div class="cloud cloud1"></div>
+        <div class="cloud cloud2"></div>
+        <div class="cloud cloud3"></div>
+    </div>
+    
     <div class="game-container">
-        <div class="cookie-count" id="cookieCount">0 KOEKJES (0/s)</div>
-        <div class="cookies-per-second" id="cpsDisplay">1 per klik</div>
+        <h1 class="game-title">Zonnebloem Kweker</h1>
         
-        <div class="cookie-button" onclick="clickCookie()">
-            <div class="cookie-image">
-                <div class="chocolate-chip chip-1"></div>
-                <div class="chocolate-chip chip-2"></div>
-                <div class="chocolate-chip chip-3"></div>
-                <div class="chocolate-chip chip-4"></div>
-                <div class="chocolate-chip chip-5"></div>
-                <div class="chocolate-chip chip-6"></div>
-                <div class="chocolate-chip chip-7"></div>
-                <div class="chocolate-chip chip-8"></div>
+        <div class="stats-container">
+            <div class="stat-box">
+                <div class="plant-count" id="plantCount">0 ZONNEBLOEMEN</div>
+                <div class="plants-per-second" id="cpsDisplay">1 per klik</div>
             </div>
         </div>
         
-        <div class="upgrade-buttons">
-            <button class="upgrade-btn" id="mousePowerBtn" onclick="buyUpgrade('mousePower')">
-                Krachtige muis (15 koekjes)
-            </button>
-            <button class="upgrade-btn" id="autoClickerBtn" onclick="buyUpgrade('autoClicker')">
-                Automatische klikker (50 koekjes)
-            </button>
+        <div class="garden">
+            <div class="sunflower-button" onclick="clickSunflower(event)">
+                <img src="Images/sunflower.png" alt="Zonnebloem" class="sunflower-image">
+                <div class="click-effect"></div>
+            </div>
+        </div>
+        
+        <div class="shop-container">
+            <h2 class="shop-title">Tuinwinkel</h2>
+            <div class="upgrade-buttons">
+                <button class="upgrade-btn" id="mousePowerBtn" onclick="buyUpgrade('mousePower')">
+                    <span class="upgrade-icon">☀️</span>
+                    <span class="upgrade-info">
+                        <span class="upgrade-name">Zonnestralen</span>
+                        <span class="upgrade-cost">15 zonnebloemen</span>
+                    </span>
+                </button>
+                <button class="upgrade-btn" id="autoClickerBtn" onclick="buyUpgrade('autoClicker')">
+                    <span class="upgrade-icon">🌱</span>
+                    <span class="upgrade-info">
+                        <span class="upgrade-name">Automatische groei</span>
+                        <span class="upgrade-cost">50 zonnebloemen</span>
+                    </span>
+                </button>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Klik op de zonnebloem om meer te kweken!</p>
         </div>
     </div>
     
-    <script src="script.js"></script>
+
 </body>
 </html>
