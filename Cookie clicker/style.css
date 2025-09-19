@@ -7,13 +7,32 @@
 body {
     margin: 0;
     padding: 0;
-    background-color: #87CEEB;
     font-family: 'Nunito', sans-serif;
-    min-height: 100vh;
-    overflow-x: hidden;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
     position: relative;
+    display: flex;
+    flex-direction: column;
 }
 
+/* Verborgen controls */
+.theme-controls {
+    position: absolute;
+    left: -9999px;
+}
+
+.click-counter {
+    position: absolute;
+    left: -9999px;
+}
+
+.unlock-checkbox {
+    position: absolute;
+    left: -9999px;
+}
+
+/* Basis achtergrond (standaard thema) */
 .sky {
     position: fixed;
     top: 0;
@@ -21,16 +40,24 @@ body {
     width: 100%;
     height: 100%;
     background: linear-gradient(to bottom, #87CEEB, #e0f7fa);
-    z-index: -2;
+    z-index: -10;
+    transition: all 0.5s ease;
 }
 
+/* Standaard wolken */
 .clouds {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -1;
+    z-index: -9;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.default-clouds {
+    opacity: 1;
 }
 
 .cloud {
@@ -125,6 +152,305 @@ body {
     }
 }
 
+/* Storm thema elementen */
+.storm-clouds {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -9;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.storm-cloud {
+    position: absolute;
+    background: #444;
+    border-radius: 50px;
+    opacity: 0.9;
+    filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.3));
+}
+
+.storm-cloud:before, .storm-cloud:after {
+    content: '';
+    position: absolute;
+    background: #444;
+    border-radius: 50%;
+}
+
+.storm-cloud1 {
+    width: 250px;
+    height: 80px;
+    top: 70px;
+    left: 20%;
+    animation: stormFloat 15s linear infinite;
+}
+
+.storm-cloud1:before {
+    width: 100px;
+    height: 100px;
+    top: -50px;
+    left: 40px;
+}
+
+.storm-cloud1:after {
+    width: 80px;
+    height: 80px;
+    top: -40px;
+    left: 120px;
+}
+
+.storm-cloud2 {
+    width: 200px;
+    height: 70px;
+    top: 150px;
+    left: 60%;
+    animation: stormFloat 18s linear infinite reverse;
+}
+
+.storm-cloud2:before {
+    width: 90px;
+    height: 90px;
+    top: -45px;
+    left: 30px;
+}
+
+.storm-cloud2:after {
+    width: 70px;
+    height: 70px;
+    top: -35px;
+    left: 100px;
+}
+
+.lightning {
+    position: absolute;
+    width: 5px;
+    height: 100px;
+    background: rgba(255, 255, 255, 0.9);
+    transform-origin: top;
+    opacity: 0;
+}
+
+.lightning1 {
+    top: 150px;
+    left: 30%;
+    animation: lightning 5s infinite;
+    animation-delay: 1s;
+}
+
+.lightning2 {
+    top: 100px;
+    left: 65%;
+    animation: lightning 7s infinite;
+    animation-delay: 3s;
+}
+
+.rain {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.2));
+    background-size: 20px 100px;
+    animation: rain 0.5s linear infinite;
+    opacity: 0.7;
+}
+
+@keyframes stormFloat {
+    0% {
+        transform: translateX(0);
+    }
+    50% {
+        transform: translateX(150px);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+@keyframes lightning {
+    0% {
+        opacity: 0;
+        transform: scaleY(0);
+    }
+    1% {
+        opacity: 1;
+        transform: scaleY(1);
+    }
+    2% {
+        opacity: 0;
+        transform: scaleY(0);
+    }
+    3% {
+        opacity: 1;
+        transform: scaleY(1);
+    }
+    4% {
+        opacity: 0;
+        transform: scaleY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: scaleY(0);
+    }
+}
+
+@keyframes rain {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 0 100px;
+    }
+}
+
+/* Nacht thema elementen */
+.night-sky {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, #0a0e2c, #1a237e);
+    z-index: -9;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.star {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background-color: white;
+    border-radius: 50%;
+    animation: twinkle 3s infinite;
+}
+
+.star1 {
+    top: 10%;
+    left: 20%;
+    animation-delay: 0s;
+}
+
+.star2 {
+    top: 15%;
+    left: 50%;
+    animation-delay: 0.5s;
+}
+
+.star3 {
+    top: 25%;
+    left: 80%;
+    animation-delay: 1s;
+}
+
+.star4 {
+    top: 40%;
+    left: 30%;
+    animation-delay: 1.5s;
+}
+
+.star5 {
+    top: 35%;
+    left: 70%;
+    animation-delay: 2s;
+}
+
+.moon {
+    position: absolute;
+    top: 80px;
+    left: 70%;
+    width: 80px;
+    height: 80px;
+    background-color: #f5f5f5;
+    border-radius: 50%;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+}
+
+@keyframes twinkle {
+    0% {
+        opacity: 0.3;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.5);
+    }
+    100% {
+        opacity: 0.3;
+        transform: scale(1);
+    }
+}
+
+/* Herfst thema elementen */
+.autumn-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, #ff9800, #f57c00);
+    z-index: -9;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.falling-leaf {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: #e65100;
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+    animation: falling 10s linear infinite;
+}
+
+.leaf1 {
+    top: -20px;
+    left: 20%;
+    animation-delay: 0s;
+}
+
+.leaf2 {
+    top: -20px;
+    left: 40%;
+    animation-delay: 2s;
+    background-color: #ff9800;
+}
+
+.leaf3 {
+    top: -20px;
+    left: 60%;
+    animation-delay: 4s;
+    background-color: #ffb74d;
+}
+
+.leaf4 {
+    top: -20px;
+    left: 80%;
+    animation-delay: 6s;
+    background-color: #ff5722;
+}
+
+.leaf5 {
+    top: -20px;
+    left: 10%;
+    animation-delay: 8s;
+    background-color: #bf360c;
+}
+
+@keyframes falling {
+    0% {
+        top: -20px;
+        transform: rotate(0deg) translateX(0);
+    }
+    100% {
+        top: 100vh;
+        transform: rotate(360deg) translateX(100px);
+    }
+}
+
 .game-container {
     background-color: rgba(255, 255, 255, 0.85);
     border-radius: 20px;
@@ -136,6 +462,550 @@ body {
     position: relative;
     overflow: hidden;
     border: 8px solid #8BC34A;
+    transition: all 0.5s ease;
+}
+
+/* Thema selectie (links boven) */
+.theme-selector {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    z-index: 10;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.theme-options {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.theme-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    position: relative;
+    width: 60px;
+    transition: all 0.3s ease;
+}
+
+.theme-default-option {
+    background-color: #e3f2fd;
+}
+
+.theme-storm-option {
+    background-color: #cfd8dc;
+    opacity: 0.7;
+}
+
+.theme-night-option {
+    background-color: #e8eaf6;
+    opacity: 0.7;
+}
+
+.theme-autumn-option {
+    background-color: #fff3e0;
+    opacity: 0.7;
+}
+
+.theme-icon {
+    font-size: 20px;
+    margin-bottom: 4px;
+}
+
+.theme-name {
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.theme-lock {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    font-size: 10px;
+}
+
+/* Hoofdlayout */
+.game-layout {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    padding-top: 70px; /* Ruimte voor thema selector */
+}
+
+.main-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.side-panel {
+    width: 300px;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.85);
+    border-left: 8px solid #8BC34A;
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.5s ease;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.panel-content {
+    padding: 20px;
+    height: 100%;
+    overflow-y: auto;
+}
+
+/* Verborgen progressie element */
+.progress-fill {
+    display: none;
+}
+
+/* Stats container */
+.stats-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.stat-box {
+    background-color: #FFF9C4;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 2px solid #FFD54F;
+    width: 80%;
+    transition: all 0.5s ease;
+}
+
+.plant-count {
+    color: #5D4037;
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.plants-per-second {
+    color: #795548;
+    font-size: 16px;
+}
+
+/* Garden */
+.garden {
+    position: relative;
+    width: 400px;
+    height: 400px;
+    background: linear-gradient(to bottom, #8BC34A 60%, #795548 60%);
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.5s ease;
+    margin: 0 auto;
+}
+
+.garden:before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 40%;
+    background-color: #795548;
+    z-index: 0;
+}
+
+.sunflower-button {
+    width: 220px;
+    height: 220px;
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: transform 0.2s;
+    z-index: 1;
+    display: block;
+}
+
+.sunflower-button:hover {
+    transform: translate(-50%, -50%) scale(1.05);
+}
+
+.sunflower-button:active {
+    transform: translate(-50%, -50%) scale(0.95);
+}
+
+.sunflower-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.2));
+    transition: transform 0.3s;
+}
+
+.click-effect {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    background: radial-gradient(circle, rgba(255,255,0,0.8) 0%, rgba(255,255,0,0) 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0;
+    transform: scale(0);
+    top: 50%;
+    left: 50%;
+    margin-top: -40px;
+    margin-left: -40px;
+}
+
+/* Shop container */
+.shop-container {
+    background-color: #DCEDC8;
+    border-radius: 15px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border: 2px dashed #8BC34A;
+    transition: all 0.5s ease;
+}
+
+.shop-title {
+    color: #33691E;
+    font-size: 20px;
+    margin-bottom: 12px;
+    font-weight: 700;
+}
+
+.upgrade-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.upgrade-btn {
+    background-color: #FFA000;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    text-align: left;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+    border-bottom: 3px solid #F57C00;
+}
+
+.upgrade-btn:hover {
+    background-color: #FFB300;
+    transform: translateY(-2px);
+}
+
+.upgrade-btn:active {
+    transform: translateY(0);
+    border-bottom-width: 2px;
+}
+
+.upgrade-icon {
+    font-size: 20px;
+    margin-right: 10px;
+    display: inline-block;
+}
+
+.upgrade-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.upgrade-name {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.upgrade-cost {
+    font-size: 12px;
+    opacity: 0.9;
+}
+
+/* Unlocks container */
+.unlocks-container {
+    background-color: #E8F5E9;
+    border-radius: 15px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border: 2px dashed #4CAF50;
+    transition: all 0.5s ease;
+}
+
+.unlocks-title {
+    color: #2E7D32;
+    font-size: 20px;
+    margin-bottom: 12px;
+    font-weight: 700;
+}
+
+.unlocks-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.unlock-item {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    background-color: #F1F8E9;
+    border-radius: 8px;
+    border-left: 4px solid #AED581;
+    transition: all 0.3s;
+}
+
+.unlock-icon {
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+.unlock-name {
+    font-weight: bold;
+    font-size: 14px;
+    margin-right: auto;
+}
+
+.unlock-status {
+    font-size: 11px;
+    color: #7CB342;
+}
+
+/* Klik counter voor statistieken */
+#click-counter:checked ~ .main-area .plant-count::after {
+    content: " +1";
+    color: #4CAF50;
+    animation: fadeOut 1s forwards;
+}
+
+@keyframes fadeOut {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+/* Thema activering */
+#unlock-storm:checked ~ body .theme-storm-option {
+    opacity: 1;
+}
+
+#unlock-storm:checked ~ body .theme-storm-option .theme-lock {
+    display: none;
+}
+
+#unlock-night:checked ~ body .theme-night-option {
+    opacity: 1;
+}
+
+#unlock-night:checked ~ body .theme-night-option .theme-lock {
+    display: none;
+}
+
+#unlock-autumn:checked ~ body .theme-autumn-option {
+    opacity: 1;
+}
+
+#unlock-autumn:checked ~ body .theme-autumn-option .theme-lock {
+    display: none;
+}
+
+/* Thema toepassing */
+#theme-default:checked ~ .default-clouds {
+    opacity: 1;
+}
+
+#theme-storm:checked ~ .storm-clouds {
+    opacity: 1;
+}
+
+#theme-storm:checked ~ .sky {
+    background: linear-gradient(to bottom, #37474F, #546E7A);
+}
+
+#theme-storm:checked ~ .side-panel {
+    border-color: #546E7A;
+}
+
+#theme-storm:checked ~ .garden {
+    background: linear-gradient(to bottom, #546E7A 60%, #37474F 60%);
+}
+
+#theme-storm:checked ~ .garden:before {
+    background-color: #37474F;
+}
+
+#theme-storm:checked ~ .side-panel .shop-container {
+    background-color: #CFD8DC;
+    border-color: #607D8B;
+}
+
+#theme-storm:checked ~ .side-panel .unlocks-container {
+    background-color: #ECEFF1;
+    border-color: #B0BEC5;
+}
+
+#theme-storm:checked ~ .stat-box {
+    background-color: #ECEFF1;
+    border-color: #B0BEC5;
+}
+
+#theme-night:checked ~ .night-sky {
+    opacity: 1;
+}
+
+#theme-night:checked ~ .side-panel {
+    border-color: #3F51B5;
+}
+
+#theme-night:checked ~ .garden {
+    background: linear-gradient(to bottom, #3F51B5 60%, #303F9F 60%);
+}
+
+#theme-night:checked ~ .garden:before {
+    background-color: #303F9F;
+}
+
+#theme-night:checked ~ .side-panel .shop-container {
+    background-color: #E8EAF6;
+    border-color: #7986CB;
+}
+
+#theme-night:checked ~ .side-panel .unlocks-container {
+    background-color: #C5CAE9;
+    border-color: #9FA8DA;
+}
+
+#theme-night:checked ~ .stat-box {
+    background-color: #C5CAE9;
+    border-color: #9FA8DA;
+}
+
+#theme-autumn:checked ~ .autumn-background {
+    opacity: 1;
+}
+
+#theme-autumn:checked ~ .side-panel {
+    border-color: #FF5722;
+}
+
+#theme-autumn:checked ~ .garden {
+    background: linear-gradient(to bottom, #FF9800 60%, #F57C00 60%);
+}
+
+#theme-autumn:checked ~ .garden:before {
+    background-color: #F57C00;
+}
+
+#theme-autumn:checked ~ .side-panel .shop-container {
+    background-color: #FFF3E0;
+    border-color: #FFB74D;
+}
+
+#theme-autumn:checked ~ .side-panel .unlocks-container {
+    background-color: #FFECB3;
+    border-color: #FFD54F;
+}
+
+#theme-autumn:checked ~ .stat-box {
+    background-color: #FFECB3;
+    border-color: #FFD54F;
+}
+
+/* Klik animatie */
+@keyframes clickEffect {
+    0% { opacity: 1; transform: scale(0); }
+    100% { opacity: 0; transform: scale(2); }
+}
+
+.sunflower-button:active .click-effect {
+    animation: clickEffect 0.5s ease-out forwards;
+}
+
+/* Unlocking simulatie */
+#click-counter:checked ~ .game-container .progress-fill {
+    width: 20%;
+}
+
+#click-counter:checked ~ #click-counter:checked ~ .game-container .progress-fill {
+    width: 40%;
+}
+
+#click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ .game-container .progress-fill {
+    width: 60%;
+}
+
+#click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ .game-container .progress-fill {
+    width: 80%;
+}
+
+#click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ .game-container .progress-fill {
+    width: 100%;
+}
+
+/* Storm thema ontgrendelen bij 100 zonnebloemen (5 klikken) */
+#click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ .theme-controls #unlock-storm {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+#click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ .game-container #storm-unlock {
+    background-color: #E8F5E9;
+    border-left-color: #4CAF50;
+}
+
+#click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ .game-container #storm-unlock .unlock-status {
+    color: #4CAF50;
+    content: 'Ontgrendeld!';
+}
+
+/* Nacht thema ontgrendelen bij 250 zonnebloemen (10 klikken) */
+#click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ .theme-controls #unlock-night {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+#click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ .game-container #night-unlock {
+    background-color: #E8F5E9;
+    border-left-color: #4CAF50;
+}
+
+#click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ .game-container #night-unlock .unlock-status {
+    color: #4CAF50;
+    content: 'Ontgrendeld!';
+}
+
+/* Herfst thema ontgrendelen bij 500 zonnebloemen (15 klikken) */
+#click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ .theme-controls #unlock-autumn {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+#click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ .game-container #autumn-unlock {
+    background-color: #E8F5E9;
+    border-left-color: #4CAF50;
+}
+
+#click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ #click-counter:checked ~ .game-container #autumn-unlock .unlock-status {
+    color: #4CAF50;
+    content: 'Ontgrendeld!';
 }
 
 .game-title {

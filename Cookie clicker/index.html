@@ -8,55 +8,148 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- Thema controls (verborgen radio buttons) -->
+    <div class="theme-controls">
+        <input type="radio" name="theme" id="theme-default" checked>
+        <input type="radio" name="theme" id="theme-storm" class="theme-locked">
+        <input type="radio" name="theme" id="theme-night" class="theme-locked">
+        <input type="radio" name="theme" id="theme-autumn" class="theme-locked">
+       
+        <!-- Unlock checkboxes (gesimuleerde progressie) -->
+        <input type="checkbox" id="unlock-storm" class="unlock-checkbox">
+        <input type="checkbox" id="unlock-night" class="unlock-checkbox">
+        <input type="checkbox" id="unlock-autumn" class="unlock-checkbox">
+    </div>
+   
+    <!-- Achtergrond elementen voor alle thema's -->
     <div class="sky"></div>
-    <div class="clouds">
+    <div class="clouds default-clouds">
         <div class="cloud cloud1"></div>
         <div class="cloud cloud2"></div>
         <div class="cloud cloud3"></div>
     </div>
-    
-    <div class="game-container">
-        <h1 class="game-title">Zonnebloem Kweker</h1>
-        
-        <div class="stats-container">
-            <div class="stat-box">
-                <div class="plant-count" id="plantCount">0 ZONNEBLOEMEN</div>
-                <div class="plants-per-second" id="cpsDisplay">1 per klik</div>
-            </div>
-        </div>
-        
-        <div class="garden">
-            <div class="sunflower-button" onclick="clickSunflower(event)">
-                <img src="Images/sunflower.png" alt="Zonnebloem" class="sunflower-image">
-                <div class="click-effect"></div>
-            </div>
-        </div>
-        
-        <div class="shop-container">
-            <h2 class="shop-title">Tuinwinkel</h2>
-            <div class="upgrade-buttons">
-                <button class="upgrade-btn" id="mousePowerBtn" onclick="buyUpgrade('mousePower')">
-                    <span class="upgrade-icon">☀️</span>
-                    <span class="upgrade-info">
-                        <span class="upgrade-name">Zonnestralen</span>
-                        <span class="upgrade-cost">15 zonnebloemen</span>
-                    </span>
-                </button>
-                <button class="upgrade-btn" id="autoClickerBtn" onclick="buyUpgrade('autoClicker')">
-                    <span class="upgrade-icon">🌱</span>
-                    <span class="upgrade-info">
-                        <span class="upgrade-name">Automatische groei</span>
-                        <span class="upgrade-cost">50 zonnebloemen</span>
-                    </span>
-                </button>
-            </div>
-        </div>
-        
-        <div class="footer">
-            <p>Klik op de zonnebloem om meer te kweken!!</p>
+   
+    <!-- Storm thema elementen -->
+    <div class="storm-clouds">
+        <div class="storm-cloud storm-cloud1"></div>
+        <div class="storm-cloud storm-cloud2"></div>
+        <div class="lightning lightning1"></div>
+        <div class="lightning lightning2"></div>
+        <div class="rain"></div>
+    </div>
+   
+    <!-- Nacht thema elementen -->
+    <div class="night-sky">
+        <div class="star star1"></div>
+        <div class="star star2"></div>
+        <div class="star star3"></div>
+        <div class="star star4"></div>
+        <div class="star star5"></div>
+        <div class="moon"></div>
+    </div>
+   
+    <!-- Herfst thema elementen -->
+    <div class="autumn-background">
+        <div class="falling-leaf leaf1"></div>
+        <div class="falling-leaf leaf2"></div>
+        <div class="falling-leaf leaf3"></div>
+        <div class="falling-leaf leaf4"></div>
+        <div class="falling-leaf leaf5"></div>
+    </div>
+   
+    <!-- Thema selectie (links boven) -->
+    <div class="theme-selector">
+        <div class="theme-options">
+            <label for="theme-default" class="theme-option theme-default-option">
+                <span class="theme-icon">☀️</span>
+                <span class="theme-name">Zonnig</span>
+            </label>
+           
+            <label for="theme-storm" class="theme-option theme-storm-option">
+                <span class="theme-icon">⛈️</span>
+                <span class="theme-name">Storm</span>
+                <span class="theme-lock">🔒</span>
+            </label>
+           
+            <label for="theme-night" class="theme-option theme-night-option">
+                <span class="theme-icon">🌙</span>
+                <span class="theme-name">Nacht</span>
+                <span class="theme-lock">🔒</span>
+            </label>
+           
+            <label for="theme-autumn" class="theme-option theme-autumn-option">
+                <span class="theme-icon">🍂</span>
+                <span class="theme-name">Herfst</span>
+                <span class="theme-lock">🔒</span>
+            </label>
         </div>
     </div>
-    
-
+   
+    <div class="game-layout">
+        <!-- Hoofdgedeelte met zonnebloem -->
+        <div class="main-area">
+            <div class="stats-container">
+                <div class="stat-box">
+                    <div class="plant-count" id="plantCount">0 ZONNEBLOEMEN</div>
+                    <div class="plants-per-second" id="cpsDisplay">Klik op de zonnebloem!</div>
+                </div>
+            </div>
+           
+            <div class="garden">
+                <label class="sunflower-button" for="click-counter">
+                    <img src="Images/sunflower.png" alt="Zonnebloem" class="sunflower-image">
+                    <div class="click-effect"></div>
+                </label>
+                <!-- Verborgen counter voor klikken -->
+                <input type="checkbox" id="click-counter" class="click-counter">
+            </div>
+        </div>
+       
+        <!-- Zijpaneel met upgrades en unlocks -->
+        <div class="side-panel">
+            <div class="panel-content">
+                <div class="shop-container">
+                    <h2 class="shop-title">Tuinwinkel</h2>
+                    <div class="upgrade-buttons">
+                        <div class="upgrade-btn" id="mousePowerBtn">
+                            <span class="upgrade-icon">☀️</span>
+                            <span class="upgrade-info">
+                                <span class="upgrade-name">Zonnestralen</span>
+                                <span class="upgrade-cost">15 zonnebloemen</span>
+                            </span>
+                        </div>
+                        <div class="upgrade-btn" id="autoClickerBtn">
+                            <span class="upgrade-icon">🌱</span>
+                            <span class="upgrade-info">
+                                <span class="upgrade-name">Automatische groei</span>
+                                <span class="upgrade-cost">50 zonnebloemen</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+               
+                <div class="unlocks-container">
+                    <h2 class="unlocks-title">Ontgrendelingen</h2>
+                    <div class="unlocks-list">
+                        <div class="unlock-item" id="storm-unlock">
+                            <span class="unlock-icon">⛈️</span>
+                            <span class="unlock-name">Storm Thema</span>
+                            <span class="unlock-status">Ontgrendel bij 100 zonnebloemen</span>
+                        </div>
+                        <div class="unlock-item" id="night-unlock">
+                            <span class="unlock-icon">🌙</span>
+                            <span class="unlock-name">Nacht Thema</span>
+                            <span class="unlock-status">Ontgrendel bij 250 zonnebloemen</span>
+                        </div>
+                        <div class="unlock-item" id="autumn-unlock">
+                            <span class="unlock-icon">🍂</span>
+                            <span class="unlock-name">Herfst Thema</span>
+                            <span class="unlock-status">Ontgrendel bij 500 zonnebloemen</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
