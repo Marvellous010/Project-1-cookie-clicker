@@ -6,6 +6,49 @@
     <title>Zonnebloem Kweker</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .side-panel::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .side-panel {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+
+        /* Plant Name Styles */
+        .plant-name-container {
+            text-align: center;
+            margin-bottom: -10px; /* Position it closer to the plant */
+            position: relative;
+            z-index: 5;
+        }
+
+        #plant-name {
+            display: inline-block;
+            background: rgba(0, 0, 0, 0.1);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 12px;
+            font-size: 20px;
+            font-weight: 700;
+            cursor: text;
+            border: 2px solid transparent;
+            transition: all 0.2s ease;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+            min-width: 150px;
+            text-align: center;
+        }
+
+        #plant-name:focus {
+            outline: none;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            background: rgba(0, 0, 0, 0.2);
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+    </style>
 </head>
 <body>
     <!-- Thema controls (verborgen radio buttons) -->
@@ -86,18 +129,56 @@
     </div>
    
     <div class="game-layout">
-        <!-- Hoofdgedeelte met zonnebloem -->
-        <div class="main-area">
-            <div class="stats-container">
-                <div class="stat-box">
-                    <div class="plant-count" id="plantCount">0 ZONNEBLOEMEN</div>
-                    <div class="plants-per-second" id="cpsDisplay">Klik op de zonnebloem!</div>
+        <!-- Linkerkant stats -->
+        <div class="left-stats">
+            <div class="detailed-stats">
+                <h2 class="stats-title">📊 Statistieken</h2>
+                <div class="stat-item">
+                    <span class="stat-icon">🌻</span>
+                    <div class="stat-info">
+                        <span class="stat-label">Totaal Zonnebloemen</span>
+                        <span class="stat-value" id="totalFlowers">0</span>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-icon">👆</span>
+                    <div class="stat-info">
+                        <span class="stat-label">Totaal Clicks</span>
+                        <span class="stat-value" id="totalClicks">0</span>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-icon">⚡</span>
+                    <div class="stat-info">
+                        <span class="stat-label">Per Seconde</span>
+                        <span class="stat-value" id="perSecond">0</span>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-icon">🏪</span>
+                    <div class="stat-info">
+                        <span class="stat-label">Upgrades Gekocht</span>
+                        <span class="stat-value" id="upgradesBought">0</span>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-icon">🎯</span>
+                    <div class="stat-info">
+                        <span class="stat-label">Per Klik</span>
+                        <span class="stat-value" id="perClick">1</span>
+                    </div>
                 </div>
             </div>
-           
+        </div>
+       
+        <!-- Hoofdgedeelte met zonnebloem -->
+        <div class="main-area">   
+            <div class="plant-name-container">
+                <h2 id="plant-name" contenteditable="true" spellcheck="false">Naamloze Plant</h2>
+            </div>       
             <div class="garden">
                 <label class="sunflower-button" for="click-counter">
-                    <img src="Images/sunflower.png" alt="Zonnebloem" class="sunflower-image">
+                    <img src="Images/sunflower.png" alt="Zonnebloem" class="sunflower-image" draggable="false">
                     <div class="click-effect"></div>
                 </label>
                 <!-- Verborgen counter voor klikken -->
@@ -151,5 +232,60 @@
             </div>
         </div>
     </div>
+ 
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const plantNameElement = document.getElementById('plant-name');
+
+        // Load plant name from localStorage
+        const savedName = localStorage.getItem('plantName');
+        if (savedName) {
+            plantNameElement.textContent = savedName;
+        }
+
+        // Save plant name to localStorage on edit
+        plantNameElement.addEventListener('blur', () => {
+            const newName = plantNameElement.textContent.trim();
+            if (newName) {
+                localStorage.setItem('plantName', newName);
+            } else {
+                plantNameElement.textContent = 'Naamloze Plant';
+                localStorage.setItem('plantName', 'Naamloze Plant');
+            }
+        });
+
+        // Save on Enter key press
+        plantNameElement.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                plantNameElement.blur();
+            }
+        });
+    });
+
+    // Click effect follows mouse cursor
+    document.querySelector('.sunflower-button').addEventListener('click', function(e) {
+        const clickEffect = this.querySelector('.click-effect');
+        const rect = this.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+       
+        clickEffect.style.left = x + 'px';
+        clickEffect.style.top = y + 'px';
+        clickEffect.style.opacity = '1';
+        clickEffect.style.transform = 'scale(0)';
+       
+        // Trigger animation
+        setTimeout(() => {
+            clickEffect.style.animation = 'clickEffect 0.5s ease-out forwards';
+        }, 10);
+       
+        // Reset after animation
+        setTimeout(() => {
+            clickEffect.style.animation = '';
+            clickEffect.style.opacity = '0';
+        }, 500);
+    });
+    </script>
 </body>
 </html>
