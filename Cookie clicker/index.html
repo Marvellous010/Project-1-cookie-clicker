@@ -6,118 +6,6 @@
     <title>Zonnebloem Kweker</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        /* Settings Button */
-        .settings-button {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            z-index: 1001;
-            background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85));
-            backdrop-filter: blur(15px);
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            transition: all 0.3s ease;
-        }
-
-        .settings-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
-        }
-
-        /* Settings Panel */
-        .settings-panel {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0.9);
-            z-index: 1000;
-            background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85));
-            backdrop-filter: blur(15px);
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            min-width: 300px;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .settings-panel.show {
-            opacity: 1;
-            visibility: visible;
-            transform: translate(-50%, -50%) scale(1);
-        }
-
-        .settings-title {
-            color: #6366f1;
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            text-align: center;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .volume-control {
-            margin-bottom: 15px;
-        }
-
-        .volume-label {
-            display: block;
-            color: #666;
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .volume-slider {
-            width: 100%;
-            height: 6px;
-            border-radius: 3px;
-            background: #ddd;
-            outline: none;
-            -webkit-appearance: none;
-            appearance: none;
-        }
-
-        .volume-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: #6366f1;
-            cursor: pointer;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-        }
-
-        .volume-slider::-moz-range-thumb {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: #6366f1;
-            cursor: pointer;
-            border: none;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-        }
-
-        .volume-value {
-            color: #6366f1;
-            font-weight: 700;
-            font-size: 14px;
-            text-align: center;
-            margin-top: 5px;
-        }
-    </style>
 </head>
 <body>
     <!-- Thema controls (verborgen radio buttons) -->
@@ -145,9 +33,15 @@
     <div class="storm-clouds">
         <div class="storm-cloud storm-cloud1"></div>
         <div class="storm-cloud storm-cloud2"></div>
+        <div class="storm-cloud storm-cloud3"></div>
+        <div class="storm-cloud storm-cloud4"></div>
         <div class="lightning lightning1"></div>
         <div class="lightning lightning2"></div>
-        <div class="rain"></div>
+        <div class="lightning lightning3"></div>
+        <div class="rain rain1"></div>
+        <div class="rain rain2"></div>
+        <div class="rain rain3"></div>
+        <div class="storm-fog"></div>
     </div>
    
     <!-- Nacht thema elementen -->
@@ -157,6 +51,11 @@
         <div class="star star3"></div>
         <div class="star star4"></div>
         <div class="star star5"></div>
+        <div class="shooting-star shooting-star1"></div>
+        <div class="shooting-star shooting-star2"></div>
+        <div class="shooting-star shooting-star3"></div>
+        <div class="shooting-star shooting-star4"></div>
+        <div class="shooting-star shooting-star5"></div>
         <div class="moon"></div>
     </div>
    
@@ -167,6 +66,11 @@
         <div class="falling-leaf leaf3"></div>
         <div class="falling-leaf leaf4"></div>
         <div class="falling-leaf leaf5"></div>
+        <div class="falling-leaf leaf6"></div>
+        <div class="falling-leaf leaf7"></div>
+        <div class="falling-leaf leaf8"></div>
+        <div class="falling-leaf leaf9"></div>
+        <div class="falling-leaf leaf10"></div>
     </div>
    
     <!-- Thema selectie (links boven) -->
@@ -202,6 +106,11 @@
         ⚙️
     </div>
 
+    <!-- Stats Button -->
+    <div class="stats-button" id="statsButton">
+        📊
+    </div>
+
     <!-- Settings Panel -->
     <div class="settings-panel" id="settingsPanel">
         <h3 class="settings-title">Instellingen</h3>
@@ -211,50 +120,50 @@
             <div class="volume-value" id="volumeValue">50%</div>
         </div>
     </div>
-   
-    <div class="game-layout">
-        <!-- Linkerkant stats -->
-        <div class="left-stats">
-            <div class="detailed-stats">
-                <h2 class="stats-title">📊 Statistieken</h2>
-                <div class="stat-item">
-                    <span class="stat-icon">🌻</span>
-                    <div class="stat-info">
-                        <span class="stat-label">Totaal Zonnebloemen</span>
-                        <span class="stat-value" id="totalFlowers">0</span>
-                    </div>
+
+    <!-- Stats Panel -->
+    <div class="stats-panel" id="statsPanel">
+        <h3 class="stats-panel-title">📊 Statistieken</h3>
+        <div class="stats-grid">
+            <div class="stat-item">
+                <span class="stat-icon">🌻</span>
+                <div class="stat-info">
+                    <span class="stat-label">Totaal Zonnebloemen</span>
+                    <span class="stat-value" id="totalFlowers">0</span>
                 </div>
-                <div class="stat-item">
-                    <span class="stat-icon">👆</span>
-                    <div class="stat-info">
-                        <span class="stat-label">Totaal Clicks</span>
-                        <span class="stat-value" id="totalClicks">0</span>
-                    </div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-icon">👆</span>
+                <div class="stat-info">
+                    <span class="stat-label">Totaal Clicks</span>
+                    <span class="stat-value" id="totalClicks">0</span>
                 </div>
-                <div class="stat-item">
-                    <span class="stat-icon">⚡</span>
-                    <div class="stat-info">
-                        <span class="stat-label">Per Seconde</span>
-                        <span class="stat-value" id="perSecond">0</span>
-                    </div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-icon">⚡</span>
+                <div class="stat-info">
+                    <span class="stat-label">Per Seconde</span>
+                    <span class="stat-value" id="perSecond">0</span>
                 </div>
-                <div class="stat-item">
-                    <span class="stat-icon">🏪</span>
-                    <div class="stat-info">
-                        <span class="stat-label">Upgrades Gekocht</span>
-                        <span class="stat-value" id="upgradesBought">0</span>
-                    </div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-icon">🏪</span>
+                <div class="stat-info">
+                    <span class="stat-label">Upgrades Gekocht</span>
+                    <span class="stat-value" id="upgradesBought">0</span>
                 </div>
-                <div class="stat-item">
-                    <span class="stat-icon">🎯</span>
-                    <div class="stat-info">
-                        <span class="stat-label">Per Klik</span>
-                        <span class="stat-value" id="perClick">1</span>
-                    </div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-icon">🎯</span>
+                <div class="stat-info">
+                    <span class="stat-label">Per Klik</span>
+                    <span class="stat-value" id="perClick">1</span>
                 </div>
             </div>
         </div>
-       
+    </div>
+   
+    <div class="game-layout">
         <!-- Hoofdgedeelte met zonnebloem -->
         <div class="main-area">   
             <div class="plant-name-container">
@@ -317,92 +226,6 @@
         </div>
     </div>
  
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const plantNameElement = document.getElementById('plant-name');
-
-        // Load plant name from localStorage
-        const savedName = localStorage.getItem('plantName');
-        if (savedName) {
-            plantNameElement.textContent = savedName;
-        }
-
-        // Save plant name to localStorage on edit
-        plantNameElement.addEventListener('blur', () => {
-            const newName = plantNameElement.textContent.trim();
-            if (newName) {
-                localStorage.setItem('plantName', newName);
-            } else {
-                plantNameElement.textContent = 'Naamloze Plant';
-                localStorage.setItem('plantName', 'Naamloze Plant');
-            }
-        });
-
-        // Save on Enter key press
-        plantNameElement.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                plantNameElement.blur();
-            }
-        });
-
-        // Settings functionality
-        const settingsButton = document.getElementById('settingsButton');
-        const settingsPanel = document.getElementById('settingsPanel');
-        const volumeSlider = document.getElementById('volumeSlider');
-        const volumeValue = document.getElementById('volumeValue');
-
-        // Toggle settings panel
-        settingsButton.addEventListener('click', () => {
-            settingsPanel.classList.toggle('show');
-        });
-
-        // Close settings panel when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!settingsButton.contains(e.target) && !settingsPanel.contains(e.target)) {
-                settingsPanel.classList.remove('show');
-            }
-        });
-
-        // Volume slider functionality
-        volumeSlider.addEventListener('input', (e) => {
-            const volume = e.target.value;
-            volumeValue.textContent = volume + '%';
-            localStorage.setItem('gameVolume', volume);
-            // When you add music later, you can use this volume value
-        });
-
-        // Load saved volume
-        const savedVolume = localStorage.getItem('gameVolume');
-        if (savedVolume) {
-            volumeSlider.value = savedVolume;
-            volumeValue.textContent = savedVolume + '%';
-        }
-    });
-
-    
-    document.querySelector('.sunflower-button').addEventListener('click', function(e) {
-        const clickEffect = this.querySelector('.click-effect');
-        const rect = this.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-       
-        clickEffect.style.left = x + 'px';
-        clickEffect.style.top = y + 'px';
-        clickEffect.style.opacity = '1';
-        clickEffect.style.transform = 'scale(0)';
-       
-      
-        setTimeout(() => {
-            clickEffect.style.animation = 'clickEffect 0.5s ease-out forwards';
-        }, 10);
-       
-        // Reset after animation
-        setTimeout(() => {
-            clickEffect.style.animation = '';
-            clickEffect.style.opacity = '0';
-        }, 500);
-    });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
