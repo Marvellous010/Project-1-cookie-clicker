@@ -1326,6 +1326,263 @@ body:has(#theme-autumn:checked) .garden:before {
     display: none;
 }
 
+/* Plant afbeeldingen per thema */
+.sunflower-image {
+    transition: all 0.3s ease;
+}
+
+#theme-storm:checked ~ * .sunflower-image,
+body:has(#theme-storm:checked) .sunflower-image {
+    content: url('Images/Storn plant (1).png');
+}
+
+#theme-night:checked ~ * .sunflower-image,
+body:has(#theme-night:checked) .sunflower-image {
+    content: url('Images/nacht_plant.png');
+}
+
+#theme-autumn:checked ~ * .sunflower-image,
+body:has(#theme-autumn:checked) .sunflower-image {
+    content: url('Images/Herfst_plant.png');
+}
+
+/* Storm Thema Styling */
+#theme-storm:checked ~ * .side-panel,
+body:has(#theme-storm:checked) .side-panel {
+    background: linear-gradient(145deg, rgba(69, 90, 100, 0.95), rgba(55, 71, 79, 0.85));
+    border-color: rgba(96, 125, 139, 0.5);
+}
+
+#theme-storm:checked ~ * .shop-container,
+body:has(#theme-storm:checked) .shop-container {
+    background: linear-gradient(145deg, #455A64, #37474F);
+    border-color: rgba(96, 125, 139, 0.6);
+}
+
+#theme-storm:checked ~ * .shop-title,
+body:has(#theme-storm:checked) .shop-title {
+    color: #B0BEC5;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+#theme-storm:checked ~ * .upgrade-btn,
+body:has(#theme-storm:checked) .upgrade-btn {
+    background: linear-gradient(145deg, #546E7A, #455A64);
+    color: #ECEFF1;
+    border-bottom-color: #37474F;
+    box-shadow: 
+        0 6px 15px rgba(69, 90, 100, 0.4),
+        inset 0 2px 5px rgba(176, 190, 197, 0.2);
+}
+
+#theme-storm:checked ~ * .upgrade-btn:hover,
+body:has(#theme-storm:checked) .upgrade-btn:hover {
+    background: linear-gradient(145deg, #607D8B, #546E7A);
+    box-shadow: 
+        0 10px 25px rgba(69, 90, 100, 0.5),
+        inset 0 2px 5px rgba(176, 190, 197, 0.3);
+}
+
+#theme-storm:checked ~ * .unlocks-container,
+body:has(#theme-storm:checked) .unlocks-container {
+    background: linear-gradient(145deg, #546E7A, #455A64);
+    border-color: rgba(96, 125, 139, 0.6);
+}
+
+#theme-storm:checked ~ * .unlocks-title,
+body:has(#theme-storm:checked) .unlocks-title {
+    color: #B0BEC5;
+}
+
+#theme-storm:checked ~ * .unlock-item,
+body:has(#theme-storm:checked) .unlock-item {
+    background: linear-gradient(145deg, rgba(176, 190, 197, 0.2), rgba(144, 164, 174, 0.1));
+    border-left-color: #78909C;
+}
+
+#theme-storm:checked ~ * .unlock-name,
+body:has(#theme-storm:checked) .unlock-name {
+    color: #CFD8DC;
+}
+
+#theme-storm:checked ~ * .unlock-status,
+body:has(#theme-storm:checked) .unlock-status {
+    color: #90A4AE;
+}
+
+#theme-storm:checked ~ * .theme-selector,
+body:has(#theme-storm:checked) .theme-selector {
+    background: linear-gradient(145deg, rgba(69, 90, 100, 0.95), rgba(55, 71, 79, 0.85));
+    border-color: rgba(96, 125, 139, 0.4);
+}
+
+#theme-storm:checked ~ * .settings-button,
+#theme-storm:checked ~ * .stats-button,
+body:has(#theme-storm:checked) .settings-button,
+body:has(#theme-storm:checked) .stats-button {
+    background: linear-gradient(145deg, rgba(69, 90, 100, 0.95), rgba(55, 71, 79, 0.85));
+    border-color: rgba(96, 125, 139, 0.4);
+    color: #B0BEC5;
+}
+
+/* Nacht Thema Styling */
+#theme-night:checked ~ * .side-panel,
+body:has(#theme-night:checked) .side-panel {
+    background: linear-gradient(145deg, rgba(26, 35, 126, 0.95), rgba(13, 27, 42, 0.85));
+    border-color: rgba(63, 81, 181, 0.5);
+}
+
+#theme-night:checked ~ * .shop-container,
+body:has(#theme-night:checked) .shop-container {
+    background: linear-gradient(145deg, #1A237E, #0D1B2A);
+    border-color: rgba(63, 81, 181, 0.6);
+}
+
+#theme-night:checked ~ * .shop-title,
+body:has(#theme-night:checked) .shop-title {
+    color: #C5CAE9;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+#theme-night:checked ~ * .upgrade-btn,
+body:has(#theme-night:checked) .upgrade-btn {
+    background: linear-gradient(145deg, #3F51B5, #303F9F);
+    color: #E8EAF6;
+    border-bottom-color: #1A237E;
+    box-shadow: 
+        0 6px 15px rgba(63, 81, 181, 0.4),
+        inset 0 2px 5px rgba(197, 202, 233, 0.2);
+}
+
+#theme-night:checked ~ * .upgrade-btn:hover,
+body:has(#theme-night:checked) .upgrade-btn:hover {
+    background: linear-gradient(145deg, #5C6BC0, #3F51B5);
+    box-shadow: 
+        0 10px 25px rgba(63, 81, 181, 0.5),
+        inset 0 2px 5px rgba(197, 202, 233, 0.3);
+}
+
+#theme-night:checked ~ * .unlocks-container,
+body:has(#theme-night:checked) .unlocks-container {
+    background: linear-gradient(145deg, #3F51B5, #303F9F);
+    border-color: rgba(121, 134, 203, 0.6);
+}
+
+#theme-night:checked ~ * .unlocks-title,
+body:has(#theme-night:checked) .unlocks-title {
+    color: #C5CAE9;
+}
+
+#theme-night:checked ~ * .unlock-item,
+body:has(#theme-night:checked) .unlock-item {
+    background: linear-gradient(145deg, rgba(197, 202, 233, 0.2), rgba(159, 168, 218, 0.1));
+    border-left-color: #7986CB;
+}
+
+#theme-night:checked ~ * .unlock-name,
+body:has(#theme-night:checked) .unlock-name {
+    color: #E1E5FE;
+}
+
+#theme-night:checked ~ * .unlock-status,
+body:has(#theme-night:checked) .unlock-status {
+    color: #9FA8DA;
+}
+
+#theme-night:checked ~ * .theme-selector,
+body:has(#theme-night:checked) .theme-selector {
+    background: linear-gradient(145deg, rgba(26, 35, 126, 0.95), rgba(13, 27, 42, 0.85));
+    border-color: rgba(63, 81, 181, 0.4);
+}
+
+#theme-night:checked ~ * .settings-button,
+#theme-night:checked ~ * .stats-button,
+body:has(#theme-night:checked) .settings-button,
+body:has(#theme-night:checked) .stats-button {
+    background: linear-gradient(145deg, rgba(26, 35, 126, 0.95), rgba(13, 27, 42, 0.85));
+    border-color: rgba(63, 81, 181, 0.4);
+    color: #C5CAE9;
+}
+
+/* Herfst Thema Styling */
+#theme-autumn:checked ~ * .side-panel,
+body:has(#theme-autumn:checked) .side-panel {
+    background: linear-gradient(145deg, rgba(191, 54, 12, 0.95), rgba(230, 81, 0, 0.85));
+    border-color: rgba(255, 87, 34, 0.5);
+}
+
+#theme-autumn:checked ~ * .shop-container,
+body:has(#theme-autumn:checked) .shop-container {
+    background: linear-gradient(145deg, #D84315, #BF360C);
+    border-color: rgba(255, 87, 34, 0.6);
+}
+
+#theme-autumn:checked ~ * .shop-title,
+body:has(#theme-autumn:checked) .shop-title {
+    color: #FFCCBC;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+#theme-autumn:checked ~ * .upgrade-btn,
+body:has(#theme-autumn:checked) .upgrade-btn {
+    background: linear-gradient(145deg, #FF5722, #E64100);
+    color: #FFF3E0;
+    border-bottom-color: #BF360C;
+    box-shadow: 
+        0 6px 15px rgba(255, 87, 34, 0.4),
+        inset 0 2px 5px rgba(255, 204, 188, 0.2);
+}
+
+#theme-autumn:checked ~ * .upgrade-btn:hover,
+body:has(#theme-autumn:checked) .upgrade-btn:hover {
+    background: linear-gradient(145deg, #FF7043, #FF5722);
+    box-shadow: 
+        0 10px 25px rgba(255, 87, 34, 0.5),
+        inset 0 2px 5px rgba(255, 204, 188, 0.3);
+}
+
+#theme-autumn:checked ~ * .unlocks-container,
+body:has(#theme-autumn:checked) .unlocks-container {
+    background: linear-gradient(145deg, #FF5722, #E64100);
+    border-color: rgba(255, 112, 67, 0.6);
+}
+
+#theme-autumn:checked ~ * .unlocks-title,
+body:has(#theme-autumn:checked) .unlocks-title {
+    color: #FFCCBC;
+}
+
+#theme-autumn:checked ~ * .unlock-item,
+body:has(#theme-autumn:checked) .unlock-item {
+    background: linear-gradient(145deg, rgba(255, 204, 188, 0.2), rgba(255, 183, 77, 0.1));
+    border-left-color: #FFB74D;
+}
+
+#theme-autumn:checked ~ * .unlock-name,
+body:has(#theme-autumn:checked) .unlock-name {
+    color: #FFF8E1;
+}
+
+#theme-autumn:checked ~ * .unlock-status,
+body:has(#theme-autumn:checked) .unlock-status {
+    color: #FFCC02;
+}
+
+#theme-autumn:checked ~ * .theme-selector,
+body:has(#theme-autumn:checked) .theme-selector {
+    background: linear-gradient(145deg, rgba(191, 54, 12, 0.95), rgba(230, 81, 0, 0.85));
+    border-color: rgba(255, 87, 34, 0.4);
+}
+
+#theme-autumn:checked ~ * .settings-button,
+#theme-autumn:checked ~ * .stats-button,
+body:has(#theme-autumn:checked) .settings-button,
+body:has(#theme-autumn:checked) .stats-button {
+    background: linear-gradient(145deg, rgba(191, 54, 12, 0.95), rgba(230, 81, 0, 0.85));
+    border-color: rgba(255, 87, 34, 0.4);
+    color: #FFCCBC;
+}
+
 /* Settings Button */
 .settings-button {
     position: fixed;
