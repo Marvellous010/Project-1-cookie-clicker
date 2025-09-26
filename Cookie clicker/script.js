@@ -45,7 +45,15 @@ document.addEventListener('DOMContentLoaded', () => {
     let sunflowerCount = 0;
     let totalClicks = 0;
     let clickTimes = [];
+    let clickMultiplier = 1.0;
     const sunflowerCountElement = document.getElementById('sunflowerCount');
+    
+    // Theme unlock system
+    const themeUnlocks = {
+        storm: { unlocked: false, cost: 100, multiplier: 0.2 },
+        night: { unlocked: false, cost: 250, multiplier: 0.4 },
+        autumn: { unlocked: false, cost: 500, multiplier: 0.6 }
+    };
     
     // Load saved count from localStorage
     const savedCount = localStorage.getItem('sunflowerCount');
@@ -59,6 +67,30 @@ document.addEventListener('DOMContentLoaded', () => {
     if (savedClicks) {
         totalClicks = parseInt(savedClicks);
     }
+    
+    // Load saved theme unlocks
+    const savedThemeUnlocks = localStorage.getItem('themeUnlocks');
+    if (savedThemeUnlocks) {
+        const parsed = JSON.parse(savedThemeUnlocks);
+        Object.keys(parsed).forEach(key => {
+            if (themeUnlocks[key]) {
+                themeUnlocks[key].unlocked = parsed[key].unlocked;
+            }
+        });
+    }
+    
+    // Calculate click multiplier based on unlocked themes
+    function calculateClickMultiplier() {
+        let multiplier = 1.0;
+        Object.keys(themeUnlocks).forEach(theme => {
+            if (themeUnlocks[theme].unlocked) {
+                multiplier += themeUnlocks[theme].multiplier;
+            }
+        });
+        return multiplier;
+    }
+    
+    clickMultiplier = calculateClickMultiplier();
     
     // Achievement system
     const achievements = {
@@ -92,8 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     function checkAllThemesUnlocked() {
-        // This would check if all themes are unlocked - simplified for now
-        return false;
+        return Object.keys(themeUnlocks).every(theme => themeUnlocks[theme].unlocked);
     }
     
     function checkFirstUpgrade() {
@@ -161,15 +192,101 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Function to update sunflower count
     function updateSunflowerCount() {
-        sunflowerCount++;
+        const flowersToAdd = Math.round(clickMultiplier * 10) / 10; // Round to 1 decimal
+        sunflowerCount += flowersToAdd;
         totalClicks++;
         clickTimes.push(Date.now());
         
-        sunflowerCountElement.textContent = sunflowerCount;
+        sunflowerCountElement.textContent = Math.floor(sunflowerCount);
         localStorage.setItem('sunflowerCount', sunflowerCount);
         localStorage.setItem('totalClicks', totalClicks);
         
         checkAchievements();
+        checkThemeUnlocks();
+    }
+    
+    // Function to check and unlock themes
+    function checkThemeUnlocks() {
+        Object.keys(themeUnlocks).forEach(theme => {
+            if (!themeUnlocks[theme].unlocked && sunflowerCount >= themeUnlocks[theme].cost) {
+                unlockTheme(theme);
+            }
+        });
+    }
+    
+    // Function to unlock a theme
+    function unlockTheme(themeName) {
+        themeUnlocks[themeName].unlocked = true;
+        localStorage.setItem('themeUnlocks', JSON.stringify(themeUnlocks));
+        
+        // Update click multiplier
+        clickMultiplier = calculateClickMultiplier();
+        
+        // Update UI
+        updateThemeUI();
+        
+        // Show notification
+        showThemeUnlockNotification(themeName);
+        
+        // Check theme collector achievement
+        checkAchievements();
+    }
+    
+    // Function to update theme UI
+    function updateThemeUI() {
+        // Update storm theme
+        if (themeUnlocks.storm.unlocked) {
+            document.getElementById('unlock-storm').checked = true;
+            document.querySelector('.theme-storm-option .theme-lock').style.display = 'none';
+            document.querySelector('.theme-storm-option').style.opacity = '1';
+            document.querySelector('.theme-storm-option').style.pointerEvents = 'auto';
+            document.getElementById('storm-unlock').style.display = 'none';
+        }
+        
+        // Update night theme
+        if (themeUnlocks.night.unlocked) {
+            document.getElementById('unlock-night').checked = true;
+            document.querySelector('.theme-night-option .theme-lock').style.display = 'none';
+            document.querySelector('.theme-night-option').style.opacity = '1';
+            document.querySelector('.theme-night-option').style.pointerEvents = 'auto';
+            document.getElementById('night-unlock').style.display = 'none';
+        }
+        
+        // Update autumn theme
+        if (themeUnlocks.autumn.unlocked) {
+            document.getElementById('unlock-autumn').checked = true;
+            document.querySelector('.theme-autumn-option .theme-lock').style.display = 'none';
+            document.querySelector('.theme-autumn-option').style.opacity = '1';
+            document.querySelector('.theme-autumn-option').style.pointerEvents = 'auto';
+            document.getElementById('autumn-unlock').style.display = 'none';
+        }
+    }
+    
+    // Function to show theme unlock notification
+    function showThemeUnlockNotification(themeName) {
+        const themeNames = {
+            storm: 'Storm Thema',
+            night: 'Nacht Thema',
+            autumn: 'Herfst Thema'
+        };
+        
+        const notification = document.getElementById('achievementNotification');
+        const notificationName = document.getElementById('notificationName');
+        const notificationTitle = notification.querySelector('.notification-title');
+        
+        // Update notification content
+        notificationTitle.textContent = 'Thema Ontgrendeld!';
+        notificationName.textContent = `${themeNames[themeName]} (+${themeUnlocks[themeName].multiplier} click multiplier)`;
+        
+        // Show notification
+        notification.classList.add('show');
+        
+        // Hide notification after 5 seconds
+        setTimeout(() => {
+            notification.classList.remove('show');
+            // Reset title for achievements
+            notificationTitle.textContent = 'Achievement Unlocked!';
+        }, 5000);
     }
     
     const plantNameElement = document.getElementById('plant-name');
@@ -319,16 +436,22 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.removeItem('achievements');
         localStorage.removeItem('gameVolume');
         localStorage.removeItem('upgrades');
-        localStorage.removeItem('unlockedThemes');
+        localStorage.removeItem('themeUnlocks');
         
         // Reset all game variables
         sunflowerCount = 0;
         totalClicks = 0;
         clickTimes = [];
+        clickMultiplier = 1.0;
         
         // Reset achievements
         Object.keys(achievements).forEach(key => {
             achievements[key].unlocked = false;
+        });
+        
+        // Reset theme unlocks
+        Object.keys(themeUnlocks).forEach(key => {
+            themeUnlocks[key].unlocked = false;
         });
         
         // Reset UI elements
@@ -348,22 +471,25 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         document.getElementById('theme-default').checked = true;
         
-        // Reset theme unlocks (unless in admin mode)
-        if (!adminMode) {
-            document.getElementById('unlock-storm').checked = false;
-            document.getElementById('unlock-night').checked = false;
-            document.getElementById('unlock-autumn').checked = false;
-            
-            // Re-lock themes
-            document.querySelectorAll('.theme-lock').forEach(lock => {
-                lock.style.display = 'block';
-            });
-            
-            document.querySelectorAll('.theme-option:not(.theme-default-option)').forEach(option => {
-                option.style.opacity = '0.5';
-                option.style.pointerEvents = 'none';
-            });
-        }
+        // Reset theme unlocks
+        document.getElementById('unlock-storm').checked = false;
+        document.getElementById('unlock-night').checked = false;
+        document.getElementById('unlock-autumn').checked = false;
+        
+        // Re-lock themes
+        document.querySelectorAll('.theme-lock').forEach(lock => {
+            lock.style.display = 'block';
+        });
+        
+        document.querySelectorAll('.theme-option:not(.theme-default-option)').forEach(option => {
+            option.style.opacity = '0.5';
+            option.style.pointerEvents = 'none';
+        });
+        
+        // Show theme unlock items again
+        document.getElementById('storm-unlock').style.display = 'flex';
+        document.getElementById('night-unlock').style.display = 'flex';
+        document.getElementById('autumn-unlock').style.display = 'flex';
         
         // Apply default theme
         applyTheme('theme-default');
@@ -378,34 +504,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize achievement UI
     updateAchievementUI();
-
-    // ADMIN MODE: Unlock all themes for preview
-    // Remove this section when you want normal gameplay
-    const adminMode = true; // Set to false to disable admin mode
     
-    if (adminMode) {
-        // Unlock all themes
-        document.getElementById('unlock-storm').checked = true;
-        document.getElementById('unlock-night').checked = true;
-        document.getElementById('unlock-autumn').checked = true;
-        
-        // Remove lock icons and make themes clickable
-        document.querySelectorAll('.theme-lock').forEach(lock => {
-            lock.style.display = 'none';
-        });
-        
-        document.querySelectorAll('.theme-option').forEach(option => {
-            option.style.opacity = '1';
-            option.style.pointerEvents = 'auto';
-        });
-        
-        // Make theme switching work by adding click handlers
-        document.querySelectorAll('.theme-option').forEach(option => {
-            option.addEventListener('click', (e) => {
+    // Initialize theme UI
+    updateThemeUI();
+
+    // Make theme switching work by adding click handlers
+    document.querySelectorAll('.theme-option').forEach(option => {
+        option.addEventListener('click', (e) => {
+            // Only allow clicking if theme is unlocked
+            const themeId = option.getAttribute('for');
+            const themeName = themeId.replace('theme-', '');
+            
+            // Always allow default theme
+            if (themeName === 'default' || themeUnlocks[themeName]?.unlocked) {
                 e.preventDefault();
-                
-                // Get the theme type from the label's 'for' attribute
-                const themeId = option.getAttribute('for');
                 
                 // Uncheck all theme radios first
                 document.querySelectorAll('input[name="theme"]').forEach(radio => {
@@ -421,11 +533,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     applyTheme(themeId);
                     console.log('🎨 Theme switched to:', themeId);
                 }
-            });
+            } else {
+                e.preventDefault();
+                // Show locked message
+                console.log('🔒 Theme locked:', themeName);
+            }
         });
-        
-        console.log('🔓 Admin Mode: All themes unlocked for preview');
-    }
+    });
     
     // Sunflower click handler
     const sunflowerButton = document.querySelector('.sunflower-button');
