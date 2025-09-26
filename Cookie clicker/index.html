@@ -46,13 +46,6 @@
         <div class="raindrop raindrop6"></div>
         <div class="raindrop raindrop7"></div>
         <div class="raindrop raindrop8"></div>
-        <div class="raindrop raindrop9"></div>
-        <div class="raindrop raindrop10"></div>
-        <div class="raindrop raindrop11"></div>
-        <div class="raindrop raindrop12"></div>
-        <div class="raindrop raindrop13"></div>
-        <div class="raindrop raindrop14"></div>
-        <div class="raindrop raindrop15"></div>
         <div class="storm-fog"></div>
     </div>
    
@@ -71,18 +64,6 @@
         <div class="shooting-star shooting-star6"></div>
         <div class="shooting-star shooting-star7"></div>
         <div class="shooting-star shooting-star8"></div>
-        <div class="shooting-star shooting-star9"></div>
-        <div class="shooting-star shooting-star10"></div>
-        <div class="shooting-star shooting-star11"></div>
-        <div class="shooting-star shooting-star12"></div>
-        <div class="shooting-star shooting-star13"></div>
-        <div class="shooting-star shooting-star14"></div>
-        <div class="shooting-star shooting-star15"></div>
-        <div class="shooting-star shooting-star16"></div>
-        <div class="shooting-star shooting-star17"></div>
-        <div class="shooting-star shooting-star18"></div>
-        <div class="shooting-star shooting-star19"></div>
-        <div class="shooting-star shooting-star20"></div>
         <div class="moon"></div>
     </div>
    
@@ -94,10 +75,6 @@
         <div class="falling-leaf leaf4"></div>
         <div class="falling-leaf leaf5"></div>
         <div class="falling-leaf leaf6"></div>
-        <div class="falling-leaf leaf7"></div>
-        <div class="falling-leaf leaf8"></div>
-        <div class="falling-leaf leaf9"></div>
-        <div class="falling-leaf leaf10"></div>
     </div>
    
     <!-- Thema selectie (links boven) -->
@@ -136,6 +113,11 @@
     <!-- Stats Button -->
     <div class="stats-button" id="statsButton">
         📊
+    </div>
+
+    <!-- Achievements Button -->
+    <div class="achievements-button" id="achievementsButton">
+        🏆
     </div>
 
     <!-- Settings Panel -->
@@ -189,13 +171,119 @@
             </div>
         </div>
     </div>
+
+    <!-- Achievements Panel -->
+    <div class="achievements-panel" id="achievementsPanel">
+        <h3 class="achievements-panel-title">🏆 Achievements</h3>
+        <div class="achievements-grid">
+            <div class="achievement-item" id="achievement-first-click" data-achieved="false">
+                <span class="achievement-icon">🌱</span>
+                <div class="achievement-info">
+                    <span class="achievement-name">Eerste Groei</span>
+                    <span class="achievement-description">Klik je eerste zonnebloem</span>
+                </div>
+                <span class="achievement-status"></span>
+            </div>
+            <div class="achievement-item" id="achievement-hundred-club" data-achieved="false">
+                <span class="achievement-icon">💯</span>
+                <div class="achievement-info">
+                    <span class="achievement-name">Honderd Club</span>
+                    <span class="achievement-description">Verzamel 100 zonnebloemen</span>
+                </div>
+                <span class="achievement-status"></span>
+            </div>
+            <div class="achievement-item" id="achievement-click-master" data-achieved="false">
+                <span class="achievement-icon">🔥</span>
+                <div class="achievement-info">
+                    <span class="achievement-name">Klik Meester</span>
+                    <span class="achievement-description">Klik 500 keer op de zonnebloem</span>
+                </div>
+                <span class="achievement-status"></span>
+            </div>
+            <div class="achievement-item" id="achievement-thousand-stars" data-achieved="false">
+                <span class="achievement-icon">🌟</span>
+                <div class="achievement-info">
+                    <span class="achievement-name">Duizend Sterren</span>
+                    <span class="achievement-description">Verzamel 1000 zonnebloemen</span>
+                </div>
+                <span class="achievement-status"></span>
+            </div>
+            <div class="achievement-item" id="achievement-fast-fingers" data-achieved="false">
+                <span class="achievement-icon">⚡</span>
+                <div class="achievement-info">
+                    <span class="achievement-name">Snelle Vingers</span>
+                    <span class="achievement-description">Klik 10 keer binnen 5 seconden</span>
+                </div>
+                <span class="achievement-status"></span>
+            </div>
+            <div class="achievement-item" id="achievement-theme-collector" data-achieved="false">
+                <span class="achievement-icon">🎨</span>
+                <div class="achievement-info">
+                    <span class="achievement-name">Thema Verzamelaar</span>
+                    <span class="achievement-description">Ontgrendel alle 4 thema's</span>
+                </div>
+                <span class="achievement-status"></span>
+            </div>
+            <div class="achievement-item" id="achievement-shopaholic" data-achieved="false">
+                <span class="achievement-icon">🏪</span>
+                <div class="achievement-info">
+                    <span class="achievement-name">Shopaholic</span>
+                    <span class="achievement-description">Koop je eerste upgrade</span>
+                </div>
+                <span class="achievement-status"></span>
+            </div>
+            <div class="achievement-item" id="achievement-sunflower-tycoon" data-achieved="false">
+                <span class="achievement-icon">🌻</span>
+                <div class="achievement-info">
+                    <span class="achievement-name">Zonnebloem Magnaat</span>
+                    <span class="achievement-description">Verzamel 5000 zonnebloemen</span>
+                </div>
+                <span class="achievement-status"></span>
+            </div>
+            <div class="achievement-item" id="achievement-click-king" data-achieved="false">
+                <span class="achievement-icon">👑</span>
+                <div class="achievement-info">
+                    <span class="achievement-name">Klik Koning</span>
+                    <span class="achievement-description">Klik 2000 keer totaal</span>
+                </div>
+                <span class="achievement-status"></span>
+            </div>
+            <div class="achievement-item" id="achievement-perfectionist" data-achieved="false">
+                <span class="achievement-icon">🎯</span>
+                <div class="achievement-info">
+                    <span class="achievement-name">Perfectionist</span>
+                    <span class="achievement-description">Koop alle beschikbare upgrades</span>
+                </div>
+                <span class="achievement-status"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Achievement Notification -->
+    <div class="achievement-notification" id="achievementNotification">
+        <div class="notification-content">
+            <span class="notification-icon">🏆</span>
+            <div class="notification-text">
+                <span class="notification-title">Achievement Unlocked!</span>
+                <span class="notification-name" id="notificationName"></span>
+            </div>
+        </div>
+    </div>
    
     <div class="game-layout">
         <!-- Hoofdgedeelte met zonnebloem -->
         <div class="main-area">   
             <div class="plant-name-container">
                 <h2 id="plant-name" contenteditable="true" spellcheck="false">Naamloze Plant</h2>
-            </div>       
+            </div>
+            
+            <!-- Zonnebloem Counter -->
+            <div class="sunflower-counter">
+                <span class="counter-icon">🌻</span>
+                <span class="counter-value" id="sunflowerCount">0</span>
+                <span class="counter-label">Zonnebloemen</span>
+            </div>
+            
             <div class="garden">
                 <label class="sunflower-button" for="click-counter">
                     <img src="Images/sunflower.png" alt="Zonnebloem" class="sunflower-image" draggable="false">
@@ -226,11 +314,60 @@
                                 <span class="upgrade-cost">50 zonnebloemen</span>
                             </span>
                         </div>
+                        <div class="upgrade-btn" id="fertilizerBtn">
+                            <span class="upgrade-icon">🧪</span>
+                            <span class="upgrade-info">
+                                <span class="upgrade-name">Magische Meststof</span>
+                                <span class="upgrade-cost">125 zonnebloemen</span>
+                            </span>
+                        </div>
+                        <div class="upgrade-btn" id="beeHiveBtn">
+                            <span class="upgrade-icon">🐝</span>
+                            <span class="upgrade-info">
+                                <span class="upgrade-name">Bijenkorf</span>
+                                <span class="upgrade-cost">300 zonnebloemen</span>
+                            </span>
+                        </div>
+                        <div class="upgrade-btn" id="rainCloudBtn">
+                            <span class="upgrade-icon">☁️</span>
+                            <span class="upgrade-info">
+                                <span class="upgrade-name">Regenwolk</span>
+                                <span class="upgrade-cost">750 zonnebloemen</span>
+                            </span>
+                        </div>
+                        <div class="upgrade-btn" id="gardenGnomeBtn">
+                            <span class="upgrade-icon">🧙‍♂️</span>
+                            <span class="upgrade-info">
+                                <span class="upgrade-name">Tuinkabouter</span>
+                                <span class="upgrade-cost">1500 zonnebloemen</span>
+                            </span>
+                        </div>
+                        <div class="upgrade-btn" id="sunlightLensBtn">
+                            <span class="upgrade-icon">🔍</span>
+                            <span class="upgrade-info">
+                                <span class="upgrade-name">Zonlicht Lens</span>
+                                <span class="upgrade-cost">3000 zonnebloemen</span>
+                            </span>
+                        </div>
+                        <div class="upgrade-btn" id="timeAcceleratorBtn">
+                            <span class="upgrade-icon">⏰</span>
+                            <span class="upgrade-info">
+                                <span class="upgrade-name">Tijd Versneller</span>
+                                <span class="upgrade-cost">6000 zonnebloemen</span>
+                            </span>
+                        </div>
+                        <div class="upgrade-btn" id="cosmicSeedBtn">
+                            <span class="upgrade-icon">🌌</span>
+                            <span class="upgrade-info">
+                                <span class="upgrade-name">Kosmisch Zaad</span>
+                                <span class="upgrade-cost">12000 zonnebloemen</span>
+                            </span>
+                        </div>
                     </div>
                 </div>
                
                 <div class="unlocks-container">
-                    <h2 class="unlocks-title">Ontgrendelingen</h2>
+                    <h2 class="unlocks-title">Thema's</h2>
                     <div class="unlocks-list">
                         <div class="unlock-item" id="storm-unlock">
                             <span class="unlock-icon">⛈️</span>

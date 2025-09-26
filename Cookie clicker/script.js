@@ -1,37 +1,177 @@
+// Cache DOM elements for better performance
+const themeElements = {
+    defaultClouds: document.querySelector('.default-clouds'),
+    stormClouds: document.querySelector('.storm-clouds'),
+    nightSky: document.querySelector('.night-sky'),
+    autumnBackground: document.querySelector('.autumn-background'),
+    sky: document.querySelector('.sky')
+};
+
 // Function to apply themes directly
 function applyTheme(themeId) {
     // Reset all theme elements
-    document.querySelector('.default-clouds').style.opacity = '0';
-    document.querySelector('.storm-clouds').style.opacity = '0';
-    document.querySelector('.night-sky').style.opacity = '0';
-    document.querySelector('.autumn-background').style.opacity = '0';
-    document.querySelector('.sky').style.background = 'linear-gradient(to bottom, #87CEEB, #e0f7fa)';
+    themeElements.defaultClouds.style.opacity = '0';
+    themeElements.stormClouds.style.opacity = '0';
+    themeElements.nightSky.style.opacity = '0';
+    themeElements.autumnBackground.style.opacity = '0';
+    themeElements.sky.style.background = 'linear-gradient(to bottom, #87CEEB, #e0f7fa)';
     
     // Apply selected theme
     switch(themeId) {
         case 'theme-default':
-            document.querySelector('.default-clouds').style.opacity = '1';
-            document.querySelector('.sky').style.background = 'linear-gradient(to bottom, #87CEEB, #e0f7fa)';
+            themeElements.defaultClouds.style.opacity = '1';
+            themeElements.sky.style.background = 'linear-gradient(to bottom, #87CEEB, #e0f7fa)';
             break;
             
         case 'theme-storm':
-            document.querySelector('.storm-clouds').style.opacity = '1';
-            document.querySelector('.sky').style.background = 'linear-gradient(to bottom, #37474F, #546E7A)';
+            themeElements.stormClouds.style.opacity = '1';
+            themeElements.sky.style.background = 'linear-gradient(to bottom, #37474F, #546E7A)';
             break;
             
         case 'theme-night':
-            document.querySelector('.night-sky').style.opacity = '1';
-            document.querySelector('.sky').style.background = 'linear-gradient(to bottom, #0a0e2c, #1a237e)';
+            themeElements.nightSky.style.opacity = '1';
+            themeElements.sky.style.background = 'linear-gradient(to bottom, #0a0e2c, #1a237e)';
             break;
             
         case 'theme-autumn':
-            document.querySelector('.autumn-background').style.opacity = '1';
-            document.querySelector('.sky').style.background = 'linear-gradient(to bottom, #ff9800, #f57c00)';
+            themeElements.autumnBackground.style.opacity = '1';
+            themeElements.sky.style.background = 'linear-gradient(to bottom, #ff9800, #f57c00)';
             break;
     }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Sunflower counter variables
+    let sunflowerCount = 0;
+    let totalClicks = 0;
+    let clickTimes = [];
+    const sunflowerCountElement = document.getElementById('sunflowerCount');
+    
+    // Load saved count from localStorage
+    const savedCount = localStorage.getItem('sunflowerCount');
+    if (savedCount) {
+        sunflowerCount = parseInt(savedCount);
+        sunflowerCountElement.textContent = sunflowerCount;
+    }
+    
+    // Load saved total clicks
+    const savedClicks = localStorage.getItem('totalClicks');
+    if (savedClicks) {
+        totalClicks = parseInt(savedClicks);
+    }
+    
+    // Achievement system
+    const achievements = {
+        'first-click': { unlocked: false, condition: () => totalClicks >= 1 },
+        'hundred-club': { unlocked: false, condition: () => sunflowerCount >= 100 },
+        'click-master': { unlocked: false, condition: () => totalClicks >= 500 },
+        'thousand-stars': { unlocked: false, condition: () => sunflowerCount >= 1000 },
+        'fast-fingers': { unlocked: false, condition: () => checkFastFingers() },
+        'theme-collector': { unlocked: false, condition: () => checkAllThemesUnlocked() },
+        'shopaholic': { unlocked: false, condition: () => checkFirstUpgrade() },
+        'sunflower-tycoon': { unlocked: false, condition: () => sunflowerCount >= 5000 },
+        'click-king': { unlocked: false, condition: () => totalClicks >= 2000 },
+        'perfectionist': { unlocked: false, condition: () => checkAllUpgradesBought() }
+    };
+    
+    // Load saved achievements
+    const savedAchievements = localStorage.getItem('achievements');
+    if (savedAchievements) {
+        const parsed = JSON.parse(savedAchievements);
+        Object.keys(parsed).forEach(key => {
+            if (achievements[key]) {
+                achievements[key].unlocked = parsed[key].unlocked;
+            }
+        });
+    }
+    
+    function checkFastFingers() {
+        const now = Date.now();
+        clickTimes = clickTimes.filter(time => now - time <= 5000);
+        return clickTimes.length >= 10;
+    }
+    
+    function checkAllThemesUnlocked() {
+        // This would check if all themes are unlocked - simplified for now
+        return false;
+    }
+    
+    function checkFirstUpgrade() {
+        // This would check if any upgrade is bought - simplified for now
+        return false;
+    }
+    
+    function checkAllUpgradesBought() {
+        // This would check if all upgrades are bought - simplified for now
+        return false;
+    }
+    
+    function checkAchievements() {
+        Object.keys(achievements).forEach(key => {
+            if (!achievements[key].unlocked && achievements[key].condition()) {
+                unlockAchievement(key);
+            }
+        });
+    }
+    
+    function unlockAchievement(achievementId) {
+        achievements[achievementId].unlocked = true;
+        localStorage.setItem('achievements', JSON.stringify(achievements));
+        
+        // Update UI
+        const achievementElement = document.getElementById(`achievement-${achievementId}`);
+        if (achievementElement) {
+            achievementElement.setAttribute('data-achieved', 'true');
+        }
+        
+        // Show notification
+        showAchievementNotification(achievementId);
+    }
+    
+    function showAchievementNotification(achievementId) {
+        const achievementElement = document.getElementById(`achievement-${achievementId}`);
+        const name = achievementElement.querySelector('.achievement-name').textContent;
+        const notification = document.getElementById('achievementNotification');
+        const notificationName = document.getElementById('notificationName');
+        
+        // Update notification content
+        notificationName.textContent = name;
+        
+        // Show notification
+        notification.classList.add('show');
+        
+        // Hide notification after 4 seconds
+        setTimeout(() => {
+            notification.classList.remove('show');
+        }, 4000);
+    }
+    
+    function updateAchievementUI() {
+        Object.keys(achievements).forEach(key => {
+            const achievementElement = document.getElementById(`achievement-${key}`);
+            if (achievementElement) {
+                if (achievements[key].unlocked) {
+                    achievementElement.setAttribute('data-achieved', 'true');
+                } else {
+                    achievementElement.setAttribute('data-achieved', 'false');
+                }
+            }
+        });
+    }
+    
+    // Function to update sunflower count
+    function updateSunflowerCount() {
+        sunflowerCount++;
+        totalClicks++;
+        clickTimes.push(Date.now());
+        
+        sunflowerCountElement.textContent = sunflowerCount;
+        localStorage.setItem('sunflowerCount', sunflowerCount);
+        localStorage.setItem('totalClicks', totalClicks);
+        
+        checkAchievements();
+    }
+    
     const plantNameElement = document.getElementById('plant-name');
 
     // Load plant name from localStorage
@@ -68,8 +208,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Toggle settings panel
     settingsButton.addEventListener('click', () => {
         settingsPanel.classList.toggle('show');
-        // Close stats panel if open
+        // Close other panels if open
         statsPanel.classList.remove('show');
+        achievementsPanel.classList.remove('show');
     });
 
     // Stats functionality
@@ -79,8 +220,21 @@ document.addEventListener('DOMContentLoaded', () => {
     // Toggle stats panel
     statsButton.addEventListener('click', () => {
         statsPanel.classList.toggle('show');
-        // Close settings panel if open
+        // Close other panels if open
         settingsPanel.classList.remove('show');
+        achievementsPanel.classList.remove('show');
+    });
+
+    // Achievements functionality
+    const achievementsButton = document.getElementById('achievementsButton');
+    const achievementsPanel = document.getElementById('achievementsPanel');
+
+    // Toggle achievements panel
+    achievementsButton.addEventListener('click', () => {
+        achievementsPanel.classList.toggle('show');
+        // Close other panels if open
+        settingsPanel.classList.remove('show');
+        statsPanel.classList.remove('show');
     });
 
     // Close panels when clicking outside
@@ -90,6 +244,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (!statsButton.contains(e.target) && !statsPanel.contains(e.target)) {
             statsPanel.classList.remove('show');
+        }
+        if (!achievementsButton.contains(e.target) && !achievementsPanel.contains(e.target)) {
+            achievementsPanel.classList.remove('show');
         }
     });
 
@@ -107,6 +264,9 @@ document.addEventListener('DOMContentLoaded', () => {
         volumeSlider.value = savedVolume;
         volumeValue.textContent = savedVolume + '%';
     }
+
+    // Initialize achievement UI
+    updateAchievementUI();
 
     // ADMIN MODE: Unlock all themes for preview
     // Remove this section when you want normal gameplay
@@ -155,27 +315,37 @@ document.addEventListener('DOMContentLoaded', () => {
         
         console.log('🔓 Admin Mode: All themes unlocked for preview');
     }
-});
-
-document.querySelector('.sunflower-button').addEventListener('click', function(e) {
-    const clickEffect = this.querySelector('.click-effect');
-    const rect = this.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-   
-    clickEffect.style.left = x + 'px';
-    clickEffect.style.top = y + 'px';
-    clickEffect.style.opacity = '1';
-    clickEffect.style.transform = 'scale(0)';
-   
     
-    setTimeout(() => {
-        clickEffect.style.animation = 'clickEffect 0.5s ease-out forwards';
-    }, 10);
-   
-    // Reset after animation
-    setTimeout(() => {
-        clickEffect.style.animation = '';
-        clickEffect.style.opacity = '0';
-    }, 500);
+    // Sunflower click handler
+    const sunflowerButton = document.querySelector('.sunflower-button');
+    if (sunflowerButton) {
+        sunflowerButton.addEventListener('click', function(e) {
+            // Update sunflower count
+            updateSunflowerCount();
+            
+            // Click effect animation with requestAnimationFrame for better performance
+            const clickEffect = this.querySelector('.click-effect');
+            const rect = this.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+           
+            // Use requestAnimationFrame for smooth animation
+            requestAnimationFrame(() => {
+                clickEffect.style.left = x + 'px';
+                clickEffect.style.top = y + 'px';
+                clickEffect.style.opacity = '1';
+                clickEffect.style.transform = 'scale(0)';
+                
+                requestAnimationFrame(() => {
+                    clickEffect.style.animation = 'clickEffect 0.5s ease-out forwards';
+                });
+            });
+           
+            // Reset after animation
+            setTimeout(() => {
+                clickEffect.style.animation = '';
+                clickEffect.style.opacity = '0';
+            }, 500);
+        });
+    }
 });
