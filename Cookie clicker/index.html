@@ -128,6 +128,13 @@
             <input type="range" id="volumeSlider" class="volume-slider" min="0" max="100" value="50">
             <div class="volume-value" id="volumeValue">50%</div>
         </div>
+        <div class="reset-control">
+            <button id="resetGameBtn" class="reset-button">
+                <span class="reset-icon">🔄</span>
+                <span class="reset-text">Reset Game</span>
+            </button>
+            <div class="reset-warning">Dit zal alle voortgang verwijderen!</div>
+        </div>
     </div>
 
     <!-- Stats Panel -->
@@ -269,6 +276,59 @@
             </div>
         </div>
     </div>
+
+    <!-- Reset Confirmation Modal -->
+    <div class="modal-overlay" id="resetModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-icon">⚠️</span>
+                <h3 class="modal-title">Game Resetten</h3>
+            </div>
+            <div class="modal-body">
+                <p class="modal-warning">Dit zal <strong>ALLE</strong> voortgang permanent verwijderen:</p>
+                <ul class="modal-list">
+                    <li>🌻 Alle zonnebloemen</li>
+                    <li>🏆 Alle achievements</li>
+                    <li>🛒 Alle upgrades</li>
+                    <li>🏷️ Plant naam</li>
+                    <li>📊 Statistieken</li>
+                </ul>
+                <p class="modal-final-warning">
+                    <strong>Deze actie kan NIET ongedaan gemaakt worden!</strong>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-cancel" id="resetCancelBtn">
+                    <span class="btn-icon">❌</span>
+                    <span class="btn-text">Annuleren</span>
+                </button>
+                <button class="modal-btn modal-btn-confirm" id="resetConfirmBtn">
+                    <span class="btn-icon">🔄</span>
+                    <span class="btn-text">Reset Game</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal-overlay" id="successModal">
+        <div class="modal-content success-modal">
+            <div class="modal-header">
+                <span class="modal-icon">✅</span>
+                <h3 class="modal-title">Reset Succesvol!</h3>
+            </div>
+            <div class="modal-body">
+                <p>Alle voortgang is verwijderd en je kunt opnieuw beginnen.</p>
+                <p>Veel plezier met je nieuwe start! 🌱</p>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-primary" id="successOkBtn">
+                    <span class="btn-icon">👍</span>
+                    <span class="btn-text">Geweldig!</span>
+                </button>
+            </div>
+        </div>
+    </div>
    
     <div class="game-layout">
         <!-- Hoofdgedeelte met zonnebloem -->
@@ -362,6 +422,77 @@
                                 <span class="upgrade-name">Kosmisch Zaad</span>
                                 <span class="upgrade-cost">12000 zonnebloemen</span>
                             </span>
+                        </div>
+                    </div>
+                    
+                    <!-- Auto-Clicker Upgrades Section -->
+                    <div class="autoclicker-section">
+                        <h3 class="autoclicker-title">⚡ Auto-Clicker Verbeteringen</h3>
+                        <div class="autoclicker-buttons">
+                            <div class="upgrade-btn autoclicker-upgrade" id="turboZonnestralenBtn">
+                                <span class="upgrade-icon">🔥</span>
+                                <span class="upgrade-info">
+                                    <span class="upgrade-name">Turbo Zonnestralen</span>
+                                    <span class="upgrade-cost">500 zonnebloemen</span>
+                                    <span class="upgrade-boost">Verdubbelt Zonnestralen effect</span>
+                                </span>
+                            </div>
+                            <div class="upgrade-btn autoclicker-upgrade" id="superGroeiBtn">
+                                <span class="upgrade-icon">🚀</span>
+                                <span class="upgrade-info">
+                                    <span class="upgrade-name">Super Groei</span>
+                                    <span class="upgrade-cost">1200 zonnebloemen</span>
+                                    <span class="upgrade-boost">Verdrievoudigt Automatische groei</span>
+                                </span>
+                            </div>
+                            <div class="upgrade-btn autoclicker-upgrade" id="megaMeststofBtn">
+                                <span class="upgrade-icon">💎</span>
+                                <span class="upgrade-info">
+                                    <span class="upgrade-name">Mega Meststof</span>
+                                    <span class="upgrade-cost">2500 zonnebloemen</span>
+                                    <span class="upgrade-boost">Verviervoudigt Magische Meststof</span>
+                                </span>
+                            </div>
+                            <div class="upgrade-btn autoclicker-upgrade" id="koninginneBijBtn">
+                                <span class="upgrade-icon">👑</span>
+                                <span class="upgrade-info">
+                                    <span class="upgrade-name">Koningin Bij</span>
+                                    <span class="upgrade-cost">4000 zonnebloemen</span>
+                                    <span class="upgrade-boost">Vervijfvoudigt Bijenkorf productie</span>
+                                </span>
+                            </div>
+                            <div class="upgrade-btn autoclicker-upgrade" id="stormWolkBtn">
+                                <span class="upgrade-icon">⛈️</span>
+                                <span class="upgrade-info">
+                                    <span class="upgrade-name">Storm Wolk</span>
+                                    <span class="upgrade-cost">6500 zonnebloemen</span>
+                                    <span class="upgrade-boost">Verzevenvoudigt Regenwolk kracht</span>
+                                </span>
+                            </div>
+                            <div class="upgrade-btn autoclicker-upgrade" id="aartsTuinkabouter">
+                                <span class="upgrade-icon">🧙‍♂️</span>
+                                <span class="upgrade-info">
+                                    <span class="upgrade-name">Aarts Tuinkabouter</span>
+                                    <span class="upgrade-cost">10000 zonnebloemen</span>
+                                    <span class="upgrade-boost">Vertienvoudigt Tuinkabouter magie</span>
+                                </span>
+                            </div>
+                            <div class="upgrade-btn autoclicker-upgrade" id="prismaLensBtn">
+                                <span class="upgrade-icon">🌈</span>
+                                <span class="upgrade-info">
+                                    <span class="upgrade-name">Prisma Lens</span>
+                                    <span class="upgrade-cost">15000 zonnebloemen</span>
+                                    <span class="upgrade-boost">Vertwaalfvoudigt Zonlicht Lens</span>
+                                </span>
+                            </div>
+                            <div class="upgrade-btn autoclicker-upgrade" id="tijdMeesterBtn">
+                                <span class="upgrade-icon">⏳</span>
+                                <span class="upgrade-info">
+                                    <span class="upgrade-name">Tijd Meester</span>
+                                    <span class="upgrade-cost">25000 zonnebloemen</span>
+                                    <span class="upgrade-boost">Vervijftienvoudigt Tijd Versneller</span>
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>

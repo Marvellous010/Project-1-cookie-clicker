@@ -265,6 +265,117 @@ document.addEventListener('DOMContentLoaded', () => {
         volumeValue.textContent = savedVolume + '%';
     }
 
+    // Reset game functionality
+    const resetButton = document.getElementById('resetGameBtn');
+    const resetModal = document.getElementById('resetModal');
+    const resetCancelBtn = document.getElementById('resetCancelBtn');
+    const resetConfirmBtn = document.getElementById('resetConfirmBtn');
+    const successModal = document.getElementById('successModal');
+    const successOkBtn = document.getElementById('successOkBtn');
+    
+    resetButton.addEventListener('click', () => {
+        // Show custom reset modal
+        resetModal.classList.add('show');
+        // Close settings panel
+        settingsPanel.classList.remove('show');
+    });
+    
+    resetCancelBtn.addEventListener('click', () => {
+        // Hide reset modal
+        resetModal.classList.remove('show');
+    });
+    
+    resetConfirmBtn.addEventListener('click', () => {
+        // Hide reset modal and perform reset
+        resetModal.classList.remove('show');
+        resetGame();
+    });
+    
+    successOkBtn.addEventListener('click', () => {
+        // Hide success modal
+        successModal.classList.remove('show');
+    });
+    
+    // Close modals when clicking outside
+    resetModal.addEventListener('click', (e) => {
+        if (e.target === resetModal) {
+            resetModal.classList.remove('show');
+        }
+    });
+    
+    successModal.addEventListener('click', (e) => {
+        if (e.target === successModal) {
+            successModal.classList.remove('show');
+        }
+    });
+    
+    function resetGame() {
+        console.log('🔄 Resetting game...');
+        
+        // Clear all localStorage data
+        localStorage.removeItem('sunflowerCount');
+        localStorage.removeItem('totalClicks');
+        localStorage.removeItem('plantName');
+        localStorage.removeItem('achievements');
+        localStorage.removeItem('gameVolume');
+        localStorage.removeItem('upgrades');
+        localStorage.removeItem('unlockedThemes');
+        
+        // Reset all game variables
+        sunflowerCount = 0;
+        totalClicks = 0;
+        clickTimes = [];
+        
+        // Reset achievements
+        Object.keys(achievements).forEach(key => {
+            achievements[key].unlocked = false;
+        });
+        
+        // Reset UI elements
+        sunflowerCountElement.textContent = '0';
+        plantNameElement.textContent = 'Naamloze Plant';
+        volumeSlider.value = 50;
+        volumeValue.textContent = '50%';
+        
+        // Reset all achievement UI
+        document.querySelectorAll('.achievement-item').forEach(item => {
+            item.setAttribute('data-achieved', 'false');
+        });
+        
+        // Reset theme to default
+        document.querySelectorAll('input[name="theme"]').forEach(radio => {
+            radio.checked = false;
+        });
+        document.getElementById('theme-default').checked = true;
+        
+        // Reset theme unlocks (unless in admin mode)
+        if (!adminMode) {
+            document.getElementById('unlock-storm').checked = false;
+            document.getElementById('unlock-night').checked = false;
+            document.getElementById('unlock-autumn').checked = false;
+            
+            // Re-lock themes
+            document.querySelectorAll('.theme-lock').forEach(lock => {
+                lock.style.display = 'block';
+            });
+            
+            document.querySelectorAll('.theme-option:not(.theme-default-option)').forEach(option => {
+                option.style.opacity = '0.5';
+                option.style.pointerEvents = 'none';
+            });
+        }
+        
+        // Apply default theme
+        applyTheme('theme-default');
+        
+        // Show success modal
+        setTimeout(() => {
+            successModal.classList.add('show');
+        }, 300);
+        
+        console.log('✅ Game reset complete!');
+    }
+
     // Initialize achievement UI
     updateAchievementUI();
 
