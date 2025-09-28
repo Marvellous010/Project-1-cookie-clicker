@@ -50,9 +50,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Theme unlock system
     const themeUnlocks = {
-        storm: { unlocked: false, cost: 100, multiplier: 0.2 },
-        night: { unlocked: false, cost: 250, multiplier: 0.4 },
-        autumn: { unlocked: false, cost: 500, multiplier: 0.6 }
+        storm: { unlocked: false, cost: 100, multiplier: 2.0 },
+        night: { unlocked: false, cost: 250, multiplier: 4.0 },
+        autumn: { unlocked: false, cost: 500, multiplier: 8.0 }
     };
     
     // Load saved count from localStorage
@@ -202,34 +202,48 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('totalClicks', totalClicks);
         
         checkAchievements();
-        checkThemeUnlocks();
+        updatePurchaseButtons();
     }
     
-    // Function to check and unlock themes
-    function checkThemeUnlocks() {
-        Object.keys(themeUnlocks).forEach(theme => {
-            if (!themeUnlocks[theme].unlocked && sunflowerCount >= themeUnlocks[theme].cost) {
-                unlockTheme(theme);
-            }
-        });
+    // Function to check theme availability (themes are always visible, buttons get enabled)
+    function checkThemeAvailability() {
+        // This function is now handled by updatePurchaseButtons()
+        // Themes are always visible, we just update button states
     }
     
-    // Function to unlock a theme
-    function unlockTheme(themeName) {
-        themeUnlocks[themeName].unlocked = true;
-        localStorage.setItem('themeUnlocks', JSON.stringify(themeUnlocks));
+    // Function to purchase a theme
+    function purchaseTheme(themeName) {
+        const theme = themeUnlocks[themeName];
         
-        // Update click multiplier
-        clickMultiplier = calculateClickMultiplier();
-        
-        // Update UI
-        updateThemeUI();
-        
-        // Show notification
-        showThemeUnlockNotification(themeName);
-        
-        // Check theme collector achievement
-        checkAchievements();
+        // Check if player has enough sunflowers
+        if (sunflowerCount >= theme.cost && !theme.unlocked) {
+            // Deduct cost from sunflower count
+            sunflowerCount -= theme.cost;
+            sunflowerCountElement.textContent = Math.floor(sunflowerCount);
+            localStorage.setItem('sunflowerCount', sunflowerCount);
+            
+            // Unlock the theme
+            theme.unlocked = true;
+            localStorage.setItem('themeUnlocks', JSON.stringify(themeUnlocks));
+            
+            // Update click multiplier
+            clickMultiplier = calculateClickMultiplier();
+            
+            // Update UI
+            updateThemeUI();
+            
+            // Show notification
+            showThemeUnlockNotification(themeName);
+            
+            // Check theme collector achievement
+            checkAchievements();
+            
+            console.log(`🎨 Purchased ${themeName} theme for ${theme.cost} sunflowers!`);
+            return true;
+        } else {
+            console.log(`❌ Cannot purchase ${themeName} theme - insufficient sunflowers or already owned`);
+            return false;
+        }
     }
     
     // Function to update theme UI
@@ -237,28 +251,88 @@ document.addEventListener('DOMContentLoaded', () => {
         // Update storm theme
         if (themeUnlocks.storm.unlocked) {
             document.getElementById('unlock-storm').checked = true;
-            document.querySelector('.theme-storm-option .theme-lock').style.display = 'none';
-            document.querySelector('.theme-storm-option').style.opacity = '1';
-            document.querySelector('.theme-storm-option').style.pointerEvents = 'auto';
-            document.getElementById('storm-unlock').style.display = 'none';
+            const stormOption = document.querySelector('.theme-storm-option');
+            const stormLock = document.querySelector('.theme-storm-option .theme-lock');
+            if (stormLock) stormLock.style.display = 'none';
+            if (stormOption) {
+                stormOption.style.opacity = '1';
+                stormOption.style.pointerEvents = 'auto';
+            }
         }
         
         // Update night theme
         if (themeUnlocks.night.unlocked) {
             document.getElementById('unlock-night').checked = true;
-            document.querySelector('.theme-night-option .theme-lock').style.display = 'none';
-            document.querySelector('.theme-night-option').style.opacity = '1';
-            document.querySelector('.theme-night-option').style.pointerEvents = 'auto';
-            document.getElementById('night-unlock').style.display = 'none';
+            const nightOption = document.querySelector('.theme-night-option');
+            const nightLock = document.querySelector('.theme-night-option .theme-lock');
+            if (nightLock) nightLock.style.display = 'none';
+            if (nightOption) {
+                nightOption.style.opacity = '1';
+                nightOption.style.pointerEvents = 'auto';
+            }
         }
         
         // Update autumn theme
         if (themeUnlocks.autumn.unlocked) {
             document.getElementById('unlock-autumn').checked = true;
-            document.querySelector('.theme-autumn-option .theme-lock').style.display = 'none';
-            document.querySelector('.theme-autumn-option').style.opacity = '1';
-            document.querySelector('.theme-autumn-option').style.pointerEvents = 'auto';
-            document.getElementById('autumn-unlock').style.display = 'none';
+            const autumnOption = document.querySelector('.theme-autumn-option');
+            const autumnLock = document.querySelector('.theme-autumn-option .theme-lock');
+            if (autumnLock) autumnLock.style.display = 'none';
+            if (autumnOption) {
+                autumnOption.style.opacity = '1';
+                autumnOption.style.pointerEvents = 'auto';
+            }
+        }
+        
+        // Update purchase button states
+        updatePurchaseButtons();
+    }
+    
+    // Function to update purchase button states
+    function updatePurchaseButtons() {
+        // Update storm purchase button
+        const stormBtn = document.querySelector('#storm-unlock .purchase-btn');
+        if (stormBtn) {
+            if (themeUnlocks.storm.unlocked) {
+                stormBtn.disabled = true;
+                stormBtn.textContent = 'Gekocht';
+            } else if (sunflowerCount >= themeUnlocks.storm.cost) {
+                stormBtn.disabled = false;
+                stormBtn.textContent = 'Koop';
+            } else {
+                stormBtn.disabled = true;
+                stormBtn.textContent = 'Koop';
+            }
+        }
+        
+        // Update night purchase button
+        const nightBtn = document.querySelector('#night-unlock .purchase-btn');
+        if (nightBtn) {
+            if (themeUnlocks.night.unlocked) {
+                nightBtn.disabled = true;
+                nightBtn.textContent = 'Gekocht';
+            } else if (sunflowerCount >= themeUnlocks.night.cost) {
+                nightBtn.disabled = false;
+                nightBtn.textContent = 'Koop';
+            } else {
+                nightBtn.disabled = true;
+                nightBtn.textContent = 'Koop';
+            }
+        }
+        
+        // Update autumn purchase button
+        const autumnBtn = document.querySelector('#autumn-unlock .purchase-btn');
+        if (autumnBtn) {
+            if (themeUnlocks.autumn.unlocked) {
+                autumnBtn.disabled = true;
+                autumnBtn.textContent = 'Gekocht';
+            } else if (sunflowerCount >= themeUnlocks.autumn.cost) {
+                autumnBtn.disabled = false;
+                autumnBtn.textContent = 'Koop';
+            } else {
+                autumnBtn.disabled = true;
+                autumnBtn.textContent = 'Koop';
+            }
         }
     }
     
@@ -486,10 +560,23 @@ document.addEventListener('DOMContentLoaded', () => {
             option.style.pointerEvents = 'none';
         });
         
-        // Show theme unlock items again
-        document.getElementById('storm-unlock').style.display = 'flex';
-        document.getElementById('night-unlock').style.display = 'flex';
-        document.getElementById('autumn-unlock').style.display = 'flex';
+        // Reset purchase buttons to disabled state
+        const stormBtn = document.querySelector('#storm-unlock .purchase-btn');
+        const nightBtn = document.querySelector('#night-unlock .purchase-btn');
+        const autumnBtn = document.querySelector('#autumn-unlock .purchase-btn');
+        
+        if (stormBtn) {
+            stormBtn.disabled = true;
+            stormBtn.textContent = 'Koop';
+        }
+        if (nightBtn) {
+            nightBtn.disabled = true;
+            nightBtn.textContent = 'Koop';
+        }
+        if (autumnBtn) {
+            autumnBtn.disabled = true;
+            autumnBtn.textContent = 'Koop';
+        }
         
         // Apply default theme
         applyTheme('theme-default');
@@ -507,6 +594,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Initialize theme UI
     updateThemeUI();
+    
+    // Make purchaseTheme function globally accessible
+    window.purchaseTheme = purchaseTheme;
 
     // Make theme switching work by adding click handlers
     document.querySelectorAll('.theme-option').forEach(option => {
