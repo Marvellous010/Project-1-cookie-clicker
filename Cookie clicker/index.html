@@ -8,20 +8,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Thema controls (verborgen radio buttons) -->
+
     <div class="theme-controls">
         <input type="radio" name="theme" id="theme-default" checked>
         <input type="radio" name="theme" id="theme-storm" class="theme-locked">
         <input type="radio" name="theme" id="theme-night" class="theme-locked">
         <input type="radio" name="theme" id="theme-autumn" class="theme-locked">
        
-        <!-- Unlock checkboxes (gesimuleerde progressie) -->
+
         <input type="checkbox" id="unlock-storm" class="unlock-checkbox">
         <input type="checkbox" id="unlock-night" class="unlock-checkbox">
         <input type="checkbox" id="unlock-autumn" class="unlock-checkbox">
     </div>
    
-    <!-- Achtergrond elementen voor alle thema's -->
+   
     <div class="sky"></div>
     <div class="clouds default-clouds">
         <div class="cloud cloud1"></div>
@@ -29,7 +29,7 @@
         <div class="cloud cloud3"></div>
     </div>
    
-    <!-- Storm thema elementen -->
+   
     <div class="storm-clouds">
         <div class="storm-cloud storm-cloud1"></div>
         <div class="storm-cloud storm-cloud2"></div>
@@ -49,7 +49,7 @@
         <div class="storm-fog"></div>
     </div>
    
-    <!-- Nacht thema elementen -->
+  
     <div class="night-sky">
         <div class="star star1"></div>
         <div class="star star2"></div>
@@ -67,7 +67,6 @@
         <div class="moon"></div>
     </div>
    
-    <!-- Herfst thema elementen -->
     <div class="autumn-background">
         <div class="falling-leaf leaf1"></div>
         <div class="falling-leaf leaf2"></div>
@@ -77,7 +76,7 @@
         <div class="falling-leaf leaf6"></div>
     </div>
    
-    <!-- Thema selectie (links boven) -->
+    
     <div class="theme-selector">
         <div class="theme-options">
             <label for="theme-default" class="theme-option theme-default-option">
@@ -105,22 +104,22 @@
         </div>
     </div>
 
-    <!-- Settings Button -->
+   
     <div class="settings-button" id="settingsButton">
         ⚙️
     </div>
 
-    <!-- Stats Button -->
+   
     <div class="stats-button" id="statsButton">
         📊
     </div>
 
-    <!-- Achievements Button -->
+   
     <div class="achievements-button" id="achievementsButton">
         🏆
     </div>
 
-    <!-- Settings Panel -->
+   
     <div class="settings-panel" id="settingsPanel">
         <h3 class="settings-title">Instellingen</h3>
         <div class="volume-control">
@@ -366,6 +365,7 @@
                                 <span class="upgrade-name">Zonnestralen</span>
                                 <span class="upgrade-cost">15 zonnebloemen</span>
                             </span>
+                            <div class="tooltip">+1x click boost</div>
                         </div>
                         <div class="upgrade-btn" id="autoClickerBtn">
                             <span class="upgrade-icon">🌱</span>
@@ -373,6 +373,7 @@
                                 <span class="upgrade-name">Automatische groei</span>
                                 <span class="upgrade-cost">50 zonnebloemen</span>
                             </span>
+                            <div class="tooltip">+1/sec auto</div>
                         </div>
                         <div class="upgrade-btn" id="fertilizerBtn">
                             <span class="upgrade-icon">🧪</span>
@@ -380,6 +381,7 @@
                                 <span class="upgrade-name">Magische Meststof</span>
                                 <span class="upgrade-cost">125 zonnebloemen</span>
                             </span>
+                            <div class="tooltip">+2x click boost</div>
                         </div>
                         <div class="upgrade-btn" id="beeHiveBtn">
                             <span class="upgrade-icon">🐝</span>
@@ -387,6 +389,7 @@
                                 <span class="upgrade-name">Bijenkorf</span>
                                 <span class="upgrade-cost">300 zonnebloemen</span>
                             </span>
+                            <div class="tooltip">+3/sec auto</div>
                         </div>
                         <div class="upgrade-btn" id="rainCloudBtn">
                             <span class="upgrade-icon">☁️</span>
@@ -394,6 +397,7 @@
                                 <span class="upgrade-name">Regenwolk</span>
                                 <span class="upgrade-cost">750 zonnebloemen</span>
                             </span>
+                            <div class="tooltip">+5x click boost</div>
                         </div>
                         <div class="upgrade-btn" id="gardenGnomeBtn">
                             <span class="upgrade-icon">🧙‍♂️</span>
@@ -401,6 +405,7 @@
                                 <span class="upgrade-name">Tuinkabouter</span>
                                 <span class="upgrade-cost">1500 zonnebloemen</span>
                             </span>
+                            <div class="tooltip">+8/sec auto</div>
                         </div>
                         <div class="upgrade-btn" id="sunlightLensBtn">
                             <span class="upgrade-icon">🔍</span>
@@ -408,6 +413,7 @@
                                 <span class="upgrade-name">Zonlicht Lens</span>
                                 <span class="upgrade-cost">3000 zonnebloemen</span>
                             </span>
+                            <div class="tooltip">+10x click boost</div>
                         </div>
                         <div class="upgrade-btn" id="timeAcceleratorBtn">
                             <span class="upgrade-icon">⏰</span>
@@ -415,6 +421,7 @@
                                 <span class="upgrade-name">Tijd Versneller</span>
                                 <span class="upgrade-cost">6000 zonnebloemen</span>
                             </span>
+                            <div class="tooltip">+15/sec auto</div>
                         </div>
                         <div class="upgrade-btn" id="cosmicSeedBtn">
                             <span class="upgrade-icon">🌌</span>
@@ -422,6 +429,7 @@
                                 <span class="upgrade-name">Kosmisch Zaad</span>
                                 <span class="upgrade-cost">12000 zonnebloemen</span>
                             </span>
+                            <div class="tooltip">+25x click boost</div>
                         </div>
                     </div>
                     
@@ -436,6 +444,7 @@
                                     <span class="upgrade-cost">500 zonnebloemen</span>
                                     <span class="upgrade-boost">Verdubbelt Zonnestralen effect</span>
                                 </span>
+                                <div class="tooltip">2x multiplier</div>
                             </div>
                             <div class="upgrade-btn autoclicker-upgrade" id="superGroeiBtn">
                                 <span class="upgrade-icon">🚀</span>
@@ -444,6 +453,7 @@
                                     <span class="upgrade-cost">1200 zonnebloemen</span>
                                     <span class="upgrade-boost">Verdrievoudigt Automatische groei</span>
                                 </span>
+                                <div class="tooltip">3x multiplier</div>
                             </div>
                             <div class="upgrade-btn autoclicker-upgrade" id="megaMeststofBtn">
                                 <span class="upgrade-icon">💎</span>
@@ -452,6 +462,7 @@
                                     <span class="upgrade-cost">2500 zonnebloemen</span>
                                     <span class="upgrade-boost">Verviervoudigt Magische Meststof</span>
                                 </span>
+                                <div class="tooltip">4x multiplier</div>
                             </div>
                             <div class="upgrade-btn autoclicker-upgrade" id="koninginneBijBtn">
                                 <span class="upgrade-icon">👑</span>
@@ -460,6 +471,7 @@
                                     <span class="upgrade-cost">4000 zonnebloemen</span>
                                     <span class="upgrade-boost">Vervijfvoudigt Bijenkorf productie</span>
                                 </span>
+                                <div class="tooltip">5x multiplier</div>
                             </div>
                             <div class="upgrade-btn autoclicker-upgrade" id="stormWolkBtn">
                                 <span class="upgrade-icon">⛈️</span>
@@ -468,6 +480,7 @@
                                     <span class="upgrade-cost">6500 zonnebloemen</span>
                                     <span class="upgrade-boost">Verzevenvoudigt Regenwolk kracht</span>
                                 </span>
+                                <div class="tooltip">7x multiplier</div>
                             </div>
                             <div class="upgrade-btn autoclicker-upgrade" id="aartsTuinkabouter">
                                 <span class="upgrade-icon">🧙‍♂️</span>
@@ -476,6 +489,7 @@
                                     <span class="upgrade-cost">10000 zonnebloemen</span>
                                     <span class="upgrade-boost">Vertienvoudigt Tuinkabouter magie</span>
                                 </span>
+                                <div class="tooltip">10x multiplier</div>
                             </div>
                             <div class="upgrade-btn autoclicker-upgrade" id="prismaLensBtn">
                                 <span class="upgrade-icon">🌈</span>
@@ -484,6 +498,7 @@
                                     <span class="upgrade-cost">15000 zonnebloemen</span>
                                     <span class="upgrade-boost">Vertwaalfvoudigt Zonlicht Lens</span>
                                 </span>
+                                <div class="tooltip">12x multiplier</div>
                             </div>
                             <div class="upgrade-btn autoclicker-upgrade" id="tijdMeesterBtn">
                                 <span class="upgrade-icon">⏳</span>
@@ -492,6 +507,7 @@
                                     <span class="upgrade-cost">25000 zonnebloemen</span>
                                     <span class="upgrade-boost">Vervijftienvoudigt Tijd Versneller</span>
                                 </span>
+                                <div class="tooltip">15x multiplier</div>
                             </div>
                         </div>
                     </div>

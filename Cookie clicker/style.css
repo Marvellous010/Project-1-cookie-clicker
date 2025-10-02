@@ -1011,12 +1011,118 @@ body {
         inset 0 2px 5px rgba(255, 255, 255, 0.8);
     border: 2px solid rgba(255, 193, 7, 0.3);
     transition: all 0.3s ease;
-    max-width: 300px;
 }
 
-.counter-icon {
-    font-size: 28px;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+/* Tooltip Styles */
+.tooltip {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    z-index: 1000;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateX(-50%) translateY(-10px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    bottom: 100%;
+    left: 50%;
+    margin-bottom: 5px;
+    max-width: 200px;
+    text-align: center;
+}
+
+.tooltip.show {
+    opacity: 1 !important;
+    transform: translateX(-50%) translateY(0) !important;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* Make tooltips more visible */
+.tooltip {
+    font-size: 12px;
+    font-weight: 600;
+    background: rgba(0, 0, 0, 0.95);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid rgba(0, 0, 0, 0.9);
+}
+
+/* Theme-aware tooltip styles */
+#theme-storm:checked ~ * .tooltip,
+body:has(#theme-storm:checked) .tooltip {
+    background: rgba(69, 90, 100, 0.95);
+    border-color: rgba(176, 190, 197, 0.3);
+}
+
+#theme-storm:checked ~ * .tooltip::after,
+body:has(#theme-storm:checked) .tooltip::after {
+    border-top-color: rgba(69, 90, 100, 0.95);
+}
+
+#theme-night:checked ~ * .tooltip,
+body:has(#theme-night:checked) .tooltip {
+    background: rgba(26, 35, 126, 0.95);
+    border-color: rgba(197, 202, 233, 0.3);
+}
+
+#theme-night:checked ~ * .tooltip::after,
+body:has(#theme-night:checked) .tooltip::after {
+    border-top-color: rgba(26, 35, 126, 0.95);
+}
+
+#theme-autumn:checked ~ * .tooltip,
+body:has(#theme-autumn:checked) .tooltip {
+    background: rgba(191, 54, 12, 0.95);
+    border-color: rgba(255, 204, 188, 0.3);
+}
+
+#theme-autumn:checked ~ * .tooltip::after,
+body:has(#theme-autumn:checked) .tooltip::after {
+    border-top-color: rgba(191, 54, 12, 0.95);
+}
+
+/* Tooltip positioning classes */
+.tooltip.tooltip-left {
+    left: 10px;
+    transform: translateY(-10px);
+}
+
+.tooltip.tooltip-left.show {
+    transform: translateY(0);
+}
+
+.tooltip.tooltip-left::after {
+    left: 20px;
+}
+
+.tooltip.tooltip-right {
+    right: 10px;
+    left: auto;
+    transform: translateY(-10px);
+}
+
+.tooltip.tooltip-right.show {
+    transform: translateY(0);
+}
+
+.tooltip.tooltip-right::after {
+    left: auto;
+    right: 20px;
 }
 
 .counter-value {
@@ -1116,6 +1222,21 @@ body {
     margin-left: -40px;
     z-index: 10;
     will-change: transform, opacity;
+}
+
+@keyframes clickPulse {
+    0% {
+        opacity: 0;
+        transform: scale(0);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(1.5);
+    }
 }
 
 /* Shop container */
