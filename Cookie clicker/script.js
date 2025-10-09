@@ -2,15 +2,29 @@ class SimpleCookieClicker {
     constructor() {
         this.count = 0;
         this.countElement = document.getElementById('sunflowerCount');
-        this.volume = 50; // Default volume
+        this.volume = 50;
+        
+        // Stats tracking
+        this.stats = {
+            totalClicks: 0,
+            totalFlowers: 0,
+            upgradesBought: 0,
+            perClick: 1,
+            perSecond: 0,
+            gameStartTime: Date.now()
+        };
+        
         this.init();
     }
     
     init() {
         this.loadCount();
         this.loadSettings();
+        this.loadStats();
         this.setupClicker();
         this.setupSettings();
+        this.setupStatsPanel();
+        this.updateStatsDisplay();
     }
     
     loadCount() {
@@ -22,9 +36,13 @@ class SimpleCookieClicker {
     }
     
     click() {
-        this.count++;
+        this.count += this.stats.perClick;
+        this.stats.totalClicks++;
+        this.stats.totalFlowers += this.stats.perClick;
         this.updateDisplay();
+        this.updateStatsDisplay();
         this.saveCount();
+        this.saveStats();
     }
     
     updateDisplay() {
@@ -35,6 +53,51 @@ class SimpleCookieClicker {
     
     saveCount() {
         localStorage.setItem('sunflowerCount', this.count);
+    }
+    
+    // Stats methods
+    loadStats() {
+        const savedStats = localStorage.getItem('gameStats');
+        if (savedStats) {
+            const parsed = JSON.parse(savedStats);
+            this.stats = { ...this.stats, ...parsed };
+        }
+    }
+    
+    saveStats() {
+        localStorage.setItem('gameStats', JSON.stringify(this.stats));
+    }
+    
+    updateStatsDisplay() {
+        const totalFlowersEl = document.getElementById('totalFlowers');
+        const totalClicksEl = document.getElementById('totalClicks');
+        const perSecondEl = document.getElementById('perSecond');
+        const upgradesBoughtEl = document.getElementById('upgradesBought');
+        const perClickEl = document.getElementById('perClick');
+        
+        if (totalFlowersEl) totalFlowersEl.textContent = this.stats.totalFlowers.toLocaleString();
+        if (totalClicksEl) totalClicksEl.textContent = this.stats.totalClicks.toLocaleString();
+        if (perSecondEl) perSecondEl.textContent = this.stats.perSecond.toLocaleString();
+        if (upgradesBoughtEl) upgradesBoughtEl.textContent = this.stats.upgradesBought.toLocaleString();
+        if (perClickEl) perClickEl.textContent = this.stats.perClick.toLocaleString();
+    }
+    
+    setupStatsPanel() {
+        const statsButton = document.getElementById('statsButton');
+        const statsPanel = document.getElementById('statsPanel');
+        
+        if (statsButton && statsPanel) {
+            statsButton.addEventListener('click', () => {
+                statsPanel.classList.toggle('show');
+            });
+            
+            // Close stats panel when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!statsPanel.contains(e.target) && !statsButton.contains(e.target)) {
+                    statsPanel.classList.remove('show');
+                }
+            });
+        }
     }
     
     setupClicker() {
@@ -150,15 +213,27 @@ class SimpleCookieClicker {
         this.count = 0;
         this.volume = 50;
         
-    
+        // Reset stats
+        this.stats = {
+            totalClicks: 0,
+            totalFlowers: 0,
+            upgradesBought: 0,
+            perClick: 1,
+            perSecond: 0,
+            gameStartTime: Date.now()
+        };
+        
+        // Clear localStorage
         localStorage.removeItem('sunflowerCount');
         localStorage.removeItem('gameVolume');
+        localStorage.removeItem('gameStats');
         
-        
+        // Update displays
         this.updateDisplay();
         this.updateVolumeDisplay();
+        this.updateStatsDisplay();
         
-        
+        // Reset plant name
         const plantName = document.getElementById('plant-name');
         if (plantName) {
             plantName.textContent = 'Naamloze Plant';
