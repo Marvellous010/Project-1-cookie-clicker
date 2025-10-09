@@ -1,3 +1,130 @@
+// Simpel Achievement Systeem
+class AchievementSystem {
+    constructor() {
+        this.achievements = {
+            'first-click': { name: 'Eerste Klik', description: 'Klik voor de eerste keer', icon: '👆', unlocked: false },
+            'hundred-club': { name: 'Honderd Club', description: 'Verzamel 100 zonnebloemen', icon: '💯', unlocked: false },
+            'click-master': { name: 'Klik Meester', description: 'Klik 500 keer', icon: '🖱️', unlocked: false },
+            'thousand-stars': { name: 'Duizend Sterren', description: 'Verzamel 1000 zonnebloemen', icon: '⭐', unlocked: false },
+            'sunflower-tycoon': { name: 'Zonnebloem Magnaat', description: 'Verzamel 5000 zonnebloemen', icon: '🌻', unlocked: false },
+            'click-king': { name: 'Klik Koning', description: 'Klik 2000 keer', icon: '👑', unlocked: false },
+            'mega-collector': { name: 'Mega Verzamelaar', description: 'Verzamel 10000 zonnebloemen', icon: '🏆', unlocked: false },
+            'click-legend': { name: 'Klik Legende', description: 'Klik 5000 keer', icon: '🌟', unlocked: false }
+        };
+        this.loadAchievements();
+    }
+
+    checkAchievements(totalClicks, totalFlowers) {
+        // Check eerste klik
+        if (!this.achievements['first-click'].unlocked && totalClicks >= 1) {
+            this.unlockAchievement('first-click');
+        }
+        
+        // Check honderd club
+        if (!this.achievements['hundred-club'].unlocked && totalFlowers >= 100) {
+            this.unlockAchievement('hundred-club');
+        }
+        
+        // Check klik meester
+        if (!this.achievements['click-master'].unlocked && totalClicks >= 500) {
+            this.unlockAchievement('click-master');
+        }
+        
+        // Check duizend sterren
+        if (!this.achievements['thousand-stars'].unlocked && totalFlowers >= 1000) {
+            this.unlockAchievement('thousand-stars');
+        }
+        
+        // Check zonnebloem magnaat
+        if (!this.achievements['sunflower-tycoon'].unlocked && totalFlowers >= 5000) {
+            this.unlockAchievement('sunflower-tycoon');
+        }
+        
+        // Check klik koning
+        if (!this.achievements['click-king'].unlocked && totalClicks >= 2000) {
+            this.unlockAchievement('click-king');
+        }
+        
+        // Check mega verzamelaar
+        if (!this.achievements['mega-collector'].unlocked && totalFlowers >= 10000) {
+            this.unlockAchievement('mega-collector');
+        }
+        
+        // Check klik legende
+        if (!this.achievements['click-legend'].unlocked && totalClicks >= 5000) {
+            this.unlockAchievement('click-legend');
+        }
+    }
+
+    unlockAchievement(achievementId) {
+        this.achievements[achievementId].unlocked = true;
+        this.showNotification(this.achievements[achievementId]);
+        this.updateUI();
+        this.saveAchievements();
+    }
+
+    showNotification(achievement) {
+        const notification = document.getElementById('achievementNotification');
+        const nameElement = document.getElementById('notificationName');
+        
+        if (notification && nameElement) {
+            nameElement.textContent = achievement.name;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+    }
+
+    updateUI() {
+        for (let id in this.achievements) {
+            const element = document.getElementById(`achievement-${id}`);
+            if (element) {
+                const statusElement = element.querySelector('.achievement-status');
+                if (statusElement) {
+                    statusElement.textContent = this.achievements[id].unlocked ? '✅' : '';
+                }
+                
+                if (this.achievements[id].unlocked) {
+                    element.classList.add('achieved');
+                } else {
+                    element.classList.remove('achieved');
+                }
+            }
+        }
+    }
+
+    saveAchievements() {
+        const saveData = {};
+        for (let id in this.achievements) {
+            saveData[id] = this.achievements[id].unlocked;
+        }
+        localStorage.setItem('achievements', JSON.stringify(saveData));
+    }
+
+    loadAchievements() {
+        const saved = localStorage.getItem('achievements');
+        if (saved) {
+            const saveData = JSON.parse(saved);
+            for (let id in saveData) {
+                if (this.achievements[id]) {
+                    this.achievements[id].unlocked = saveData[id];
+                }
+            }
+            this.updateUI();
+        }
+    }
+
+    resetAchievements() {
+        for (let id in this.achievements) {
+            this.achievements[id].unlocked = false;
+        }
+        this.updateUI();
+        localStorage.removeItem('achievements');
+    }
+}
+
 class SimpleCookieClicker {
     constructor() {
         this.count = 0;
@@ -13,6 +140,9 @@ class SimpleCookieClicker {
             perSecond: 0,
             gameStartTime: Date.now()
         };
+
+        // Achievement systeem
+        this.achievementSystem = new AchievementSystem();
         
         this.init();
     }
@@ -24,6 +154,7 @@ class SimpleCookieClicker {
         this.setupClicker();
         this.setupSettings();
         this.setupStatsPanel();
+        this.setupAchievementsPanel();
         this.updateStatsDisplay();
     }
     
@@ -43,6 +174,9 @@ class SimpleCookieClicker {
         this.updateStatsDisplay();
         this.saveCount();
         this.saveStats();
+        
+        // Check achievements
+        this.achievementSystem.checkAchievements(this.stats.totalClicks, this.stats.totalFlowers);
     }
     
     updateDisplay() {
@@ -95,6 +229,24 @@ class SimpleCookieClicker {
             document.addEventListener('click', (e) => {
                 if (!statsPanel.contains(e.target) && !statsButton.contains(e.target)) {
                     statsPanel.classList.remove('show');
+                }
+            });
+        }
+    }
+
+    setupAchievementsPanel() {
+        const achievementsButton = document.getElementById('achievementsButton');
+        const achievementsPanel = document.getElementById('achievementsPanel');
+        
+        if (achievementsButton && achievementsPanel) {
+            achievementsButton.addEventListener('click', () => {
+                achievementsPanel.classList.toggle('show');
+            });
+            
+            // Close achievements panel when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!achievementsPanel.contains(e.target) && !achievementsButton.contains(e.target)) {
+                    achievementsPanel.classList.remove('show');
                 }
             });
         }
@@ -222,6 +374,9 @@ class SimpleCookieClicker {
             perSecond: 0,
             gameStartTime: Date.now()
         };
+        
+        // Reset achievements
+        this.achievementSystem.resetAchievements();
         
         // Clear localStorage
         localStorage.removeItem('sunflowerCount');
