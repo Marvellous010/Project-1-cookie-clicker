@@ -82,14 +82,21 @@ class AchievementSystem {
             const element = document.getElementById(`achievement-${id}`);
             if (element) {
                 const statusElement = element.querySelector('.achievement-status');
-                if (statusElement) {
-                    statusElement.textContent = this.achievements[id].unlocked ? '✅' : '';
-                }
                 
                 if (this.achievements[id].unlocked) {
+                    // Set as achieved
                     element.classList.add('achieved');
+                    element.setAttribute('data-achieved', 'true');
+                    if (statusElement) {
+                        statusElement.textContent = '✅';
+                    }
                 } else {
+                    // Set as not achieved
                     element.classList.remove('achieved');
+                    element.setAttribute('data-achieved', 'false');
+                    if (statusElement) {
+                        statusElement.textContent = '🔒';
+                    }
                 }
             }
         }

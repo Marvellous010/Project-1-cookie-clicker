@@ -2408,9 +2408,18 @@ body:has(#theme-autumn:checked) .achievements-button {
     border-left-color: #FF9800;
 }
 
+.achievement-item.achieved:hover {
+    transform: translateX(5px);
+    box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+    border-left-color: #388E3C;
+    background: linear-gradient(145deg, rgba(76, 175, 80, 0.3), rgba(139, 195, 74, 0.15));
+}
+
 .achievement-item.achieved {
-    background: linear-gradient(145deg, rgba(76, 175, 80, 0.1), rgba(139, 195, 74, 0.05));
+    background: linear-gradient(145deg, rgba(76, 175, 80, 0.2), rgba(139, 195, 74, 0.1));
     border-left-color: #4CAF50;
+    border-left-width: 4px;
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
 }
 
 .achievement-item.achieved::before {
@@ -2433,6 +2442,11 @@ body:has(#theme-autumn:checked) .achievements-button {
     margin-right: 15px;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     flex-shrink: 0;
+}
+
+.achievement-item.achieved .achievement-icon {
+    text-shadow: 0 0 10px rgba(76, 175, 80, 0.6), 0 2px 4px rgba(0, 0, 0, 0.2);
+    filter: brightness(1.1);
 }
 
 .achievement-info {
@@ -2652,6 +2666,12 @@ body:has(#theme-autumn:checked) .achievements-button {
     opacity: 0.5;
 }
 
+.achievement-item[data-achieved="true"] .achievement-icon,
+.achievement-item.achieved .achievement-icon {
+    filter: none;
+    opacity: 1;
+}
+
 .achievement-info {
     display: flex;
     flex-direction: column;
@@ -2680,13 +2700,7 @@ body:has(#theme-autumn:checked) .achievements-button {
     margin-left: 10px;
 }
 
-.achievement-item[data-achieved="true"] .achievement-status::after {
-    content: "✅";
-}
-
-.achievement-item[data-achieved="false"] .achievement-status::after {
-    content: "🔒";
-}
+/* Status icons are now handled by JavaScript */
 
 /* Achievement Notification */
 .achievement-notification {
