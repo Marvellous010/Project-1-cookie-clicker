@@ -132,6 +132,374 @@ class AchievementSystem {
     }
 }
 
+// Basis Event Class
+class GameEvent {
+    constructor(id, name, icon, description, requiredClicks, duration, cooldown) {
+        this.id = id;
+        this.name = name;
+        this.icon = icon;
+        this.description = description;
+        this.requiredClicks = requiredClicks;
+        this.duration = duration; // in seconds
+        this.cooldown = cooldown; // in seconds
+        this.isActive = false;
+        this.isUnlocked = false;
+        this.timeRemaining = 0;
+        this.cooldownRemaining = 0;
+        this.element = document.getElementById(`${id}-event`);
+        this.timerElement = document.getElementById(`${id}-timer`);
+        this.progressElement = document.getElementById(`${id}-progress`);
+    }
+
+    unlock() {
+        this.isUnlocked = true;
+        this.updateUI();
+    }
+
+    activate() {
+        if (!this.isUnlocked || this.isActive || this.cooldownRemaining > 0) return false;
+        
+        this.isActive = true;
+        this.timeRemaining = this.duration;
+        this.updateUI();
+        this.onActivate();
+        return true;
+    }
+
+    deactivate() {
+        if (!this.isActive) return;
+        
+        this.isActive = false;
+        this.cooldownRemaining = this.cooldown;
+        this.timeRemaining = 0;
+        this.updateUI();
+        this.onDeactivate();
+    }
+
+    update(deltaTime) {
+        if (this.isActive && this.timeRemaining > 0) {
+            this.timeRemaining -= deltaTime;
+            if (this.timeRemaining <= 0) {
+                this.deactivate();
+            }
+            this.updateTimer();
+        }
+
+        if (this.cooldownRemaining > 0) {
+            this.cooldownRemaining -= deltaTime;
+            if (this.cooldownRemaining <= 0) {
+                this.cooldownRemaining = 0;
+            }
+            this.updateTimer();
+        }
+    }
+
+    updateUI() {
+        if (!this.element) return;
+
+        this.element.setAttribute('data-active', this.isActive);
+        this.element.setAttribute('data-unlocked', this.isUnlocked);
+        
+        const lockElement = this.element.querySelector('.event-lock');
+        const timerElement = this.element.querySelector('.event-timer');
+        
+        if (lockElement) {
+            lockElement.style.display = this.isUnlocked ? 'none' : 'block';
+        }
+        
+        if (timerElement) {
+            timerElement.style.display = this.isUnlocked ? 'block' : 'none';
+        }
+    }
+
+    updateTimer() {
+        if (!this.timerElement) return;
+
+        if (this.isActive && this.timeRemaining > 0) {
+            const minutes = Math.floor(this.timeRemaining / 60);
+            const seconds = Math.floor(this.timeRemaining % 60);
+            this.timerElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        } else if (this.cooldownRemaining > 0) {
+            const minutes = Math.floor(this.cooldownRemaining / 60);
+            const seconds = Math.floor(this.cooldownRemaining % 60);
+            this.timerElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        } else {
+            this.timerElement.textContent = 'Klaar!';
+        }
+    }
+
+    // Override deze methods in subclasses
+    onActivate() {}
+    onDeactivate() {}
+    getEffect() { return 1; }
+}
+
+// Gouden Uur Event - Dubbele zonnebloemen voor clicks
+class GoldenHourEvent extends GameEvent {
+    constructor() {
+        super('golden-hour', 'Gouden Uur', '🌅', 'Dubbele zonnebloemen voor alle clicks!', 50, 60, 300);
+        this.multiplier = 2;
+    }
+
+    onActivate() {
+        console.log('Gouden Uur geactiveerd! Dubbele zonnebloemen voor clicks!');
+    }
+
+    onDeactivate() {
+        console.log('Gouden Uur beëindigd.');
+    }
+
+    getClickMultiplier() {
+        return this.isActive ? this.multiplier : 1;
+    }
+}
+
+// Bijenzwerm Event - Extra zonnebloemen per seconde
+class BeeSwarmEvent extends GameEvent {
+    constructor() {
+        super('bee-swarm', 'Bijenzwerm', '🐝', '+10 zonnebloemen per seconde!', 150, 45, 400);
+        this.bonusPerSecond = 10;
+    }
+
+    onActivate() {
+        console.log('Bijenzwerm geactiveerd! +10 zonnebloemen per seconde!');
+    }
+
+    onDeactivate() {
+        console.log('Bijenzwerm beëindigd.');
+    }
+
+    getBonusPerSecond() {
+        return this.isActive ? this.bonusPerSecond : 0;
+    }
+}
+
+// Regenboog Boost Event - 5x click multiplier
+class RainbowBoostEvent extends GameEvent {
+    constructor() {
+        super('rainbow-boost', 'Regenboog Boost', '🌈', '5x click multiplier + extra geluk!', 300, 30, 600);
+        this.multiplier = 5;
+    }
+
+    onActivate() {
+        console.log('Regenboog Boost geactiveerd! 5x click multiplier!');
+    }
+
+    onDeactivate() {
+        console.log('Regenboog Boost beëindigd.');
+    }
+
+    getClickMultiplier() {
+        return this.isActive ? this.multiplier : 1;
+    }
+}
+
+// Meteorenregen Event - Willekeurige zonnebloem bonuses
+class MeteorShowerEvent extends GameEvent {
+    constructor() {
+        super('meteor-shower', 'Meteorenregen', '☄️', 'Willekeurige zonnebloem explosies!', 500, 90, 800);
+    }
+
+    onActivate() {
+        console.log('Meteorenregen geactiveerd! Willekeurige bonuses!');
+    }
+
+    onDeactivate() {
+        console.log('Meteorenregen beëindigd.');
+    }
+
+}
+
+// Fee Bezoek Event - Alle upgrades 50% goedkoper
+class FairyVisitEvent extends GameEvent {
+    constructor() {
+        super('fairy-visit', 'Fee Bezoek', '🧚‍♀️', 'Alle upgrades 50% goedkoper!', 750, 120, 1000);
+        this.discount = 0.5;
+    }
+
+    onActivate() {
+        console.log('Fee Bezoek geactiveerd! Alle upgrades 50% goedkoper!');
+    }
+
+    onDeactivate() {
+        console.log('Fee Bezoek beëindigd.');
+    }
+
+    getUpgradeDiscount() {
+        return this.isActive ? this.discount : 0;
+    }
+}
+
+// Event System Manager
+class EventSystem {
+    constructor() {
+        this.events = {
+            'golden-hour': new GoldenHourEvent(),
+            'bee-swarm': new BeeSwarmEvent(),
+            'rainbow-boost': new RainbowBoostEvent(),
+            'meteor-shower': new MeteorShowerEvent(),
+            'fairy-visit': new FairyVisitEvent()
+        };
+        
+        this.lastUpdate = Date.now();
+        this.setupEventListeners();
+        this.startUpdateLoop();
+    }
+
+    setupEventListeners() {
+        // Voeg click listeners toe voor unlocked events
+        Object.values(this.events).forEach(event => {
+            if (event.element) {
+                event.element.addEventListener('click', () => {
+                    if (event.isUnlocked && !event.isActive && event.cooldownRemaining <= 0) {
+                        event.activate();
+                    }
+                });
+            }
+        });
+    }
+
+    checkUnlocks(totalClicks) {
+        Object.values(this.events).forEach(event => {
+            if (!event.isUnlocked && totalClicks >= event.requiredClicks) {
+                event.unlock();
+                this.showEventUnlockNotification(event);
+            }
+            
+            // Update progress bar
+            this.updateEventProgress(event, totalClicks);
+        });
+    }
+    
+    updateEventProgress(event, totalClicks) {
+        if (event.progressElement) {
+            let progress = 0;
+            
+            if (event.isActive) {
+                // Toon resterende tijd als progress
+                progress = ((event.duration - event.timeRemaining) / event.duration) * 100;
+            } else if (event.cooldownRemaining > 0) {
+                // Toon cooldown progress
+                progress = ((event.cooldown - event.cooldownRemaining) / event.cooldown) * 100;
+            } else if (!event.isUnlocked) {
+                // Toon unlock progress
+                progress = (totalClicks / event.requiredClicks) * 100;
+            } else {
+                // Event is klaar om geactiveerd te worden
+                progress = 100;
+            }
+            
+            event.progressElement.style.width = Math.min(progress, 100) + '%';
+        }
+    }
+
+    showEventUnlockNotification(event) {
+        // Gebruik bestaande achievement notification systeem
+        const notification = document.getElementById('achievementNotification');
+        const nameElement = document.getElementById('notificationName');
+        
+        if (notification && nameElement) {
+            nameElement.textContent = `Event Unlocked: ${event.name}`;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+    }
+
+    startUpdateLoop() {
+        const update = () => {
+            const now = Date.now();
+            const deltaTime = (now - this.lastUpdate) / 1000; // Convert to seconds
+            this.lastUpdate = now;
+
+            Object.values(this.events).forEach(event => {
+                event.update(deltaTime);
+                // Update progress voor actieve events
+                if (event.isActive || event.cooldownRemaining > 0) {
+                    this.updateEventProgress(event, 0);
+                }
+            });
+
+            requestAnimationFrame(update);
+        };
+        
+        requestAnimationFrame(update);
+    }
+
+    getClickMultiplier() {
+        let multiplier = 1;
+        Object.values(this.events).forEach(event => {
+            if (event.getClickMultiplier) {
+                multiplier *= event.getClickMultiplier();
+            }
+        });
+        return multiplier;
+    }
+
+    getBonusPerSecond() {
+        let bonus = 0;
+        Object.values(this.events).forEach(event => {
+            if (event.getBonusPerSecond) {
+                bonus += event.getBonusPerSecond();
+            }
+        });
+        return bonus;
+    }
+
+    getUpgradeDiscount() {
+        let maxDiscount = 0;
+        Object.values(this.events).forEach(event => {
+            if (event.getUpgradeDiscount) {
+                maxDiscount = Math.max(maxDiscount, event.getUpgradeDiscount());
+            }
+        });
+        return maxDiscount;
+    }
+
+
+    saveEventData() {
+        const saveData = {};
+        Object.entries(this.events).forEach(([id, event]) => {
+            saveData[id] = {
+                isUnlocked: event.isUnlocked,
+                isActive: event.isActive,
+                timeRemaining: event.timeRemaining,
+                cooldownRemaining: event.cooldownRemaining
+            };
+        });
+        localStorage.setItem('eventData', JSON.stringify(saveData));
+    }
+
+    loadEventData() {
+        const saved = localStorage.getItem('eventData');
+        if (saved) {
+            const saveData = JSON.parse(saved);
+            Object.entries(saveData).forEach(([id, data]) => {
+                if (this.events[id]) {
+                    this.events[id].isUnlocked = data.isUnlocked;
+                    this.events[id].isActive = data.isActive;
+                    this.events[id].timeRemaining = data.timeRemaining || 0;
+                    this.events[id].cooldownRemaining = data.cooldownRemaining || 0;
+                    this.events[id].updateUI();
+                }
+            });
+        }
+    }
+
+    resetEvents() {
+        Object.values(this.events).forEach(event => {
+            event.isUnlocked = false;
+            event.isActive = false;
+            event.timeRemaining = 0;
+            event.cooldownRemaining = 0;
+            event.updateUI();
+        });
+        localStorage.removeItem('eventData');
+    }
+}
+
 class SimpleCookieClicker {
     constructor() {
         this.count = 0;
@@ -151,6 +519,9 @@ class SimpleCookieClicker {
         // Achievement systeem
         this.achievementSystem = new AchievementSystem();
         
+        // Event systeem
+        this.eventSystem = new EventSystem();
+        
         this.init();
     }
     
@@ -158,11 +529,13 @@ class SimpleCookieClicker {
         this.loadCount();
         this.loadSettings();
         this.loadStats();
+        this.eventSystem.loadEventData();
         this.setupClicker();
         this.setupSettings();
         this.setupStatsPanel();
         this.setupAchievementsPanel();
         this.updateStatsDisplay();
+        this.startAutoGeneration();
     }
     
     loadCount() {
@@ -174,16 +547,34 @@ class SimpleCookieClicker {
     }
     
     click() {
-        this.count += this.stats.perClick;
+        // Bereken click waarde met event multipliers
+        const eventMultiplier = this.eventSystem.getClickMultiplier();
+        const clickValue = this.stats.perClick * eventMultiplier;
+        
+        this.count += clickValue;
         this.stats.totalClicks++;
-        this.stats.totalFlowers += this.stats.perClick;
+        this.stats.totalFlowers += clickValue;
+        
+        // Check voor meteor bonus (alleen bij clicks)
+        const meteorEvent = this.eventSystem.events['meteor-shower'];
+        if (meteorEvent && meteorEvent.isActive && Math.random() < 0.3) { // 30% kans per click
+            const meteorBonus = Math.floor(Math.random() * 21) + 5; // 5-25 bonus
+            this.count += meteorBonus;
+            this.stats.totalFlowers += meteorBonus;
+            this.showMeteorEffect(meteorBonus);
+        }
+        
         this.updateDisplay();
         this.updateStatsDisplay();
         this.saveCount();
         this.saveStats();
+        this.eventSystem.saveEventData();
         
         // Check achievements
         this.achievementSystem.checkAchievements(this.stats.totalClicks, this.stats.totalFlowers);
+        
+        // Check event unlocks
+        this.eventSystem.checkUnlocks(this.stats.totalClicks);
     }
     
     updateDisplay() {
@@ -194,6 +585,41 @@ class SimpleCookieClicker {
     
     saveCount() {
         localStorage.setItem('sunflowerCount', this.count);
+    }
+    
+    showMeteorEffect(bonus) {
+        // Toon een visueel effect voor meteor bonus
+        const notification = document.getElementById('achievementNotification');
+        const nameElement = document.getElementById('notificationName');
+        
+        if (notification && nameElement) {
+            nameElement.textContent = `Meteor Bonus: +${bonus} zonnebloemen! ☄️`;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 2000);
+        }
+    }
+    
+    startAutoGeneration() {
+        setInterval(() => {
+            if (this.stats.perSecond > 0) {
+                const eventBonus = this.eventSystem.getBonusPerSecond();
+                const totalPerSecond = this.stats.perSecond + eventBonus;
+                
+                this.count += totalPerSecond;
+                this.stats.totalFlowers += totalPerSecond;
+                
+                this.updateDisplay();
+                this.updateStatsDisplay();
+                this.saveCount();
+                this.saveStats();
+                
+                // Check achievements
+                this.achievementSystem.checkAchievements(this.stats.totalClicks, this.stats.totalFlowers);
+            }
+        }, 1000); // Elke seconde
     }
     
     // Stats methods
@@ -384,6 +810,9 @@ class SimpleCookieClicker {
         
         // Reset achievements
         this.achievementSystem.resetAchievements();
+        
+        // Reset events
+        this.eventSystem.resetEvents();
         
         // Clear localStorage
         localStorage.removeItem('sunflowerCount');
