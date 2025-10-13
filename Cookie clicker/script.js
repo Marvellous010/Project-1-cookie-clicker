@@ -237,7 +237,7 @@ class GameEvent {
 // Gouden Uur Event - Dubbele zonnebloemen voor clicks
 class GoldenHourEvent extends GameEvent {
     constructor() {
-        super('golden-hour', 'Gouden Uur', '🌅', 'Dubbele zonnebloemen voor alle clicks!', 50, 60, 300);
+        super('golden-hour', 'Gouden Uur', '🌅', 'Dubbele zonnebloemen voor alle clicks!', 50, 15, 300);
         this.multiplier = 2;
     }
 
@@ -257,7 +257,7 @@ class GoldenHourEvent extends GameEvent {
 // Bijenzwerm Event - Extra zonnebloemen per seconde
 class BeeSwarmEvent extends GameEvent {
     constructor() {
-        super('bee-swarm', 'Bijenzwerm', '🐝', '+10 zonnebloemen per seconde!', 150, 45, 400);
+        super('bee-swarm', 'Bijenzwerm', '🐝', '+10 zonnebloemen per seconde!', 150, 15, 400);
         this.bonusPerSecond = 10;
     }
 
@@ -277,7 +277,7 @@ class BeeSwarmEvent extends GameEvent {
 // Regenboog Boost Event - 5x click multiplier
 class RainbowBoostEvent extends GameEvent {
     constructor() {
-        super('rainbow-boost', 'Regenboog Boost', '🌈', '5x click multiplier + extra geluk!', 300, 30, 600);
+        super('rainbow-boost', 'Regenboog Boost', '🌈', '5x click multiplier + extra geluk!', 300, 15, 600);
         this.multiplier = 5;
     }
 
@@ -297,7 +297,7 @@ class RainbowBoostEvent extends GameEvent {
 // Meteorenregen Event - Willekeurige zonnebloem bonuses
 class MeteorShowerEvent extends GameEvent {
     constructor() {
-        super('meteor-shower', 'Meteorenregen', '☄️', 'Willekeurige zonnebloem explosies!', 500, 90, 800);
+        super('meteor-shower', 'Meteorenregen', '☄️', 'Willekeurige zonnebloem explosies!', 500, 15, 800);
     }
 
     onActivate() {
@@ -313,7 +313,7 @@ class MeteorShowerEvent extends GameEvent {
 // Fee Bezoek Event - Alle upgrades 50% goedkoper
 class FairyVisitEvent extends GameEvent {
     constructor() {
-        super('fairy-visit', 'Fee Bezoek', '🧚‍♀️', 'Alle upgrades 50% goedkoper!', 750, 120, 1000);
+        super('fairy-visit', 'Fee Bezoek', '🧚‍♀️', 'Alle upgrades 50% goedkoper!', 750, 15, 1000);
         this.discount = 0.5;
     }
 
@@ -500,6 +500,321 @@ class EventSystem {
     }
 }
 
+// Theme System Class
+class ThemeSystem {
+    constructor(game) {
+        this.game = game;
+        this.themes = {
+            'storm': { 
+                name: 'Storm', 
+                cost: 100, 
+                unlocked: false,
+                icon: '⛈️'
+            },
+            'night': { 
+                name: 'Nacht', 
+                cost: 250, 
+                unlocked: false,
+                icon: '🌙'
+            },
+            'autumn': { 
+                name: 'Herfst', 
+                cost: 500, 
+                unlocked: false,
+                icon: '🍂'
+            }
+        };
+        this.currentTheme = 'default';
+        this.loadThemeData();
+        this.setupThemeListeners();
+    }
+
+    checkUnlocks() {
+        let hasNewUnlock = false;
+        
+        Object.entries(this.themes).forEach(([themeId, theme]) => {
+            if (!theme.unlocked && this.game.count >= theme.cost) {
+                // Theme kan nu gekocht worden - update UI
+                this.updateThemeUI(themeId);
+            }
+        });
+    }
+
+    updateThemeUI(themeId = null) {
+        if (themeId) {
+            // Update specifiek thema
+            const unlockItem = document.getElementById(`${themeId}-unlock`);
+            const purchaseBtn = unlockItem?.querySelector('.purchase-btn');
+            
+            if (unlockItem && purchaseBtn) {
+                if (this.themes[themeId].unlocked) {
+                    // Thema is al gekocht
+                    unlockItem.classList.add('purchased');
+                    purchaseBtn.textContent = 'Gekocht';
+                    purchaseBtn.disabled = true;
+                    
+                    // Unlock het thema in de selector
+                    const themeInput = document.getElementById(`theme-${themeId}`);
+                    const themeLock = document.querySelector(`.theme-${themeId}-option .theme-lock`);
+                    
+                    if (themeInput) {
+                        themeInput.classList.remove('theme-locked');
+                        themeInput.disabled = false;
+                    }
+                    if (themeLock) {
+                        themeLock.style.display = 'none';
+                    }
+                } else if (this.game.count >= this.themes[themeId].cost) {
+                    // Thema kan gekocht worden
+                    purchaseBtn.disabled = false;
+                    unlockItem.classList.add('affordable');
+                } else {
+                    // Niet genoeg geld
+                    purchaseBtn.disabled = true;
+                    unlockItem.classList.remove('affordable');
+                }
+            }
+        } else {
+            // Update alle themas
+            Object.keys(this.themes).forEach(id => this.updateThemeUI(id));
+        }
+    }
+
+    purchaseTheme(themeId) {
+        const theme = this.themes[themeId];
+        
+        if (!theme) {
+            console.error(`Thema ${themeId} bestaat niet`);
+            return false;
+        }
+
+        if (theme.unlocked) {
+            console.log(`Thema ${theme.name} is al gekocht`);
+            return false;
+        }
+
+        if (this.game.count < theme.cost) {
+            console.log(`Niet genoeg zonnebloemen voor ${theme.name}. Nodig: ${theme.cost}, Heb: ${this.game.count}`);
+            return false;
+        }
+
+        // Koop het thema
+        this.game.count -= theme.cost;
+        theme.unlocked = true;
+        this.game.stats.upgradesBought++;
+
+        // Update displays
+        this.game.updateDisplay();
+        this.game.updateStatsDisplay();
+        this.updateThemeUI(themeId);
+        
+        // Save data
+        this.game.saveCount();
+        this.game.saveStats();
+        this.saveThemeData();
+
+        // Toon notificatie
+        this.showThemeUnlockNotification(theme);
+
+        console.log(`Thema ${theme.name} gekocht voor ${theme.cost} zonnebloemen!`);
+        return true;
+    }
+
+    showThemeUnlockNotification(theme) {
+        const notification = document.getElementById('achievementNotification');
+        const nameElement = document.getElementById('notificationName');
+        
+        if (notification && nameElement) {
+            nameElement.textContent = `Thema Gekocht: ${theme.name} ${theme.icon}`;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+    }
+
+    setupThemeListeners() {
+        // Luister naar thema wijzigingen
+        const themeInputs = document.querySelectorAll('input[name="theme"]');
+        themeInputs.forEach(input => {
+            input.addEventListener('change', (e) => {
+                if (e.target.checked) {
+                    const themeId = e.target.id.replace('theme-', '');
+                    
+                    // Controleer of het thema unlocked is (default is altijd unlocked)
+                    if (themeId === 'default' || (this.themes[themeId] && this.themes[themeId].unlocked)) {
+                        this.currentTheme = themeId;
+                        this.saveThemeData();
+                    } else {
+                        // Thema is vergrendeld, ga terug naar vorige thema
+                        e.target.checked = false;
+                        const currentThemeInput = document.getElementById(`theme-${this.currentTheme}`);
+                        if (currentThemeInput) {
+                            currentThemeInput.checked = true;
+                        }
+                        
+                        // Toon melding dat thema vergrendeld is
+                        const theme = this.themes[themeId];
+                        if (theme) {
+                            console.log(`Thema ${theme.name} is nog vergrendeld! Kost: ${theme.cost} zonnebloemen`);
+                        }
+                    }
+                }
+            });
+            
+            // Voorkom dat vergrendelde themas geklikt kunnen worden
+            input.addEventListener('click', (e) => {
+                const themeId = e.target.id.replace('theme-', '');
+                if (themeId !== 'default' && (!this.themes[themeId] || !this.themes[themeId].unlocked)) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+        });
+    }
+
+    saveThemeData() {
+        const saveData = {
+            themes: {},
+            currentTheme: this.currentTheme
+        };
+        
+        Object.entries(this.themes).forEach(([id, theme]) => {
+            saveData.themes[id] = {
+                unlocked: theme.unlocked
+            };
+        });
+        
+        localStorage.setItem('themeData', JSON.stringify(saveData));
+    }
+
+    loadThemeData() {
+        // Eerst alle themas vergrendelen
+        this.initializeLockedThemes();
+        
+        const saved = localStorage.getItem('themeData');
+        if (saved) {
+            try {
+                const saveData = JSON.parse(saved);
+                
+                // Laad thema unlock status
+                if (saveData.themes) {
+                    Object.entries(saveData.themes).forEach(([id, data]) => {
+                        if (this.themes[id]) {
+                            this.themes[id].unlocked = data.unlocked || false;
+                        }
+                    });
+                }
+                
+                // Laad huidig thema
+                if (saveData.currentTheme) {
+                    this.currentTheme = saveData.currentTheme;
+                    
+                    // Stel het thema in alleen als het unlocked is
+                    const themeInput = document.getElementById(`theme-${this.currentTheme}`);
+                    if (themeInput && (this.currentTheme === 'default' || this.themes[this.currentTheme]?.unlocked)) {
+                        themeInput.checked = true;
+                    } else {
+                        // Als het opgeslagen thema niet unlocked is, ga terug naar default
+                        this.currentTheme = 'default';
+                        const defaultTheme = document.getElementById('theme-default');
+                        if (defaultTheme) {
+                            defaultTheme.checked = true;
+                        }
+                    }
+                }
+                
+                // Update UI na laden
+                setTimeout(() => {
+                    this.updateThemeUI();
+                }, 100);
+                
+            } catch (error) {
+                console.error('Fout bij laden thema data:', error);
+                this.initializeLockedThemes();
+            }
+        } else {
+            // Geen opgeslagen data, zorg ervoor dat alles vergrendeld is
+            this.initializeLockedThemes();
+        }
+    }
+
+    initializeLockedThemes() {
+        // Zorg ervoor dat alle themas vergrendeld zijn bij start
+        Object.keys(this.themes).forEach(themeId => {
+            const themeInput = document.getElementById(`theme-${themeId}`);
+            const themeLock = document.querySelector(`.theme-${themeId}-option .theme-lock`);
+            
+            if (themeInput) {
+                themeInput.disabled = true;
+                themeInput.checked = false;
+                themeInput.classList.add('theme-locked');
+            }
+            if (themeLock) {
+                themeLock.style.display = 'block';
+            }
+        });
+        
+        // Zorg ervoor dat default thema geselecteerd is
+        const defaultTheme = document.getElementById('theme-default');
+        if (defaultTheme) {
+            defaultTheme.checked = true;
+        }
+    }
+
+    resetThemes() {
+        // Reset alle themas naar locked
+        Object.values(this.themes).forEach(theme => {
+            theme.unlocked = false;
+        });
+        
+        this.currentTheme = 'default';
+        
+        // Reset UI
+        const defaultTheme = document.getElementById('theme-default');
+        if (defaultTheme) {
+            defaultTheme.checked = true;
+        }
+        
+        // Lock alle themas weer
+        Object.keys(this.themes).forEach(themeId => {
+            const themeInput = document.getElementById(`theme-${themeId}`);
+            const themeLock = document.querySelector(`.theme-${themeId}-option .theme-lock`);
+            const unlockItem = document.getElementById(`${themeId}-unlock`);
+            
+            if (themeInput) {
+                themeInput.classList.add('theme-locked');
+                themeInput.disabled = true;
+                themeInput.checked = false;
+            }
+            if (themeLock) {
+                themeLock.style.display = 'block';
+            }
+            if (unlockItem) {
+                unlockItem.classList.remove('purchased', 'affordable');
+                const purchaseBtn = unlockItem.querySelector('.purchase-btn');
+                if (purchaseBtn) {
+                    purchaseBtn.textContent = 'Koop';
+                    purchaseBtn.disabled = true;
+                }
+            }
+        });
+        
+        // Verwijder opgeslagen data
+        localStorage.removeItem('themeData');
+    }
+}
+
+// Globale functie voor HTML onclick handlers
+function purchaseTheme(themeId) {
+    if (window.gameInstance && window.gameInstance.themeSystem) {
+        return window.gameInstance.themeSystem.purchaseTheme(themeId);
+    }
+    console.error('Game instance niet gevonden');
+    return false;
+}
+
 class SimpleCookieClicker {
     constructor() {
         this.count = 0;
@@ -521,6 +836,12 @@ class SimpleCookieClicker {
         
         // Event systeem
         this.eventSystem = new EventSystem();
+        
+        // Theme systeem
+        this.themeSystem = new ThemeSystem(this);
+        
+        // Maak game instance globaal beschikbaar voor HTML onclick handlers
+        window.gameInstance = this;
         
         this.init();
     }
@@ -575,6 +896,9 @@ class SimpleCookieClicker {
         
         // Check event unlocks
         this.eventSystem.checkUnlocks(this.stats.totalClicks);
+        
+        // Check theme unlocks
+        this.themeSystem.checkUnlocks();
     }
     
     updateDisplay() {
@@ -618,6 +942,9 @@ class SimpleCookieClicker {
                 
                 // Check achievements
                 this.achievementSystem.checkAchievements(this.stats.totalClicks, this.stats.totalFlowers);
+                
+                // Check theme unlocks
+                this.themeSystem.checkUnlocks();
             }
         }, 1000); // Elke seconde
     }
@@ -813,6 +1140,9 @@ class SimpleCookieClicker {
         
         // Reset events
         this.eventSystem.resetEvents();
+        
+        // Reset themes
+        this.themeSystem.resetThemes();
         
         // Clear localStorage
         localStorage.removeItem('sunflowerCount');
