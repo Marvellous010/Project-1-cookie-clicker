@@ -1,68 +1,277 @@
-// Simpel Achievement Systeem
+// ===== GAME CONFIGURATION =====
+const GAME_CONFIG = {
+    ACHIEVEMENTS: {
+        // Click & Collection Achievements
+        'first-click': { name: 'Eerste Klik', description: 'Klik voor de eerste keer', icon: '👆', requirement: { type: 'clicks', value: 1 } },
+        'hundred-club': { name: 'Honderd Club', description: 'Verzamel 100 zonnebloemen', icon: '💯', requirement: { type: 'flowers', value: 100 } },
+        'click-master': { name: 'Klik Meester', description: 'Klik 500 keer', icon: '🖱️', requirement: { type: 'clicks', value: 500 } },
+        'thousand-stars': { name: 'Duizend Sterren', description: 'Verzamel 1000 zonnebloemen', icon: '⭐', requirement: { type: 'flowers', value: 1000 } },
+        'sunflower-tycoon': { name: 'Zonnebloem Magnaat', description: 'Verzamel 5000 zonnebloemen', icon: '🌻', requirement: { type: 'flowers', value: 5000 } },
+        'click-king': { name: 'Klik Koning', description: 'Klik 2000 keer', icon: '👑', requirement: { type: 'clicks', value: 2000 } },
+        'mega-collector': { name: 'Mega Verzamelaar', description: 'Verzamel 10000 zonnebloemen', icon: '🏆', requirement: { type: 'flowers', value: 10000 } },
+        'click-legend': { name: 'Klik Legende', description: 'Klik 5000 keer', icon: '🌟', requirement: { type: 'clicks', value: 5000 } },
+        
+        // Higher Milestone Achievements
+        'sunflower-emperor': { name: 'Zonnebloem Keizer', description: 'Verzamel 25000 zonnebloemen', icon: '👑', requirement: { type: 'flowers', value: 25000 } },
+        'click-god': { name: 'Klik God', description: 'Klik 10000 keer', icon: '⚡', requirement: { type: 'clicks', value: 10000 } },
+        'ultimate-collector': { name: 'Ultieme Verzamelaar', description: 'Verzamel 50000 zonnebloemen', icon: '💎', requirement: { type: 'flowers', value: 50000 } },
+        'infinity-clicker': { name: 'Oneindige Klikker', description: 'Klik 25000 keer', icon: '∞', requirement: { type: 'clicks', value: 25000 } },
+        
+        // Upgrade Achievements
+        'first-upgrade': { name: 'Eerste Upgrade', description: 'Koop je eerste upgrade', icon: '🛒', requirement: { type: 'upgrades', value: 1 } },
+        'upgrade-enthusiast': { name: 'Upgrade Liefhebber', description: 'Koop 5 upgrades', icon: '📈', requirement: { type: 'upgrades', value: 5 } },
+        'upgrade-master': { name: 'Upgrade Meester', description: 'Koop 15 upgrades', icon: '🎯', requirement: { type: 'upgrades', value: 15 } },
+        'upgrade-collector': { name: 'Upgrade Verzamelaar', description: 'Koop 25 upgrades', icon: '🏪', requirement: { type: 'upgrades', value: 25 } },
+        
+        // Theme Achievements
+        'style-explorer': { name: 'Stijl Ontdekkingsreiziger', description: 'Unlock je eerste thema', icon: '🎨', requirement: { type: 'themes', value: 1 } },
+        'theme-collector': { name: 'Thema Verzamelaar', description: 'Unlock 2 verschillende themas', icon: '🌈', requirement: { type: 'themes', value: 2 } },
+        'fashion-master': { name: 'Mode Meester', description: 'Unlock alle themas', icon: '✨', requirement: { type: 'themes', value: 3 } },
+        
+        // Event Achievements
+        'event-starter': { name: 'Event Starter', description: 'Activeer je eerste event', icon: '🎉', requirement: { type: 'events', value: 1 } },
+        'event-enthusiast': { name: 'Event Liefhebber', description: 'Activeer 5 events', icon: '🎊', requirement: { type: 'events', value: 5 } },
+        'event-master': { name: 'Event Meester', description: 'Activeer 15 events', icon: '🎆', requirement: { type: 'events', value: 15 } },
+        'golden-hour-fan': { name: 'Gouden Uur Fan', description: 'Activeer Gouden Uur 3 keer', icon: '🌅', requirement: { type: 'golden-hour', value: 3 } },
+        'bee-friend': { name: 'Bijenvriend', description: 'Activeer Bijenzwerm 3 keer', icon: '🐝', requirement: { type: 'bee-swarm', value: 3 } },
+        
+        // Special Achievements
+        'speed-demon': { name: 'Snelheidsduivel', description: 'Verzamel 1000 zonnebloemen in 5 minuten', icon: '💨', requirement: { type: 'speed', value: 1000 } },
+        'efficiency-expert': { name: 'Efficiëntie Expert', description: 'Bereik 50 zonnebloemen per seconde', icon: '⚙️', requirement: { type: 'perSecond', value: 50 } },
+        'patient-gardener': { name: 'Geduldige Tuinier', description: 'Speel 30 minuten', icon: '🕐', requirement: { type: 'time', value: 30 } },
+        'dedicated-farmer': { name: 'Toegewijde Boer', description: 'Speel 2 uur', icon: '👨‍🌾', requirement: { type: 'time', value: 120 } }
+    },
+    
+    THEMES: {
+        'storm': { name: 'Storm', cost: 100, icon: '⛈️' },
+        'night': { name: 'Nacht', cost: 250, icon: '🌙' },
+        'autumn': { name: 'Herfst', cost: 500, icon: '🍂' }
+    },
+    
+    EVENTS: {
+        'golden-hour': { name: 'Gouden Uur', icon: '🌅', description: 'Dubbele zonnebloemen voor alle clicks!', cost: 200, duration: 15, cooldown: 300 },
+        'bee-swarm': { name: 'Bijenzwerm', icon: '🐝', description: '+10 zonnebloemen per seconde!', cost: 600, duration: 15, cooldown: 400 },
+        'rainbow-boost': { name: 'Regenboog Boost', icon: '🌈', description: '5x click multiplier + extra geluk!', cost: 1200, duration: 15, cooldown: 600 },
+        'meteor-shower': { name: 'Meteorenregen', icon: '☄️', description: 'Willekeurige zonnebloem explosies!', cost: 2500, duration: 15, cooldown: 800 },
+        'fairy-visit': { name: 'Fee Bezoek', icon: '🧚‍♀️', description: 'Alle upgrades 50% goedkoper!', cost: 5000, duration: 15, cooldown: 1000 }
+    }
+};
+
+// ===== UTILITY CLASSES =====
+
+/**
+ * Storage utility class for handling localStorage operations
+ */
+class GameStorage {
+    static save(key, data) {
+        try {
+            localStorage.setItem(key, JSON.stringify(data));
+            return true;
+        } catch (error) {
+            console.error(`Error saving ${key}:`, error);
+            return false;
+        }
+    }
+    
+    static load(key, defaultValue = null) {
+        try {
+            const saved = localStorage.getItem(key);
+            return saved ? JSON.parse(saved) : defaultValue;
+        } catch (error) {
+            console.error(`Error loading ${key}:`, error);
+            return defaultValue;
+        }
+    }
+    
+    static remove(key) {
+        try {
+            localStorage.removeItem(key);
+            return true;
+        } catch (error) {
+            console.error(`Error removing ${key}:`, error);
+            return false;
+        }
+    }
+    
+    static clear() {
+        try {
+            localStorage.clear();
+            return true;
+        } catch (error) {
+            console.error('Error clearing storage:', error);
+            return false;
+        }
+    }
+}
+
+/**
+ * Game statistics tracking class
+ */
+class GameStats {
+    constructor() {
+        this.totalClicks = 0;
+        this.totalFlowers = 0;
+        this.upgradesBought = 0;
+        this.perClick = 1;
+        this.perSecond = 0;
+        this.gameStartTime = Date.now();
+    }
+    
+    save() {
+        GameStorage.save('gameStats', {
+            totalClicks: this.totalClicks,
+            totalFlowers: this.totalFlowers,
+            upgradesBought: this.upgradesBought,
+            perClick: this.perClick,
+            perSecond: this.perSecond,
+            gameStartTime: this.gameStartTime
+        });
+    }
+    
+    load() {
+        const saved = GameStorage.load('gameStats');
+        if (saved) {
+            Object.assign(this, saved);
+        }
+    }
+    
+    reset() {
+        this.totalClicks = 0;
+        this.totalFlowers = 0;
+        this.upgradesBought = 0;
+        this.perClick = 1;
+        this.perSecond = 0;
+        this.gameStartTime = Date.now();
+        this.save();
+    }
+    
+    getPlayTimeMinutes() {
+        return (Date.now() - this.gameStartTime) / 1000 / 60;
+    }
+}
+
+/**
+ * Individual Achievement class
+ */
+class Achievement {
+    constructor(id, config) {
+        this.id = id;
+        this.name = config.name;
+        this.description = config.description;
+        this.icon = config.icon;
+        this.requirement = config.requirement;
+        this.unlocked = false;
+    }
+    
+    checkRequirement(stats, game) {
+        if (this.unlocked) return false;
+        
+        switch (this.requirement.type) {
+            case 'clicks':
+                return stats.totalClicks >= this.requirement.value;
+            case 'flowers':
+                return stats.totalFlowers >= this.requirement.value;
+            case 'upgrades':
+                return stats.upgradesBought >= this.requirement.value;
+            case 'themes':
+                if (!game.themeSystem) return false;
+                const unlockedThemes = Object.values(game.themeSystem.themes).filter(theme => theme.unlocked).length;
+                return unlockedThemes >= this.requirement.value;
+            case 'events':
+                if (!game.achievementSystem.eventStats) return false;
+                return game.achievementSystem.eventStats.totalEventsActivated >= this.requirement.value;
+            case 'golden-hour':
+                if (!game.achievementSystem.eventStats) return false;
+                return game.achievementSystem.eventStats.goldenHourActivated >= this.requirement.value;
+            case 'bee-swarm':
+                if (!game.achievementSystem.eventStats) return false;
+                return game.achievementSystem.eventStats.beeSwarmActivated >= this.requirement.value;
+            case 'perSecond':
+                return stats.perSecond >= this.requirement.value;
+            case 'time':
+                return stats.getPlayTimeMinutes() >= this.requirement.value;
+            case 'speed':
+                // This would need special handling for speed achievements
+                return false;
+            default:
+                return false;
+        }
+    }
+    
+    unlock() {
+        this.unlocked = true;
+    }
+}
+
+// ===== ACHIEVEMENT SYSTEM =====
+
+/**
+ * Achievement system with improved organization
+ */
 class AchievementSystem {
     constructor() {
-        this.achievements = {
-            'first-click': { name: 'Eerste Klik', description: 'Klik voor de eerste keer', icon: '👆', unlocked: false },
-            'hundred-club': { name: 'Honderd Club', description: 'Verzamel 100 zonnebloemen', icon: '💯', unlocked: false },
-            'click-master': { name: 'Klik Meester', description: 'Klik 500 keer', icon: '🖱️', unlocked: false },
-            'thousand-stars': { name: 'Duizend Sterren', description: 'Verzamel 1000 zonnebloemen', icon: '⭐', unlocked: false },
-            'sunflower-tycoon': { name: 'Zonnebloem Magnaat', description: 'Verzamel 5000 zonnebloemen', icon: '🌻', unlocked: false },
-            'click-king': { name: 'Klik Koning', description: 'Klik 2000 keer', icon: '👑', unlocked: false },
-            'mega-collector': { name: 'Mega Verzamelaar', description: 'Verzamel 10000 zonnebloemen', icon: '🏆', unlocked: false },
-            'click-legend': { name: 'Klik Legende', description: 'Klik 5000 keer', icon: '🌟', unlocked: false }
+        this.achievements = {};
+        this.eventStats = {
+            totalEventsActivated: 0,
+            goldenHourActivated: 0,
+            beeSwarmActivated: 0,
+            rainbowBoostActivated: 0,
+            meteorShowerActivated: 0,
+            fairyVisitActivated: 0
         };
-        this.loadAchievements();
-    }
-
-    checkAchievements(totalClicks, totalFlowers) {
-        // Check eerste klik
-        if (!this.achievements['first-click'].unlocked && totalClicks >= 1) {
-            this.unlockAchievement('first-click');
-        }
         
-        // Check honderd club
-        if (!this.achievements['hundred-club'].unlocked && totalFlowers >= 100) {
-            this.unlockAchievement('hundred-club');
-        }
-        
-        // Check klik meester
-        if (!this.achievements['click-master'].unlocked && totalClicks >= 500) {
-            this.unlockAchievement('click-master');
-        }
-        
-        // Check duizend sterren
-        if (!this.achievements['thousand-stars'].unlocked && totalFlowers >= 1000) {
-            this.unlockAchievement('thousand-stars');
-        }
-        
-        // Check zonnebloem magnaat
-        if (!this.achievements['sunflower-tycoon'].unlocked && totalFlowers >= 5000) {
-            this.unlockAchievement('sunflower-tycoon');
-        }
-        
-        // Check klik koning
-        if (!this.achievements['click-king'].unlocked && totalClicks >= 2000) {
-            this.unlockAchievement('click-king');
-        }
-        
-        // Check mega verzamelaar
-        if (!this.achievements['mega-collector'].unlocked && totalFlowers >= 10000) {
-            this.unlockAchievement('mega-collector');
-        }
-        
-        // Check klik legende
-        if (!this.achievements['click-legend'].unlocked && totalClicks >= 5000) {
-            this.unlockAchievement('click-legend');
+        this.initializeAchievements();
+        this.load();
+    } 
+    
+    initializeAchievements() {
+        for (const [id, config] of Object.entries(GAME_CONFIG.ACHIEVEMENTS)) {
+            this.achievements[id] = new Achievement(id, config);
         }
     }
-
+    
+    checkAchievements(stats, game) {
+        for (const achievement of Object.values(this.achievements)) {
+            if (achievement.checkRequirement(stats, game)) {
+                this.unlockAchievement(achievement.id);
+            }
+        }
+    }
+    
     unlockAchievement(achievementId) {
-        this.achievements[achievementId].unlocked = true;
-        this.showNotification(this.achievements[achievementId]);
+        const achievement = this.achievements[achievementId];
+        if (!achievement || achievement.unlocked) return;
+        
+        achievement.unlock();
+        this.showNotification(achievement);
         this.updateUI();
-        this.saveAchievements();
+        this.save();
     }
-
+    
+    trackEventActivation(eventId) {
+        this.eventStats.totalEventsActivated++;
+        
+        switch(eventId) {
+            case 'golden-hour':
+                this.eventStats.goldenHourActivated++;
+                break;
+            case 'bee-swarm':
+                this.eventStats.beeSwarmActivated++;
+                break;
+            case 'rainbow-boost':
+                this.eventStats.rainbowBoostActivated++;
+                break;
+            case 'meteor-shower':
+                this.eventStats.meteorShowerActivated++;
+                break;
+            case 'fairy-visit':
+                this.eventStats.fairyVisitActivated++;
+                break;
+        }
+        
+        this.saveEventStats();
+    }
+    
     showNotification(achievement) {
         const notification = document.getElementById('achievementNotification');
         const nameElement = document.getElementById('notificationName');
@@ -76,22 +285,20 @@ class AchievementSystem {
             }, 3000);
         }
     }
-
+    
     updateUI() {
-        for (let id in this.achievements) {
-            const element = document.getElementById(`achievement-${id}`);
+        for (const achievement of Object.values(this.achievements)) {
+            const element = document.getElementById(`achievement-${achievement.id}`);
             if (element) {
                 const statusElement = element.querySelector('.achievement-status');
                 
-                if (this.achievements[id].unlocked) {
-                    // Set as achieved
+                if (achievement.unlocked) {
                     element.classList.add('achieved');
                     element.setAttribute('data-achieved', 'true');
                     if (statusElement) {
                         statusElement.textContent = '✅';
                     }
                 } else {
-                    // Set as not achieved
                     element.classList.remove('achieved');
                     element.setAttribute('data-achieved', 'false');
                     if (statusElement) {
@@ -101,71 +308,116 @@ class AchievementSystem {
             }
         }
     }
-
-    saveAchievements() {
+    
+    save() {
         const saveData = {};
-        for (let id in this.achievements) {
-            saveData[id] = this.achievements[id].unlocked;
+        for (const [id, achievement] of Object.entries(this.achievements)) {
+            saveData[id] = achievement.unlocked;
         }
-        localStorage.setItem('achievements', JSON.stringify(saveData));
+        GameStorage.save('achievements', saveData);
     }
-
-    loadAchievements() {
-        const saved = localStorage.getItem('achievements');
-        if (saved) {
-            const saveData = JSON.parse(saved);
-            for (let id in saveData) {
-                if (this.achievements[id]) {
-                    this.achievements[id].unlocked = saveData[id];
-                }
+    
+    saveEventStats() {
+        GameStorage.save('eventStats', this.eventStats);
+    }
+    
+    load() {
+        // Load achievements
+        const achievementData = GameStorage.load('achievements', {});
+        for (const [id, unlocked] of Object.entries(achievementData)) {
+            if (this.achievements[id]) {
+                this.achievements[id].unlocked = unlocked;
             }
-            this.updateUI();
         }
-    }
-
-    resetAchievements() {
-        for (let id in this.achievements) {
-            this.achievements[id].unlocked = false;
-        }
+        
+        // Load event stats
+        const eventData = GameStorage.load('eventStats', {});
+        this.eventStats = { ...this.eventStats, ...eventData };
+        
         this.updateUI();
-        localStorage.removeItem('achievements');
+    }
+    
+    reset() {
+        for (const achievement of Object.values(this.achievements)) {
+            achievement.unlocked = false;
+        }
+        
+        this.eventStats = {
+            totalEventsActivated: 0,
+            goldenHourActivated: 0,
+            beeSwarmActivated: 0,
+            rainbowBoostActivated: 0,
+            meteorShowerActivated: 0,
+            fairyVisitActivated: 0
+        };
+        
+        this.updateUI();
+        GameStorage.remove('achievements');
+        GameStorage.remove('eventStats');
     }
 }
 
-// Basis Event Class
+// ===== EVENT SYSTEM =====
+
+/**
+ * Base Event class with improved structure
+ */
 class GameEvent {
-    constructor(id, name, icon, description, requiredClicks, duration, cooldown) {
+    constructor(id, config) {
         this.id = id;
-        this.name = name;
-        this.icon = icon;
-        this.description = description;
-        this.requiredClicks = requiredClicks;
-        this.duration = duration; // in seconds
-        this.cooldown = cooldown; // in seconds
+        this.name = config.name;
+        this.icon = config.icon;
+        this.description = config.description;
+        this.requiredFlowers = config.cost;
+        this.duration = config.duration;
+        this.cooldown = config.cooldown;
         this.isActive = false;
         this.isUnlocked = false;
         this.timeRemaining = 0;
         this.cooldownRemaining = 0;
+        
+        // DOM elements
         this.element = document.getElementById(`${id}-event`);
         this.timerElement = document.getElementById(`${id}-timer`);
         this.progressElement = document.getElementById(`${id}-progress`);
     }
-
+    
     unlock() {
         this.isUnlocked = true;
         this.updateUI();
     }
-
-    activate() {
-        if (!this.isUnlocked || this.isActive || this.cooldownRemaining > 0) return false;
+    
+    activate(game) {
+        if (!this.canActivate(game)) return false;
+        
+        // Deduct cost
+        if (game) {
+            game.count -= this.requiredFlowers;
+            game.updateDisplay();
+            game.saveCount();
+        }
         
         this.isActive = true;
         this.timeRemaining = this.duration;
         this.updateUI();
         this.onActivate();
+        
+        // Track for achievements
+        if (game && game.achievementSystem) {
+            game.achievementSystem.trackEventActivation(this.id);
+        }
+        
         return true;
     }
-
+    
+    canActivate(game) {
+        return this.isUnlocked && 
+               !this.isActive && 
+               this.cooldownRemaining <= 0 && 
+               game && 
+               game.count >= this.requiredFlowers;
+    }
+    
     deactivate() {
         if (!this.isActive) return;
         
@@ -175,7 +427,7 @@ class GameEvent {
         this.updateUI();
         this.onDeactivate();
     }
-
+    
     update(deltaTime) {
         if (this.isActive && this.timeRemaining > 0) {
             this.timeRemaining -= deltaTime;
@@ -193,7 +445,7 @@ class GameEvent {
             this.updateTimer();
         }
     }
-
+    
     updateUI() {
         if (!this.element) return;
 
@@ -211,7 +463,7 @@ class GameEvent {
             timerElement.style.display = this.isUnlocked ? 'block' : 'none';
         }
     }
-
+    
     updateTimer() {
         if (!this.timerElement) return;
 
@@ -227,174 +479,171 @@ class GameEvent {
             this.timerElement.textContent = 'Klaar!';
         }
     }
-
-    // Override deze methods in subclasses
+    
+    // Override in subclasses
     onActivate() {}
     onDeactivate() {}
     getEffect() { return 1; }
 }
 
-// Gouden Uur Event - Dubbele zonnebloemen voor clicks
+/**
+ * Specific event implementations
+ */
 class GoldenHourEvent extends GameEvent {
     constructor() {
-        super('golden-hour', 'Gouden Uur', '🌅', 'Dubbele zonnebloemen voor alle clicks!', 50, 15, 300);
+        super('golden-hour', GAME_CONFIG.EVENTS['golden-hour']);
         this.multiplier = 2;
     }
-
+    
     onActivate() {
         console.log('Gouden Uur geactiveerd! Dubbele zonnebloemen voor clicks!');
     }
-
+    
     onDeactivate() {
         console.log('Gouden Uur beëindigd.');
     }
-
+    
     getClickMultiplier() {
         return this.isActive ? this.multiplier : 1;
     }
 }
 
-// Bijenzwerm Event - Extra zonnebloemen per seconde
 class BeeSwarmEvent extends GameEvent {
     constructor() {
-        super('bee-swarm', 'Bijenzwerm', '🐝', '+10 zonnebloemen per seconde!', 150, 15, 400);
+        super('bee-swarm', GAME_CONFIG.EVENTS['bee-swarm']);
         this.bonusPerSecond = 10;
     }
-
+    
     onActivate() {
         console.log('Bijenzwerm geactiveerd! +10 zonnebloemen per seconde!');
     }
-
+    
     onDeactivate() {
         console.log('Bijenzwerm beëindigd.');
     }
-
+    
     getBonusPerSecond() {
         return this.isActive ? this.bonusPerSecond : 0;
     }
 }
 
-// Regenboog Boost Event - 5x click multiplier
 class RainbowBoostEvent extends GameEvent {
     constructor() {
-        super('rainbow-boost', 'Regenboog Boost', '🌈', '5x click multiplier + extra geluk!', 300, 15, 600);
+        super('rainbow-boost', GAME_CONFIG.EVENTS['rainbow-boost']);
         this.multiplier = 5;
     }
-
+    
     onActivate() {
         console.log('Regenboog Boost geactiveerd! 5x click multiplier!');
     }
-
+    
     onDeactivate() {
         console.log('Regenboog Boost beëindigd.');
     }
-
+    
     getClickMultiplier() {
         return this.isActive ? this.multiplier : 1;
     }
 }
 
-// Meteorenregen Event - Willekeurige zonnebloem bonuses
 class MeteorShowerEvent extends GameEvent {
     constructor() {
-        super('meteor-shower', 'Meteorenregen', '☄️', 'Willekeurige zonnebloem explosies!', 500, 15, 800);
+        super('meteor-shower', GAME_CONFIG.EVENTS['meteor-shower']);
     }
-
+    
     onActivate() {
         console.log('Meteorenregen geactiveerd! Willekeurige bonuses!');
     }
-
+    
     onDeactivate() {
         console.log('Meteorenregen beëindigd.');
     }
-
 }
 
-// Fee Bezoek Event - Alle upgrades 50% goedkoper
 class FairyVisitEvent extends GameEvent {
     constructor() {
-        super('fairy-visit', 'Fee Bezoek', '🧚‍♀️', 'Alle upgrades 50% goedkoper!', 750, 15, 1000);
+        super('fairy-visit', GAME_CONFIG.EVENTS['fairy-visit']);
         this.discount = 0.5;
     }
-
+    
     onActivate() {
         console.log('Fee Bezoek geactiveerd! Alle upgrades 50% goedkoper!');
     }
-
+    
     onDeactivate() {
         console.log('Fee Bezoek beëindigd.');
     }
-
+    
     getUpgradeDiscount() {
         return this.isActive ? this.discount : 0;
     }
 }
 
-// Event System Manager
+/**
+ * Event System Manager with improved organization
+ */
 class EventSystem {
-    constructor() {
-        this.events = {
+    constructor(game) {
+        this.game = game;
+        this.events = this.createEvents();
+        this.lastUpdate = Date.now();
+        
+        this.setupEventListeners();
+        this.startUpdateLoop();
+    }
+    
+    createEvents() {
+        return {
             'golden-hour': new GoldenHourEvent(),
             'bee-swarm': new BeeSwarmEvent(),
             'rainbow-boost': new RainbowBoostEvent(),
             'meteor-shower': new MeteorShowerEvent(),
             'fairy-visit': new FairyVisitEvent()
         };
-        
-        this.lastUpdate = Date.now();
-        this.setupEventListeners();
-        this.startUpdateLoop();
     }
-
+    
     setupEventListeners() {
-        // Voeg click listeners toe voor unlocked events
         Object.values(this.events).forEach(event => {
             if (event.element) {
                 event.element.addEventListener('click', () => {
-                    if (event.isUnlocked && !event.isActive && event.cooldownRemaining <= 0) {
-                        event.activate();
+                    if (event.canActivate(this.game)) {
+                        event.activate(this.game);
                     }
                 });
             }
         });
     }
-
-    checkUnlocks(totalClicks) {
+    
+    checkUnlocks(totalFlowers) {
         Object.values(this.events).forEach(event => {
-            if (!event.isUnlocked && totalClicks >= event.requiredClicks) {
+            if (!event.isUnlocked && totalFlowers >= event.requiredFlowers) {
                 event.unlock();
                 this.showEventUnlockNotification(event);
             }
             
-            // Update progress bar
-            this.updateEventProgress(event, totalClicks);
+            this.updateEventProgress(event, totalFlowers);
         });
     }
     
-    updateEventProgress(event, totalClicks) {
-        if (event.progressElement) {
-            let progress = 0;
-            
-            if (event.isActive) {
-                // Toon resterende tijd als progress
-                progress = ((event.duration - event.timeRemaining) / event.duration) * 100;
-            } else if (event.cooldownRemaining > 0) {
-                // Toon cooldown progress
-                progress = ((event.cooldown - event.cooldownRemaining) / event.cooldown) * 100;
-            } else if (!event.isUnlocked) {
-                // Toon unlock progress
-                progress = (totalClicks / event.requiredClicks) * 100;
-            } else {
-                // Event is klaar om geactiveerd te worden
-                progress = 100;
-            }
-            
-            event.progressElement.style.width = Math.min(progress, 100) + '%';
+    updateEventProgress(event, totalFlowers) {
+        if (!event.progressElement) return;
+        
+        let progress = 0;
+        
+        if (event.isActive) {
+            progress = ((event.duration - event.timeRemaining) / event.duration) * 100;
+        } else if (event.cooldownRemaining > 0) {
+            progress = ((event.cooldown - event.cooldownRemaining) / event.cooldown) * 100;
+        } else if (!event.isUnlocked) {
+            progress = (totalFlowers / event.requiredFlowers) * 100;
+        } else {
+            progress = 100;
         }
+        
+        event.progressElement.style.width = Math.min(progress, 100) + '%';
     }
-
+    
     showEventUnlockNotification(event) {
-        // Gebruik bestaande achievement notification systeem
         const notification = document.getElementById('achievementNotification');
         const nameElement = document.getElementById('notificationName');
         
@@ -407,16 +656,15 @@ class EventSystem {
             }, 3000);
         }
     }
-
+    
     startUpdateLoop() {
         const update = () => {
             const now = Date.now();
-            const deltaTime = (now - this.lastUpdate) / 1000; // Convert to seconds
+            const deltaTime = (now - this.lastUpdate) / 1000;
             this.lastUpdate = now;
 
             Object.values(this.events).forEach(event => {
                 event.update(deltaTime);
-                // Update progress voor actieve events
                 if (event.isActive || event.cooldownRemaining > 0) {
                     this.updateEventProgress(event, 0);
                 }
@@ -427,7 +675,7 @@ class EventSystem {
         
         requestAnimationFrame(update);
     }
-
+    
     getClickMultiplier() {
         let multiplier = 1;
         Object.values(this.events).forEach(event => {
@@ -437,7 +685,7 @@ class EventSystem {
         });
         return multiplier;
     }
-
+    
     getBonusPerSecond() {
         let bonus = 0;
         Object.values(this.events).forEach(event => {
@@ -447,7 +695,7 @@ class EventSystem {
         });
         return bonus;
     }
-
+    
     getUpgradeDiscount() {
         let maxDiscount = 0;
         Object.values(this.events).forEach(event => {
@@ -457,9 +705,8 @@ class EventSystem {
         });
         return maxDiscount;
     }
-
-
-    saveEventData() {
+    
+    save() {
         const saveData = {};
         Object.entries(this.events).forEach(([id, event]) => {
             saveData[id] = {
@@ -469,26 +716,23 @@ class EventSystem {
                 cooldownRemaining: event.cooldownRemaining
             };
         });
-        localStorage.setItem('eventData', JSON.stringify(saveData));
+        GameStorage.save('eventData', saveData);
     }
-
-    loadEventData() {
-        const saved = localStorage.getItem('eventData');
-        if (saved) {
-            const saveData = JSON.parse(saved);
-            Object.entries(saveData).forEach(([id, data]) => {
-                if (this.events[id]) {
-                    this.events[id].isUnlocked = data.isUnlocked;
-                    this.events[id].isActive = data.isActive;
-                    this.events[id].timeRemaining = data.timeRemaining || 0;
-                    this.events[id].cooldownRemaining = data.cooldownRemaining || 0;
-                    this.events[id].updateUI();
-                }
-            });
-        }
+    
+    load() {
+        const saveData = GameStorage.load('eventData', {});
+        Object.entries(saveData).forEach(([id, data]) => {
+            if (this.events[id]) {
+                this.events[id].isUnlocked = data.isUnlocked;
+                this.events[id].isActive = data.isActive;
+                this.events[id].timeRemaining = data.timeRemaining || 0;
+                this.events[id].cooldownRemaining = data.cooldownRemaining || 0;
+                this.events[id].updateUI();
+            }
+        });
     }
-
-    resetEvents() {
+    
+    reset() {
         Object.values(this.events).forEach(event => {
             event.isUnlocked = false;
             event.isActive = false;
@@ -496,90 +740,105 @@ class EventSystem {
             event.cooldownRemaining = 0;
             event.updateUI();
         });
-        localStorage.removeItem('eventData');
+        GameStorage.remove('eventData');
     }
 }
 
-// Theme System Class
+// ===== THEME SYSTEM =====
+
+/**
+ * Individual Theme class
+ */
+class Theme {
+    constructor(id, config) {
+        this.id = id;
+        this.name = config.name;
+        this.cost = config.cost;
+        this.icon = config.icon;
+        this.unlocked = false;
+    }
+    
+    unlock() {
+        this.unlocked = true;
+    }
+    
+    canPurchase(sunflowers) {
+        return !this.unlocked && sunflowers >= this.cost;
+    }
+}
+
+/**
+ * Theme System with improved organization
+ */
 class ThemeSystem {
     constructor(game) {
         this.game = game;
-        this.themes = {
-            'storm': { 
-                name: 'Storm', 
-                cost: 100, 
-                unlocked: false,
-                icon: '⛈️'
-            },
-            'night': { 
-                name: 'Nacht', 
-                cost: 250, 
-                unlocked: false,
-                icon: '🌙'
-            },
-            'autumn': { 
-                name: 'Herfst', 
-                cost: 500, 
-                unlocked: false,
-                icon: '🍂'
-            }
-        };
+        this.themes = this.createThemes();
         this.currentTheme = 'default';
-        this.loadThemeData();
+        
+        this.load();
         this.setupThemeListeners();
     }
-
+    
+    createThemes() {
+        const themes = {};
+        for (const [id, config] of Object.entries(GAME_CONFIG.THEMES)) {
+            themes[id] = new Theme(id, config);
+        }
+        return themes;
+    }
+    
     checkUnlocks() {
-        let hasNewUnlock = false;
-        
-        Object.entries(this.themes).forEach(([themeId, theme]) => {
-            if (!theme.unlocked && this.game.count >= theme.cost) {
-                // Theme kan nu gekocht worden - update UI
-                this.updateThemeUI(themeId);
+        Object.values(this.themes).forEach(theme => {
+            if (theme.canPurchase(this.game.count)) {
+                this.updateThemeUI(theme.id);
             }
         });
     }
-
+    
     updateThemeUI(themeId = null) {
         if (themeId) {
-            // Update specifiek thema
-            const unlockItem = document.getElementById(`${themeId}-unlock`);
-            const purchaseBtn = unlockItem?.querySelector('.purchase-btn');
-            
-            if (unlockItem && purchaseBtn) {
-                if (this.themes[themeId].unlocked) {
-                    // Thema is al gekocht
-                    unlockItem.classList.add('purchased');
-                    purchaseBtn.textContent = 'Gekocht';
-                    purchaseBtn.disabled = true;
-                    
-                    // Unlock het thema in de selector
-                    const themeInput = document.getElementById(`theme-${themeId}`);
-                    const themeLock = document.querySelector(`.theme-${themeId}-option .theme-lock`);
-                    
-                    if (themeInput) {
-                        themeInput.classList.remove('theme-locked');
-                        themeInput.disabled = false;
-                    }
-                    if (themeLock) {
-                        themeLock.style.display = 'none';
-                    }
-                } else if (this.game.count >= this.themes[themeId].cost) {
-                    // Thema kan gekocht worden
-                    purchaseBtn.disabled = false;
-                    unlockItem.classList.add('affordable');
-                } else {
-                    // Niet genoeg geld
-                    purchaseBtn.disabled = true;
-                    unlockItem.classList.remove('affordable');
-                }
-            }
+            this.updateSingleThemeUI(themeId);
         } else {
-            // Update alle themas
-            Object.keys(this.themes).forEach(id => this.updateThemeUI(id));
+            Object.keys(this.themes).forEach(id => this.updateSingleThemeUI(id));
         }
     }
-
+    
+    updateSingleThemeUI(themeId) {
+        const theme = this.themes[themeId];
+        const unlockItem = document.getElementById(`${themeId}-unlock`);
+        const purchaseBtn = unlockItem?.querySelector('.purchase-btn');
+        
+        if (unlockItem && purchaseBtn) {
+            if (theme.unlocked) {
+                unlockItem.classList.add('purchased');
+                purchaseBtn.textContent = 'Gekocht';
+                purchaseBtn.disabled = true;
+                
+                this.unlockThemeInSelector(themeId);
+            } else if (theme.canPurchase(this.game.count)) {
+                purchaseBtn.disabled = false;
+                unlockItem.classList.add('affordable');
+            } else {
+                purchaseBtn.disabled = true;
+                unlockItem.classList.remove('affordable');
+            }
+        }
+    }
+    
+    unlockThemeInSelector(themeId) {
+        const themeInput = document.getElementById(`theme-${themeId}`);
+        const themeLock = document.querySelector(`.theme-${themeId}-option .theme-lock`);
+        
+        if (themeInput) {
+            themeInput.classList.remove('theme-locked');
+            themeInput.disabled = false;
+        }
+        if (themeLock) {
+            themeLock.style.display = 'none';
+        }
+    }
+    
     purchaseTheme(themeId) {
         const theme = this.themes[themeId];
         
@@ -593,14 +852,14 @@ class ThemeSystem {
             return false;
         }
 
-        if (this.game.count < theme.cost) {
+        if (!theme.canPurchase(this.game.count)) {
             console.log(`Niet genoeg zonnebloemen voor ${theme.name}. Nodig: ${theme.cost}, Heb: ${this.game.count}`);
             return false;
         }
 
-        // Koop het thema
+        // Purchase theme
         this.game.count -= theme.cost;
-        theme.unlocked = true;
+        theme.unlock();
         this.game.stats.upgradesBought++;
 
         // Update displays
@@ -610,16 +869,16 @@ class ThemeSystem {
         
         // Save data
         this.game.saveCount();
-        this.game.saveStats();
-        this.saveThemeData();
+        this.game.stats.save();
+        this.save();
 
-        // Toon notificatie
+        // Show notification
         this.showThemeUnlockNotification(theme);
 
         console.log(`Thema ${theme.name} gekocht voor ${theme.cost} zonnebloemen!`);
         return true;
     }
-
+    
     showThemeUnlockNotification(theme) {
         const notification = document.getElementById('achievementNotification');
         const nameElement = document.getElementById('notificationName');
@@ -633,28 +892,24 @@ class ThemeSystem {
             }, 3000);
         }
     }
-
+    
     setupThemeListeners() {
-        // Luister naar thema wijzigingen
         const themeInputs = document.querySelectorAll('input[name="theme"]');
         themeInputs.forEach(input => {
             input.addEventListener('change', (e) => {
                 if (e.target.checked) {
                     const themeId = e.target.id.replace('theme-', '');
                     
-                    // Controleer of het thema unlocked is (default is altijd unlocked)
                     if (themeId === 'default' || (this.themes[themeId] && this.themes[themeId].unlocked)) {
                         this.currentTheme = themeId;
-                        this.saveThemeData();
+                        this.save();
                     } else {
-                        // Thema is vergrendeld, ga terug naar vorige thema
                         e.target.checked = false;
                         const currentThemeInput = document.getElementById(`theme-${this.currentTheme}`);
                         if (currentThemeInput) {
                             currentThemeInput.checked = true;
                         }
                         
-                        // Toon melding dat thema vergrendeld is
                         const theme = this.themes[themeId];
                         if (theme) {
                             console.log(`Thema ${theme.name} is nog vergrendeld! Kost: ${theme.cost} zonnebloemen`);
@@ -663,7 +918,6 @@ class ThemeSystem {
                 }
             });
             
-            // Voorkom dat vergrendelde themas geklikt kunnen worden
             input.addEventListener('click', (e) => {
                 const themeId = e.target.id.replace('theme-', '');
                 if (themeId !== 'default' && (!this.themes[themeId] || !this.themes[themeId].unlocked)) {
@@ -673,8 +927,8 @@ class ThemeSystem {
             });
         });
     }
-
-    saveThemeData() {
+    
+    save() {
         const saveData = {
             themes: {},
             currentTheme: this.currentTheme
@@ -686,19 +940,15 @@ class ThemeSystem {
             };
         });
         
-        localStorage.setItem('themeData', JSON.stringify(saveData));
+        GameStorage.save('themeData', saveData);
     }
-
-    loadThemeData() {
-        // Eerst alle themas vergrendelen
+    
+    load() {
         this.initializeLockedThemes();
         
-        const saved = localStorage.getItem('themeData');
-        if (saved) {
+        const saveData = GameStorage.load('themeData');
+        if (saveData) {
             try {
-                const saveData = JSON.parse(saved);
-                
-                // Laad thema unlock status
                 if (saveData.themes) {
                     Object.entries(saveData.themes).forEach(([id, data]) => {
                         if (this.themes[id]) {
@@ -707,16 +957,13 @@ class ThemeSystem {
                     });
                 }
                 
-                // Laad huidig thema
                 if (saveData.currentTheme) {
                     this.currentTheme = saveData.currentTheme;
                     
-                    // Stel het thema in alleen als het unlocked is
                     const themeInput = document.getElementById(`theme-${this.currentTheme}`);
                     if (themeInput && (this.currentTheme === 'default' || this.themes[this.currentTheme]?.unlocked)) {
                         themeInput.checked = true;
                     } else {
-                        // Als het opgeslagen thema niet unlocked is, ga terug naar default
                         this.currentTheme = 'default';
                         const defaultTheme = document.getElementById('theme-default');
                         if (defaultTheme) {
@@ -725,7 +972,6 @@ class ThemeSystem {
                     }
                 }
                 
-                // Update UI na laden
                 setTimeout(() => {
                     this.updateThemeUI();
                 }, 100);
@@ -735,13 +981,11 @@ class ThemeSystem {
                 this.initializeLockedThemes();
             }
         } else {
-            // Geen opgeslagen data, zorg ervoor dat alles vergrendeld is
             this.initializeLockedThemes();
         }
     }
-
+    
     initializeLockedThemes() {
-        // Zorg ervoor dat alle themas vergrendeld zijn bij start
         Object.keys(this.themes).forEach(themeId => {
             const themeInput = document.getElementById(`theme-${themeId}`);
             const themeLock = document.querySelector(`.theme-${themeId}-option .theme-lock`);
@@ -756,28 +1000,24 @@ class ThemeSystem {
             }
         });
         
-        // Zorg ervoor dat default thema geselecteerd is
         const defaultTheme = document.getElementById('theme-default');
         if (defaultTheme) {
             defaultTheme.checked = true;
         }
     }
-
-    resetThemes() {
-        // Reset alle themas naar locked
+    
+    reset() {
         Object.values(this.themes).forEach(theme => {
             theme.unlocked = false;
         });
         
         this.currentTheme = 'default';
         
-        // Reset UI
         const defaultTheme = document.getElementById('theme-default');
         if (defaultTheme) {
             defaultTheme.checked = true;
         }
         
-        // Lock alle themas weer
         Object.keys(this.themes).forEach(themeId => {
             const themeInput = document.getElementById(`theme-${themeId}`);
             const themeLock = document.querySelector(`.theme-${themeId}-option .theme-lock`);
@@ -801,56 +1041,42 @@ class ThemeSystem {
             }
         });
         
-        // Verwijder opgeslagen data
-        localStorage.removeItem('themeData');
+        GameStorage.remove('themeData');
     }
 }
 
-// Globale functie voor HTML onclick handlers
-function purchaseTheme(themeId) {
-    if (window.gameInstance && window.gameInstance.themeSystem) {
-        return window.gameInstance.themeSystem.purchaseTheme(themeId);
-    }
-    console.error('Game instance niet gevonden');
-    return false;
-}
+// ===== MAIN GAME CLASS =====
 
-class SimpleCookieClicker {
+/**
+ * Main Cookie Clicker Game class with improved organization
+ */
+class CookieClickerGame {
     constructor() {
+        // Core game state
         this.count = 0;
-        this.countElement = document.getElementById('sunflowerCount');
         this.volume = 50;
         
-        // Stats tracking
-        this.stats = {
-            totalClicks: 0,
-            totalFlowers: 0,
-            upgradesBought: 0,
-            perClick: 1,
-            perSecond: 0,
-            gameStartTime: Date.now()
-        };
-
-        // Achievement systeem
+        // DOM elements
+        this.countElement = document.getElementById('sunflowerCount');
+        
+        // Game systems
+        this.stats = new GameStats();
         this.achievementSystem = new AchievementSystem();
-        
-        // Event systeem
-        this.eventSystem = new EventSystem();
-        
-        // Theme systeem
+        this.eventSystem = new EventSystem(this);
         this.themeSystem = new ThemeSystem(this);
         
-        // Maak game instance globaal beschikbaar voor HTML onclick handlers
+        // Make globally available
         window.gameInstance = this;
         
-        this.init();
+        this.initialize();
     }
     
-    init() {
+    initialize() {
         this.loadCount();
         this.loadSettings();
-        this.loadStats();
-        this.eventSystem.loadEventData();
+        this.stats.load();
+        this.eventSystem.load();
+        
         this.setupClicker();
         this.setupSettings();
         this.setupStatsPanel();
@@ -859,16 +1085,8 @@ class SimpleCookieClicker {
         this.startAutoGeneration();
     }
     
-    loadCount() {
-        const saved = localStorage.getItem('sunflowerCount');
-        if (saved) {
-            this.count = parseInt(saved);
-            this.updateDisplay();
-        }
-    }
-    
+    // Core game mechanics
     click() {
-        // Bereken click waarde met event multipliers
         const eventMultiplier = this.eventSystem.getClickMultiplier();
         const clickValue = this.stats.perClick * eventMultiplier;
         
@@ -876,10 +1094,10 @@ class SimpleCookieClicker {
         this.stats.totalClicks++;
         this.stats.totalFlowers += clickValue;
         
-        // Check voor meteor bonus (alleen bij clicks)
+        // Meteor bonus check
         const meteorEvent = this.eventSystem.events['meteor-shower'];
-        if (meteorEvent && meteorEvent.isActive && Math.random() < 0.3) { // 30% kans per click
-            const meteorBonus = Math.floor(Math.random() * 21) + 5; // 5-25 bonus
+        if (meteorEvent && meteorEvent.isActive && Math.random() < 0.3) {
+            const meteorBonus = Math.floor(Math.random() * 21) + 5;
             this.count += meteorBonus;
             this.stats.totalFlowers += meteorBonus;
             this.showMeteorEffect(meteorBonus);
@@ -888,16 +1106,12 @@ class SimpleCookieClicker {
         this.updateDisplay();
         this.updateStatsDisplay();
         this.saveCount();
-        this.saveStats();
-        this.eventSystem.saveEventData();
+        this.stats.save();
+        this.eventSystem.save();
         
-        // Check achievements
-        this.achievementSystem.checkAchievements(this.stats.totalClicks, this.stats.totalFlowers);
-        
-        // Check event unlocks
-        this.eventSystem.checkUnlocks(this.stats.totalClicks);
-        
-        // Check theme unlocks
+        // Check systems
+        this.achievementSystem.checkAchievements(this.stats, this);
+        this.eventSystem.checkUnlocks(this.stats.totalFlowers);
         this.themeSystem.checkUnlocks();
     }
     
@@ -908,24 +1122,33 @@ class SimpleCookieClicker {
     }
     
     saveCount() {
-        localStorage.setItem('sunflowerCount', this.count);
+        GameStorage.save('sunflowerCount', this.count);
     }
     
-    showMeteorEffect(bonus) {
-        // Toon een visueel effect voor meteor bonus
-        const notification = document.getElementById('achievementNotification');
-        const nameElement = document.getElementById('notificationName');
+    loadCount() {
+        this.count = GameStorage.load('sunflowerCount', 0);
+        this.updateDisplay();
+    }
+    
+    // Settings management
+    loadSettings() {
+        this.volume = GameStorage.load('gameVolume', 50);
+        const volumeSlider = document.getElementById('volumeSlider');
+        const volumeValue = document.getElementById('volumeValue');
         
-        if (notification && nameElement) {
-            nameElement.textContent = `Meteor Bonus: +${bonus} zonnebloemen! ☄️`;
-            notification.classList.add('show');
-            
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 2000);
+        if (volumeSlider) {
+            volumeSlider.value = this.volume;
+        }
+        if (volumeValue) {
+            volumeValue.textContent = this.volume + '%';
         }
     }
     
+    saveSettings() {
+        GameStorage.save('gameVolume', this.volume);
+    }
+    
+    // Auto generation system
     startAutoGeneration() {
         setInterval(() => {
             if (this.stats.perSecond > 0) {
@@ -938,42 +1161,48 @@ class SimpleCookieClicker {
                 this.updateDisplay();
                 this.updateStatsDisplay();
                 this.saveCount();
-                this.saveStats();
+                this.stats.save();
                 
-                // Check achievements
-                this.achievementSystem.checkAchievements(this.stats.totalClicks, this.stats.totalFlowers);
-                
-                // Check theme unlocks
+                this.achievementSystem.checkAchievements(this.stats, this);
                 this.themeSystem.checkUnlocks();
             }
-        }, 1000); // Elke seconde
+        }, 1000);
     }
     
-    // Stats methods
-    loadStats() {
-        const savedStats = localStorage.getItem('gameStats');
-        if (savedStats) {
-            const parsed = JSON.parse(savedStats);
-            this.stats = { ...this.stats, ...parsed };
+    // UI Setup methods
+    setupClicker() {
+        const sunflower = document.querySelector('.sunflower');
+        if (sunflower) {
+            sunflower.addEventListener('click', () => this.click());
         }
     }
     
-    saveStats() {
-        localStorage.setItem('gameStats', JSON.stringify(this.stats));
-    }
-    
-    updateStatsDisplay() {
-        const totalFlowersEl = document.getElementById('totalFlowers');
-        const totalClicksEl = document.getElementById('totalClicks');
-        const perSecondEl = document.getElementById('perSecond');
-        const upgradesBoughtEl = document.getElementById('upgradesBought');
-        const perClickEl = document.getElementById('perClick');
+    setupSettings() {
+        const settingsButton = document.getElementById('settingsButton');
+        const settingsPanel = document.getElementById('settingsPanel');
+        const volumeSlider = document.getElementById('volumeSlider');
+        const volumeValue = document.getElementById('volumeValue');
+        const resetBtn = document.getElementById('resetGameBtn');
         
-        if (totalFlowersEl) totalFlowersEl.textContent = this.stats.totalFlowers.toLocaleString();
-        if (totalClicksEl) totalClicksEl.textContent = this.stats.totalClicks.toLocaleString();
-        if (perSecondEl) perSecondEl.textContent = this.stats.perSecond.toLocaleString();
-        if (upgradesBoughtEl) upgradesBoughtEl.textContent = this.stats.upgradesBought.toLocaleString();
-        if (perClickEl) perClickEl.textContent = this.stats.perClick.toLocaleString();
+        if (settingsButton && settingsPanel) {
+            settingsButton.addEventListener('click', () => {
+                settingsPanel.classList.toggle('show');
+            });
+        }
+        
+        if (volumeSlider && volumeValue) {
+            volumeSlider.addEventListener('input', (e) => {
+                this.volume = parseInt(e.target.value);
+                volumeValue.textContent = this.volume + '%';
+                this.saveSettings();
+            });
+        }
+        
+        if (resetBtn) {
+            resetBtn.addEventListener('click', () => this.showResetModal());
+        }
+        
+        this.setupResetModal();
     }
     
     setupStatsPanel() {
@@ -984,16 +1213,9 @@ class SimpleCookieClicker {
             statsButton.addEventListener('click', () => {
                 statsPanel.classList.toggle('show');
             });
-            
-            // Close stats panel when clicking outside
-            document.addEventListener('click', (e) => {
-                if (!statsPanel.contains(e.target) && !statsButton.contains(e.target)) {
-                    statsPanel.classList.remove('show');
-                }
-            });
         }
     }
-
+    
     setupAchievementsPanel() {
         const achievementsButton = document.getElementById('achievementsButton');
         const achievementsPanel = document.getElementById('achievementsPanel');
@@ -1002,166 +1224,96 @@ class SimpleCookieClicker {
             achievementsButton.addEventListener('click', () => {
                 achievementsPanel.classList.toggle('show');
             });
-            
-            // Close achievements panel when clicking outside
-            document.addEventListener('click', (e) => {
-                if (!achievementsPanel.contains(e.target) && !achievementsButton.contains(e.target)) {
-                    achievementsPanel.classList.remove('show');
+        }
+    }
+    
+    setupResetModal() {
+        const resetModal = document.getElementById('resetModal');
+        const resetCancelBtn = document.getElementById('resetCancelBtn');
+        const resetConfirmBtn = document.getElementById('resetConfirmBtn');
+        const successModal = document.getElementById('successModal');
+        
+        if (resetCancelBtn) {
+            resetCancelBtn.addEventListener('click', () => {
+                if (resetModal) resetModal.classList.remove('show');
+            });
+        }
+        
+        if (resetConfirmBtn) {
+            resetConfirmBtn.addEventListener('click', () => {
+                this.resetGame();
+                if (resetModal) resetModal.classList.remove('show');
+                if (successModal) {
+                    successModal.classList.add('show');
+                    setTimeout(() => {
+                        successModal.classList.remove('show');
+                    }, 3000);
                 }
             });
         }
     }
     
-    setupClicker() {
-        const button = document.querySelector('.sunflower-button');
-        if (button) {
-            button.addEventListener('click', () => this.click());
-        }
-    }
-
-    loadSettings() {
-        const savedVolume = localStorage.getItem('gameVolume');
-        if (savedVolume) {
-            this.volume = parseInt(savedVolume);
-        }
-        this.updateVolumeDisplay();
-    }
-
-    saveSettings() {
-        localStorage.setItem('gameVolume', this.volume);
-    }
-
-    updateVolumeDisplay() {
-        const volumeSlider = document.getElementById('volumeSlider');
-        const volumeValue = document.getElementById('volumeValue');
-        
-        if (volumeSlider) {
-            volumeSlider.value = this.volume;
-        }
-        if (volumeValue) {
-            volumeValue.textContent = this.volume + '%';
-        }
-    }
-
-    setupSettings() {
-        const settingsButton = document.getElementById('settingsButton');
-        const settingsPanel = document.getElementById('settingsPanel');
-        
-        if (settingsButton && settingsPanel) {
-            settingsButton.addEventListener('click', () => {
-                settingsPanel.classList.toggle('show');
-            });
-
-            document.addEventListener('click', (e) => {
-                if (!settingsPanel.contains(e.target) && !settingsButton.contains(e.target)) {
-                    settingsPanel.classList.remove('show');
-                }
-            });
-        }
-
-        
-        const volumeSlider = document.getElementById('volumeSlider');
-        if (volumeSlider) {
-            volumeSlider.addEventListener('input', (e) => {
-                this.volume = parseInt(e.target.value);
-                this.updateVolumeDisplay();
-                this.saveSettings();
-            });
-        }
-
-       
-        const resetButton = document.getElementById('resetGameBtn');
-        const resetModal = document.getElementById('resetModal');
-        const resetCancelBtn = document.getElementById('resetCancelBtn');
-        const resetConfirmBtn = document.getElementById('resetConfirmBtn');
-        const successModal = document.getElementById('successModal');
-        const successOkBtn = document.getElementById('successOkBtn');
-
-        if (resetButton && resetModal) {
-            resetButton.addEventListener('click', () => {
-                resetModal.classList.add('show');
-            });
-        }
-
-        if (resetCancelBtn && resetModal) {
-            resetCancelBtn.addEventListener('click', () => {
-                resetModal.classList.remove('show');
-            });
-        }
-
-        if (resetConfirmBtn && resetModal && successModal) {
-            resetConfirmBtn.addEventListener('click', () => {
-                this.resetGame();
-                resetModal.classList.remove('show');
-                successModal.classList.add('show');
-            });
-        }
-
-        if (successOkBtn && successModal) {
-            successOkBtn.addEventListener('click', () => {
-                successModal.classList.remove('show');
-            });
-        }
-
-       
-        if (resetModal) {
-            resetModal.addEventListener('click', (e) => {
-                if (e.target === resetModal) {
-                    resetModal.classList.remove('show');
-                }
-            });
-        }
-
-        if (successModal) {
-            successModal.addEventListener('click', (e) => {
-                if (e.target === successModal) {
-                    successModal.classList.remove('show');
-                }
-            });
-        }
-    }
-
-    resetGame() {
-        this.count = 0;
-        this.volume = 50;
-        
-        // Reset stats
-        this.stats = {
-            totalClicks: 0,
-            totalFlowers: 0,
-            upgradesBought: 0,
-            perClick: 1,
-            perSecond: 0,
-            gameStartTime: Date.now()
+    updateStatsDisplay() {
+        const elements = {
+            totalFlowers: document.getElementById('totalFlowers'),
+            totalClicks: document.getElementById('totalClicks'),
+            perSecond: document.getElementById('perSecond'),
+            upgradesBought: document.getElementById('upgradesBought'),
+            perClick: document.getElementById('perClick')
         };
         
-        // Reset achievements
-        this.achievementSystem.resetAchievements();
-        
-        // Reset events
-        this.eventSystem.resetEvents();
-        
-        // Reset themes
-        this.themeSystem.resetThemes();
-        
-        // Clear localStorage
-        localStorage.removeItem('sunflowerCount');
-        localStorage.removeItem('gameVolume');
-        localStorage.removeItem('gameStats');
-        
-        // Update displays
-        this.updateDisplay();
-        this.updateVolumeDisplay();
-        this.updateStatsDisplay();
-        
-        // Reset plant name
-        const plantName = document.getElementById('plant-name');
-        if (plantName) {
-            plantName.textContent = 'Naamloze Plant';
+        if (elements.totalFlowers) elements.totalFlowers.textContent = this.stats.totalFlowers;
+        if (elements.totalClicks) elements.totalClicks.textContent = this.stats.totalClicks;
+        if (elements.perSecond) elements.perSecond.textContent = this.stats.perSecond;
+        if (elements.upgradesBought) elements.upgradesBought.textContent = this.stats.upgradesBought;
+        if (elements.perClick) elements.perClick.textContent = this.stats.perClick;
+    }
+    
+    showMeteorEffect(bonus) {
+        // Meteor effect implementation would go here
+        console.log(`Meteor bonus: +${bonus} zonnebloemen!`);
+    }
+    
+    showResetModal() {
+        const resetModal = document.getElementById('resetModal');
+        if (resetModal) {
+            resetModal.classList.add('show');
         }
+    }
+    
+    resetGame() {
+        this.count = 0;
+        this.stats.reset();
+        this.achievementSystem.reset();
+        this.eventSystem.reset();
+        this.themeSystem.reset();
+        
+        this.updateDisplay();
+        this.updateStatsDisplay();
+        this.saveCount();
+        
+        GameStorage.remove('sunflowerCount');
+        
+        console.log('Game reset completed');
     }
 }
 
+// ===== GLOBAL FUNCTIONS =====
+
+/**
+ * Global function for HTML onclick handlers
+ */
+function purchaseTheme(themeId) {
+    if (window.gameInstance && window.gameInstance.themeSystem) {
+        return window.gameInstance.themeSystem.purchaseTheme(themeId);
+    }
+    console.error('Game instance niet gevonden');
+    return false;
+}
+
+// ===== GAME INITIALIZATION =====
+
+// Initialize game when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    new SimpleCookieClicker();
+    new CookieClickerGame();
 });
