@@ -272,6 +272,6 @@ Dit project dient als een uitstekend portfolio stuk dat zowel individuele techni
 
 **Retrospectief Voltooid:** 3 Oktober 2025  
 **Document Versie:** 1.0  
-**Team:** Marvellous010 & vxpf (Jailon)
+**Team:** Marvellous &  Jailon
 
 *"Geweldige games worden gebouwd door geweldige teams. Dit project belichaamt beide."*
