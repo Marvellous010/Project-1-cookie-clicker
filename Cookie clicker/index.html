@@ -4,6 +4,101 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zonnebloem Kweker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'nunito': ['Nunito', 'sans-serif']
+                    },
+                    animation: {
+                        'float': 'float 30s linear infinite',
+                        'storm-float': 'stormFloat 15s linear infinite',
+                        'lightning': 'lightning 5s infinite',
+                        'rain-fall': 'rainFall 1s linear infinite',
+                        'fog-move': 'fogMove 30s ease-in-out infinite',
+                        'twinkle': 'twinkle 3s infinite',
+                        'shooting-star': 'shootingStar 4s linear infinite',
+                        'falling': 'falling 10s linear infinite',
+                        'click-pulse': 'clickPulse 0.3s ease-out',
+                        'rotate-icon': 'rotateIcon 2s ease-in-out infinite',
+                        'event-glow': 'eventGlow 2s ease-in-out infinite alternate',
+                        'event-icon-bounce': 'eventIconBounce 1s ease-in-out infinite',
+                        'progress-pulse': 'progressPulse 1.5s ease-in-out infinite'
+                    },
+                    keyframes: {
+                        float: {
+                            '0%': { transform: 'translateX(0)' },
+                            '50%': { transform: 'translateX(200px)' },
+                            '100%': { transform: 'translateX(0)' }
+                        },
+                        stormFloat: {
+                            '0%': { transform: 'translateX(0)' },
+                            '50%': { transform: 'translateX(150px)' },
+                            '100%': { transform: 'translateX(0)' }
+                        },
+                        lightning: {
+                            '0%': { opacity: '0', transform: 'scaleY(0)' },
+                            '1%': { opacity: '1', transform: 'scaleY(1)' },
+                            '2%': { opacity: '0', transform: 'scaleY(0)' },
+                            '3%': { opacity: '1', transform: 'scaleY(1)' },
+                            '4%': { opacity: '0', transform: 'scaleY(0)' },
+                            '100%': { opacity: '0', transform: 'scaleY(0)' }
+                        },
+                        rainFall: {
+                            '0%': { top: '-20px', opacity: '0' },
+                            '10%': { opacity: '0.7' },
+                            '90%': { opacity: '0.7' },
+                            '100%': { top: '100vh', opacity: '0' }
+                        },
+                        fogMove: {
+                            '0%': { transform: 'translateX(-20px) translateY(-10px)', opacity: '0.4' },
+                            '50%': { transform: 'translateX(20px) translateY(10px)', opacity: '0.8' },
+                            '100%': { transform: 'translateX(-20px) translateY(-10px)', opacity: '0.4' }
+                        },
+                        twinkle: {
+                            '0%': { opacity: '0.3', transform: 'scale(1)' },
+                            '50%': { opacity: '1', transform: 'scale(1.5)' },
+                            '100%': { opacity: '0.3', transform: 'scale(1)' }
+                        },
+                        shootingStar: {
+                            '0%': { opacity: '0', transform: 'translateX(0) translateY(0) scale(0)' },
+                            '5%': { opacity: '1', transform: 'translateX(0) translateY(0) scale(1)' },
+                            '25%': { opacity: '1', transform: 'translateX(-400px) translateY(300px) scale(1)' },
+                            '35%': { opacity: '0.5', transform: 'translateX(-500px) translateY(400px) scale(0.8)' },
+                            '100%': { opacity: '0', transform: 'translateX(-600px) translateY(500px) scale(0)' }
+                        },
+                        falling: {
+                            '0%': { top: '-20px', transform: 'rotate(0deg) translateX(0)' },
+                            '100%': { top: '100vh', transform: 'rotate(360deg) translateX(100px)' }
+                        },
+                        clickPulse: {
+                            '0%': { opacity: '0', transform: 'scale(0)' },
+                            '50%': { opacity: '1', transform: 'scale(1.2)' },
+                            '100%': { opacity: '0', transform: 'scale(1.5)' }
+                        },
+                        rotateIcon: {
+                            '0%, 100%': { transform: 'rotate(0deg)' },
+                            '50%': { transform: 'rotate(180deg)' }
+                        },
+                        eventGlow: {
+                            '0%': { boxShadow: '0 0 20px rgba(76, 175, 80, 0.4)' },
+                            '100%': { boxShadow: '0 0 30px rgba(76, 175, 80, 0.6)' }
+                        },
+                        eventIconBounce: {
+                            '0%, 100%': { transform: 'scale(1)' },
+                            '50%': { transform: 'scale(1.1)' }
+                        },
+                        progressPulse: {
+                            '0%, 100%': { opacity: '1' },
+                            '50%': { opacity: '0.7' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
