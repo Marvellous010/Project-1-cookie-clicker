@@ -14,6 +14,152 @@ class Storage {
     }
 }
 
+// ===== SIMPLE SOUND SYSTEM =====
+class SoundManager {
+    constructor() {
+        this.sounds = {};
+        this.musicEnabled = true;
+        this.soundEnabled = true;
+        this.volume = 0.5;
+        this.backgroundMusic = null;
+        this.loadSounds();
+    }
+    
+    loadSounds() {
+        // Maak simpele geluidseffecten met Web Audio API
+        this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    
+    // Simpel klik geluid
+    playClickSound() {
+        if (!this.soundEnabled) return;
+        
+        const oscillator = this.audioContext.createOscillator();
+        const gainNode = this.audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(this.audioContext.destination);
+        
+        oscillator.frequency.setValueAtTime(800, this.audioContext.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(400, this.audioContext.currentTime + 0.1);
+        
+        gainNode.gain.setValueAtTime(this.volume * 0.3, this.audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.1);
+        
+        oscillator.start(this.audioContext.currentTime);
+        oscillator.stop(this.audioContext.currentTime + 0.1);
+    }
+    
+    // Prestatie geluid
+    playAchievementSound() {
+        if (!this.soundEnabled) return;
+        
+        const oscillator = this.audioContext.createOscillator();
+        const gainNode = this.audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(this.audioContext.destination);
+        
+        oscillator.frequency.setValueAtTime(523, this.audioContext.currentTime); // C
+        oscillator.frequency.setValueAtTime(659, this.audioContext.currentTime + 0.1); // E
+        oscillator.frequency.setValueAtTime(784, this.audioContext.currentTime + 0.2); // G
+        
+        gainNode.gain.setValueAtTime(this.volume * 0.4, this.audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.3);
+        
+        oscillator.start(this.audioContext.currentTime);
+        oscillator.stop(this.audioContext.currentTime + 0.3);
+    }
+    
+    // Upgrade gekocht geluid
+    playUpgradeSound() {
+        if (!this.soundEnabled) return;
+        
+        const oscillator = this.audioContext.createOscillator();
+        const gainNode = this.audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(this.audioContext.destination);
+        
+        oscillator.frequency.setValueAtTime(440, this.audioContext.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(880, this.audioContext.currentTime + 0.2);
+        
+        gainNode.gain.setValueAtTime(this.volume * 0.3, this.audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.2);
+        
+        oscillator.start(this.audioContext.currentTime);
+        oscillator.stop(this.audioContext.currentTime + 0.2);
+    }
+    
+    // Simpele achtergrondmuziek
+    startBackgroundMusic() {
+        if (!this.musicEnabled || this.backgroundMusic) return;
+        
+        this.backgroundMusic = {
+            oscillator: this.audioContext.createOscillator(),
+            gainNode: this.audioContext.createGain(),
+            isPlaying: true
+        };
+        
+        this.backgroundMusic.oscillator.connect(this.backgroundMusic.gainNode);
+        this.backgroundMusic.gainNode.connect(this.audioContext.destination);
+        
+        this.backgroundMusic.oscillator.frequency.setValueAtTime(220, this.audioContext.currentTime);
+        this.backgroundMusic.gainNode.gain.setValueAtTime(this.volume * 0.1, this.audioContext.currentTime);
+        
+        this.backgroundMusic.oscillator.start();
+        this.playMelody();
+    }
+    
+    playMelody() {
+        if (!this.backgroundMusic || !this.musicEnabled) return;
+        
+        const notes = [220, 247, 262, 294, 330, 349, 392, 440];
+        let noteIndex = 0;
+        
+        const playNote = () => {
+            if (!this.backgroundMusic || !this.musicEnabled) return;
+            
+            this.backgroundMusic.oscillator.frequency.setValueAtTime(
+                notes[noteIndex % notes.length], 
+                this.audioContext.currentTime
+            );
+            noteIndex++;
+            
+            setTimeout(playNote, 2000); // Nieuwe noot elke 2 seconden
+        };
+        
+        playNote();
+    }
+    
+    stopBackgroundMusic() {
+        if (this.backgroundMusic) {
+            this.backgroundMusic.oscillator.stop();
+            this.backgroundMusic = null;
+        }
+    }
+    
+    toggleMusic() {
+        this.musicEnabled = !this.musicEnabled;
+        if (this.musicEnabled) {
+            this.startBackgroundMusic();
+        } else {
+            this.stopBackgroundMusic();
+        }
+    }
+    
+    toggleSound() {
+        this.soundEnabled = !this.soundEnabled;
+    }
+    
+    setVolume(volume) {
+        this.volume = volume / 100;
+        if (this.backgroundMusic) {
+            this.backgroundMusic.gainNode.gain.setValueAtTime(this.volume * 0.1, this.audioContext.currentTime);
+        }
+    }
+}
+
 // ===== SIMPLE ACHIEVEMENT =====
 class Achievement {
     constructor(id, name, icon, type, target) {
@@ -147,23 +293,23 @@ class GameEvent {
 const UPGRADE_CONFIG = {
  
     mousePowerBtn: { cost: 15, type: 'click', value: 1, name: 'Zonnestralen' },
-    autoClickerBtn: { cost: 50, type: 'perSecond', value: 2, name: 'Automatische groei' },
+    autoClickerBtn: { cost: 50, type: 'perSecond', value: 0.5, name: 'Automatische groei' },
     fertilizerBtn: { cost: 125, type: 'click', value: 2, name: 'Magische Meststof' },
-    beeHiveBtn: { cost: 300, type: 'perSecond', value: 0.1, name: 'Bijenkorf' },
-    rainCloudBtn: { cost: 750, type: 'click', value: 5, name: 'Regenwolk' },
-    gardenGnomeBtn: { cost: 1500, type: 'perSecond', value: 0.2, name: 'Tuinkabouter' },
-    sunlightLensBtn: { cost: 3000, type: 'click', value: 10, name: 'Zonlicht Lens' },
-    timeAcceleratorBtn: { cost: 6000, type: 'perSecond', value: 0.5, name: 'Tijd Versneller' },
-    cosmicSeedBtn: { cost: 12000, type: 'click', value: 25, name: 'Kosmisch Zaad' },
+    beeHiveBtn: { cost: 300, type: 'perSecond', value: 1, name: 'Bijenkorf' },
+    rainCloudBtn: { cost: 750, type: 'click', value: 3, name: 'Regenwolk' },
+    gardenGnomeBtn: { cost: 1500, type: 'perSecond', value: 2, name: 'Tuinkabouter' },
+    sunlightLensBtn: { cost: 3000, type: 'click', value: 5, name: 'Zonlicht Lens' },
+    timeAcceleratorBtn: { cost: 6000, type: 'perSecond', value: 3, name: 'Tijd Versneller' },
+    cosmicSeedBtn: { cost: 12000, type: 'click', value: 10, name: 'Kosmisch Zaad' },
     
     turboZonnestralenBtn: { cost: 500, type: 'multiplier', target: 'mousePowerBtn', value: 1.5, name: 'Turbo Zonnestralen' },
-    superGroeiBtn: { cost: 1200, type: 'multiplier', target: 'autoClickerBtn', value: 1.1, name: 'Super Groei' },
+    superGroeiBtn: { cost: 1200, type: 'multiplier', target: 'autoClickerBtn', value: 1.5, name: 'Super Groei' },
     megaMeststofBtn: { cost: 2500, type: 'multiplier', target: 'fertilizerBtn', value: 1.5, name: 'Mega Meststof' },
     koninginneBijBtn: { cost: 4000, type: 'multiplier', target: 'beeHiveBtn', value: 2, name: 'Koningin Bij' },
     stormWolkBtn: { cost: 6500, type: 'multiplier', target: 'rainCloudBtn', value: 2, name: 'Storm Wolk' },
     aartsTuinkabouter: { cost: 10000, type: 'multiplier', target: 'gardenGnomeBtn', value: 2, name: 'Aarts Tuinkabouter' },
-    prismaLensBtn: { cost: 15000, type: 'multiplier', target: 'sunlightLensBtn', value: 2.5, name: 'Prisma Lens' },
-    tijdMeesterBtn: { cost: 20000, type: 'multiplier', target: 'timeAcceleratorBtn', value: 2.5, name: 'Tijd Meester' }
+    prismaLensBtn: { cost: 15000, type: 'multiplier', target: 'sunlightLensBtn', value: 2, name: 'Prisma Lens' },
+    tijdMeesterBtn: { cost: 25000, type: 'multiplier', target: 'timeAcceleratorBtn', value: 2, name: 'Tijd Meester' }
 };
 
 // ===== SIMPLE UPGRADE =====
@@ -177,6 +323,7 @@ class Upgrade {
         this.name = config.name;
         this.purchased = false;
         this.multiplier = 1;
+        this.multiplierApplied = false;
         
         // Setup click handler
         const element = document.getElementById(id);
@@ -213,13 +360,13 @@ class Upgrade {
                 break;
             case 'multiplier':
                 const targetUpgrade = game.upgrades.find(u => u.id === this.target);
-                if (targetUpgrade && targetUpgrade.purchased) {
-                    targetUpgrade.multiplier *= this.value;
-                    // Recalculate effect
+                if (targetUpgrade && targetUpgrade.purchased && !this.multiplierApplied) {
+                    this.multiplierApplied = true;
+                    const bonusValue = targetUpgrade.value * (this.value - 1);
                     if (targetUpgrade.type === 'click') {
-                        game.perClick += (targetUpgrade.value * (this.value - 1));
+                        game.perClick += bonusValue;
                     } else if (targetUpgrade.type === 'perSecond') {
-                        game.perSecond += (targetUpgrade.value * (this.value - 1));
+                        game.perSecond += bonusValue;
                     }
                 }
                 break;
@@ -324,6 +471,9 @@ class Game {
         
         
         this.domElements = {};
+        
+        // Sound system
+        this.soundManager = new SoundManager();
         
        
         this.achievements = this.createAchievements();
@@ -441,9 +591,13 @@ class Game {
             event.updateUI();
         });
         
-        // Update theme and upgrade UI
+        // Check upgrade unlocks (make affordable when you have enough flowers)
+        this.upgrades.forEach(upgrade => {
+            upgrade.updateUI();
+        });
+        
+        // Update theme UI
         this.themes.forEach(theme => theme.updateUI());
-        this.upgrades.forEach(upgrade => upgrade.updateUI());
     }
     
     cacheDOM() {
@@ -462,12 +616,12 @@ class Game {
         
         const { sunflowerCount, totalFlowers, totalClicks, perSecond, upgradesBought, perClick } = this.domElements;
         
-        if (sunflowerCount) sunflowerCount.textContent = this.count;
-        if (totalFlowers) totalFlowers.textContent = this.totalFlowers;
+        if (sunflowerCount) sunflowerCount.textContent = Math.floor(this.count);
+        if (totalFlowers) totalFlowers.textContent = Math.floor(this.totalFlowers);
         if (totalClicks) totalClicks.textContent = this.totalClicks;
-        if (perSecond) perSecond.textContent = this.perSecond;
+        if (perSecond) perSecond.textContent = Math.round(this.perSecond * 10) / 10;
         if (upgradesBought) upgradesBought.textContent = this.upgradesBought;
-        if (perClick) perClick.textContent = this.perClick;
+        if (perClick) perClick.textContent = Math.round(this.perClick * 10) / 10;
     }
     
     updateAchievementUI(achievement) {
@@ -609,8 +763,9 @@ class Game {
                     .filter(event => event.active && event.effect.type === 'bonusPerSecond')
                     .reduce((sum, event) => sum + event.effect.value, 0);
                 
-                this.count += totalPerSecond;
-                this.totalFlowers += totalPerSecond;
+                const increment = totalPerSecond * deltaTime;
+                this.count += increment;
+                this.totalFlowers += increment;
                 this.updateDisplay();
                 this.checkAchievements();
                 this.checkUnlocks();
@@ -654,7 +809,7 @@ class Game {
                 cooldownLeft: e.cooldownLeft
             })),
             themes: this.themes.map(t => ({id: t.id, unlocked: t.unlocked})),
-            upgrades: this.upgrades.map(u => ({id: u.id, purchased: u.purchased, multiplier: u.multiplier}))
+            upgrades: this.upgrades.map(u => ({id: u.id, purchased: u.purchased, multiplier: u.multiplier, multiplierApplied: u.multiplierApplied}))
         });
     }
     
@@ -693,6 +848,7 @@ class Game {
         this.loadSystemData(data.upgrades, this.upgrades, (item, saved) => {
             item.purchased = saved.purchased;
             item.multiplier = saved.multiplier || 1;
+            item.multiplierApplied = saved.multiplierApplied || false;
             if (item.purchased) item.applyEffect();
         });
         
@@ -731,6 +887,7 @@ class Game {
         this.upgrades.forEach(upgrade => {
             upgrade.purchased = false;
             upgrade.multiplier = 1;
+            upgrade.multiplierApplied = false;
         });
         
         Storage.remove('gameData');
