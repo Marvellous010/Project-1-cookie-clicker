@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Click Test</title>
+</head>
+<body>
+    <h1>Click Test</h1>
+    <div id="counter">0</div>
+    <button id="testButton">Test Click</button>
+    <div class="sunflower-button" style="padding: 20px; background: yellow; cursor: pointer; margin: 10px;">
+        Click me (sunflower)
+    </div>
+
+    <script>
+        console.log('Test script loaded');
+        
+        let count = 0;
+        
+        function updateDisplay() {
+            document.getElementById('counter').textContent = count;
+        }
+        
+        function click() {
+            console.log('Click function called');
+            count++;
+            updateDisplay();
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOM loaded');
+            
+            // Test button
+            const testBtn = document.getElementById('testButton');
+            if (testBtn) {
+                testBtn.onclick = click;
+                console.log('Test button click handler set');
+            }
+            
+            // Sunflower button
+            const sunflower = document.querySelector('.sunflower-button');
+            if (sunflower) {
+                sunflower.onclick = click;
+                console.log('Sunflower click handler set');
+            }
+        });
+    </script>
+</body>
+</html>

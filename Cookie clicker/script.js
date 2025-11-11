@@ -1,3 +1,14 @@
+// ===== NUMBER FORMATTING UTILITY =====
+class NumberFormatter {
+    static format(num) {
+        if (num < 1000) return Math.floor(num).toString();
+        if (num < 1000000) return (num / 1000).toFixed(1).replace('.0', '') + 'K';
+        if (num < 1000000000) return (num / 1000000).toFixed(1).replace('.0', '') + 'M';
+        if (num < 1000000000000) return (num / 1000000000).toFixed(1).replace('.0', '') + 'B';
+        return (num / 1000000000000).toFixed(1).replace('.0', '') + 'T';
+    }
+}
+
 // ===== SIMPLE GAME STORAGE =====
 class Storage {
     static save(key, data) {
@@ -75,9 +86,10 @@ class GameEvent {
         this.unlocked = false;
         this.timeLeft = 0;
         this.cooldownLeft = 0;
-        
-        
-        const element = document.getElementById(`${id}-event`);
+    }
+    
+    setupEventHandlers() {
+        const element = document.getElementById(`${this.id}-event`);
         if (element) {
             element.onclick = () => this.activate();
         }
@@ -149,6 +161,7 @@ const UPGRADE_CONFIG = {
     mousePowerBtn: { cost: 15, type: 'click', value: 1, name: 'Zonnestralen' },
     autoClickerBtn: { cost: 50, type: 'perSecond', value: 0.5, name: 'Automatische groei' },
     fertilizerBtn: { cost: 125, type: 'click', value: 2, name: 'Magische Meststof' },
+<<<<<<< Updated upstream
     beeHiveBtn: { cost: 300, type: 'perSecond', value: 1, name: 'Bijenkorf' },
     rainCloudBtn: { cost: 750, type: 'click', value: 3, name: 'Regenwolk' },
     gardenGnomeBtn: { cost: 1500, type: 'perSecond', value: 2, name: 'Tuinkabouter' },
@@ -164,6 +177,23 @@ const UPGRADE_CONFIG = {
     aartsTuinkabouter: { cost: 10000, type: 'multiplier', target: 'gardenGnomeBtn', value: 2, name: 'Aarts Tuinkabouter' },
     prismaLensBtn: { cost: 15000, type: 'multiplier', target: 'sunlightLensBtn', value: 2, name: 'Prisma Lens' },
     tijdMeesterBtn: { cost: 25000, type: 'multiplier', target: 'timeAcceleratorBtn', value: 2, name: 'Tijd Meester' }
+=======
+    beeHiveBtn: { cost: 300, type: 'perSecond', value: 0.3, name: 'Bijenkorf' },
+    rainCloudBtn: { cost: 750, type: 'click', value: 3, name: 'Regenwolk' },
+    gardenGnomeBtn: { cost: 1500, type: 'perSecond', value: 0.8, name: 'Tuinkabouter' },
+    sunlightLensBtn: { cost: 3000, type: 'click', value: 5, name: 'Zonlicht Lens' },
+    timeAcceleratorBtn: { cost: 6000, type: 'perSecond', value: 1.5, name: 'Tijd Versneller' },
+    cosmicSeedBtn: { cost: 12000, type: 'click', value: 10, name: 'Kosmisch Zaad' },
+    
+    turboZonnestralenBtn: { cost: 500, type: 'multiplier', target: 'mousePowerBtn', value: 1.2, name: 'Turbo Zonnestralen' },
+    superGroeiBtn: { cost: 1200, type: 'multiplier', target: 'autoClickerBtn', value: 1.3, name: 'Super Groei' },
+    megaMeststofBtn: { cost: 2500, type: 'multiplier', target: 'fertilizerBtn', value: 1.2, name: 'Mega Meststof' },
+    koninginneBijBtn: { cost: 4000, type: 'multiplier', target: 'beeHiveBtn', value: 1.4, name: 'Koningin Bij' },
+    stormWolkBtn: { cost: 6500, type: 'multiplier', target: 'rainCloudBtn', value: 1.3, name: 'Storm Wolk' },
+    aartsTuinkabouter: { cost: 10000, type: 'multiplier', target: 'gardenGnomeBtn', value: 1.5, name: 'Aarts Tuinkabouter' },
+    prismaLensBtn: { cost: 15000, type: 'multiplier', target: 'sunlightLensBtn', value: 1.4, name: 'Prisma Lens' },
+    tijdMeesterBtn: { cost: 20000, type: 'multiplier', target: 'timeAcceleratorBtn', value: 1.6, name: 'Tijd Meester' }
+>>>>>>> Stashed changes
 };
 
 // ===== SIMPLE UPGRADE =====
@@ -177,10 +207,17 @@ class Upgrade {
         this.name = config.name;
         this.purchased = false;
         this.multiplier = 1;
+<<<<<<< Updated upstream
         this.multiplierApplied = false;
         
         // Setup click handler
         const element = document.getElementById(id);
+=======
+    }
+    
+    setupEventHandlers() {
+        const element = document.getElementById(this.id);
+>>>>>>> Stashed changes
         if (element) {
             element.onclick = () => this.purchase();
         }
@@ -254,9 +291,10 @@ class Theme {
         this.icon = icon;
         this.multiplier = multiplier;
         this.unlocked = false;
-        
-        // Setup purchase button
-        const button = document.querySelector(`#${id}-unlock .purchase-btn`);
+    }
+    
+    setupEventHandlers() {
+        const button = document.querySelector(`#${this.id}-unlock .purchase-btn`);
         if (button) {
             button.onclick = () => this.purchase();
         }
@@ -311,7 +349,6 @@ class Theme {
 // ===== MAIN GAME =====
 class Game {
     constructor() {
-        
         this.count = 0;
         this.totalClicks = 0;
         this.totalFlowers = 0;
@@ -324,10 +361,11 @@ class Game {
         this.volume = 50;
         this.currentTheme = 'default';
         
-        
         this.domElements = {};
         
        
+=======
+>>>>>>> Stashed changes
         this.achievements = this.createAchievements();
         this.events = this.createEvents();
         this.themes = this.createThemes();
@@ -373,11 +411,11 @@ class Game {
     
     createEvents() {
         return [
-            new GameEvent('golden-hour', 'Gouden Uur', '🌅', 200, 15, 300, {type: 'clickMultiplier', value: 2}),
-            new GameEvent('bee-swarm', 'Bijenzwerm', '🐝', 600, 15, 400, {type: 'bonusPerSecond', value: 10}),
-            new GameEvent('rainbow-boost', 'Regenboog Boost', '🌈', 1200, 15, 600, {type: 'clickMultiplier', value: 5}),
-            new GameEvent('meteor-shower', 'Meteorenregen', '☄️', 2500, 15, 800, {type: 'randomBonus', value: 0.3}),
-            new GameEvent('fairy-visit', 'Fee Bezoek', '🧚‍♀️', 5000, 15, 1000, {type: 'discount', value: 0.5})
+            new GameEvent('golden-hour', 'Gouden Uur', '🌅', 200, 15, 300, {type: 'clickMultiplier', value: 1.5}),
+            new GameEvent('bee-swarm', 'Bijenzwerm', '🐝', 600, 15, 400, {type: 'bonusPerSecond', value: 3}),
+            new GameEvent('rainbow-boost', 'Regenboog Boost', '🌈', 1200, 15, 600, {type: 'clickMultiplier', value: 2.5}),
+            new GameEvent('meteor-shower', 'Meteorenregen', '☄️', 2500, 15, 800, {type: 'randomBonus', value: 0.2}),
+            new GameEvent('fairy-visit', 'Fee Bezoek', '🧚‍♀️', 5000, 15, 1000, {type: 'discount', value: 0.3})
         ];
     }
     
@@ -474,12 +512,21 @@ class Game {
         
         const { sunflowerCount, totalFlowers, totalClicks, perSecond, upgradesBought, perClick } = this.domElements;
         
+<<<<<<< Updated upstream
         if (sunflowerCount) sunflowerCount.textContent = Math.floor(this.count);
         if (totalFlowers) totalFlowers.textContent = Math.floor(this.totalFlowers);
         if (totalClicks) totalClicks.textContent = this.totalClicks;
         if (perSecond) perSecond.textContent = Math.round(this.perSecond * 10) / 10;
         if (upgradesBought) upgradesBought.textContent = this.upgradesBought;
         if (perClick) perClick.textContent = Math.round(this.perClick * 10) / 10;
+=======
+        if (sunflowerCount) sunflowerCount.textContent = NumberFormatter.format(this.count);
+        if (totalFlowers) totalFlowers.textContent = NumberFormatter.format(this.totalFlowers);
+        if (totalClicks) totalClicks.textContent = NumberFormatter.format(this.totalClicks);
+        if (perSecond) perSecond.textContent = NumberFormatter.format(this.perSecond);
+        if (upgradesBought) upgradesBought.textContent = this.upgradesBought;
+        if (perClick) perClick.textContent = NumberFormatter.format(this.perClick);
+>>>>>>> Stashed changes
     }
     
     updateAchievementUI(achievement) {
@@ -498,6 +545,11 @@ class Game {
         if (sunflower) {
             sunflower.onclick = () => this.click();
         }
+        
+        // Setup event handlers for all game objects
+        this.events.forEach(event => event.setupEventHandlers());
+        this.upgrades.forEach(upgrade => upgrade.setupEventHandlers());
+        this.themes.forEach(theme => theme.setupEventHandlers());
         
         // Setup panels
         this.setupPanel('settings', 'settingsButton', 'settingsPanel');
