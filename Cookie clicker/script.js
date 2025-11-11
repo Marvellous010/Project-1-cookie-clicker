@@ -14,152 +14,6 @@ class Storage {
     }
 }
 
-// ===== SIMPLE SOUND SYSTEM =====
-class SoundManager {
-    constructor() {
-        this.sounds = {};
-        this.musicEnabled = true;
-        this.soundEnabled = true;
-        this.volume = 0.5;
-        this.backgroundMusic = null;
-        this.loadSounds();
-    }
-    
-    loadSounds() {
-        // Maak simpele geluidseffecten met Web Audio API
-        this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    }
-    
-    // Simpel klik geluid
-    playClickSound() {
-        if (!this.soundEnabled) return;
-        
-        const oscillator = this.audioContext.createOscillator();
-        const gainNode = this.audioContext.createGain();
-        
-        oscillator.connect(gainNode);
-        gainNode.connect(this.audioContext.destination);
-        
-        oscillator.frequency.setValueAtTime(800, this.audioContext.currentTime);
-        oscillator.frequency.exponentialRampToValueAtTime(400, this.audioContext.currentTime + 0.1);
-        
-        gainNode.gain.setValueAtTime(this.volume * 0.3, this.audioContext.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.1);
-        
-        oscillator.start(this.audioContext.currentTime);
-        oscillator.stop(this.audioContext.currentTime + 0.1);
-    }
-    
-    // Prestatie geluid
-    playAchievementSound() {
-        if (!this.soundEnabled) return;
-        
-        const oscillator = this.audioContext.createOscillator();
-        const gainNode = this.audioContext.createGain();
-        
-        oscillator.connect(gainNode);
-        gainNode.connect(this.audioContext.destination);
-        
-        oscillator.frequency.setValueAtTime(523, this.audioContext.currentTime); // C
-        oscillator.frequency.setValueAtTime(659, this.audioContext.currentTime + 0.1); // E
-        oscillator.frequency.setValueAtTime(784, this.audioContext.currentTime + 0.2); // G
-        
-        gainNode.gain.setValueAtTime(this.volume * 0.4, this.audioContext.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.3);
-        
-        oscillator.start(this.audioContext.currentTime);
-        oscillator.stop(this.audioContext.currentTime + 0.3);
-    }
-    
-    // Upgrade gekocht geluid
-    playUpgradeSound() {
-        if (!this.soundEnabled) return;
-        
-        const oscillator = this.audioContext.createOscillator();
-        const gainNode = this.audioContext.createGain();
-        
-        oscillator.connect(gainNode);
-        gainNode.connect(this.audioContext.destination);
-        
-        oscillator.frequency.setValueAtTime(440, this.audioContext.currentTime);
-        oscillator.frequency.exponentialRampToValueAtTime(880, this.audioContext.currentTime + 0.2);
-        
-        gainNode.gain.setValueAtTime(this.volume * 0.3, this.audioContext.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.2);
-        
-        oscillator.start(this.audioContext.currentTime);
-        oscillator.stop(this.audioContext.currentTime + 0.2);
-    }
-    
-    // Simpele achtergrondmuziek
-    startBackgroundMusic() {
-        if (!this.musicEnabled || this.backgroundMusic) return;
-        
-        this.backgroundMusic = {
-            oscillator: this.audioContext.createOscillator(),
-            gainNode: this.audioContext.createGain(),
-            isPlaying: true
-        };
-        
-        this.backgroundMusic.oscillator.connect(this.backgroundMusic.gainNode);
-        this.backgroundMusic.gainNode.connect(this.audioContext.destination);
-        
-        this.backgroundMusic.oscillator.frequency.setValueAtTime(220, this.audioContext.currentTime);
-        this.backgroundMusic.gainNode.gain.setValueAtTime(this.volume * 0.1, this.audioContext.currentTime);
-        
-        this.backgroundMusic.oscillator.start();
-        this.playMelody();
-    }
-    
-    playMelody() {
-        if (!this.backgroundMusic || !this.musicEnabled) return;
-        
-        const notes = [220, 247, 262, 294, 330, 349, 392, 440];
-        let noteIndex = 0;
-        
-        const playNote = () => {
-            if (!this.backgroundMusic || !this.musicEnabled) return;
-            
-            this.backgroundMusic.oscillator.frequency.setValueAtTime(
-                notes[noteIndex % notes.length], 
-                this.audioContext.currentTime
-            );
-            noteIndex++;
-            
-            setTimeout(playNote, 2000); // Nieuwe noot elke 2 seconden
-        };
-        
-        playNote();
-    }
-    
-    stopBackgroundMusic() {
-        if (this.backgroundMusic) {
-            this.backgroundMusic.oscillator.stop();
-            this.backgroundMusic = null;
-        }
-    }
-    
-    toggleMusic() {
-        this.musicEnabled = !this.musicEnabled;
-        if (this.musicEnabled) {
-            this.startBackgroundMusic();
-        } else {
-            this.stopBackgroundMusic();
-        }
-    }
-    
-    toggleSound() {
-        this.soundEnabled = !this.soundEnabled;
-    }
-    
-    setVolume(volume) {
-        this.volume = volume / 100;
-        if (this.backgroundMusic) {
-            this.backgroundMusic.gainNode.gain.setValueAtTime(this.volume * 0.1, this.audioContext.currentTime);
-        }
-    }
-}
-
 // ===== SIMPLE ACHIEVEMENT =====
 class Achievement {
     constructor(id, name, icon, type, target) {
@@ -393,11 +247,12 @@ class Upgrade {
 
 // ===== SIMPLE THEME =====
 class Theme {
-    constructor(id, name, cost, icon) {
+    constructor(id, name, cost, icon, multiplier = 1) {
         this.id = id;
         this.name = name;
         this.cost = cost;
         this.icon = icon;
+        this.multiplier = multiplier;
         this.unlocked = false;
         
         // Setup purchase button
@@ -472,9 +327,6 @@ class Game {
         
         this.domElements = {};
         
-        // Sound system
-        this.soundManager = new SoundManager();
-        
        
         this.achievements = this.createAchievements();
         this.events = this.createEvents();
@@ -531,9 +383,9 @@ class Game {
     
     createThemes() {
         return [
-            new Theme('storm', 'Storm', 100, '⛈️'),
-            new Theme('night', 'Nacht', 250, '🌙'),
-            new Theme('autumn', 'Herfst', 500, '🍂')
+            new Theme('storm', 'Storm', 100, '⛈️', 1.2),
+            new Theme('night', 'Nacht', 250, '🌙', 1.5),
+            new Theme('autumn', 'Herfst', 500, '🍂', 2.0)
         ];
     }
     
@@ -553,6 +405,12 @@ class Game {
             if (event.active && event.effect.type === 'clickMultiplier') {
                 clickValue *= event.effect.value;
             }
+        }
+        
+        // Apply theme multiplier
+        const currentTheme = this.themes.find(theme => theme.id === this.currentTheme);
+        if (currentTheme && currentTheme.unlocked) {
+            clickValue *= currentTheme.multiplier;
         }
         
         this.count += clickValue;
@@ -725,11 +583,13 @@ class Game {
                     if (themeId === 'default') {
                         this.currentTheme = themeId;
                         this.save();
+                        this.updateDisplay(); // Update display to show new multiplier
                     } else {
                         const theme = this.themes.find(t => t.id === themeId);
                         if (theme && theme.unlocked) {
                             this.currentTheme = themeId;
                             this.save();
+                            this.updateDisplay(); // Update display to show new multiplier
                         } else {
                             e.target.checked = false;
                             const currentInput = document.getElementById(`theme-${this.currentTheme}`);
@@ -808,7 +668,7 @@ class Game {
                 timeLeft: e.timeLeft, 
                 cooldownLeft: e.cooldownLeft
             })),
-            themes: this.themes.map(t => ({id: t.id, unlocked: t.unlocked})),
+            themes: this.themes.map(t => ({id: t.id, unlocked: t.unlocked, multiplier: t.multiplier})),
             upgrades: this.upgrades.map(u => ({id: u.id, purchased: u.purchased, multiplier: u.multiplier, multiplierApplied: u.multiplierApplied}))
         });
     }
@@ -843,6 +703,7 @@ class Game {
         
         this.loadSystemData(data.themes, this.themes, (item, saved) => {
             item.unlocked = saved.unlocked;
+            if (saved.multiplier) item.multiplier = saved.multiplier;
         });
         
         this.loadSystemData(data.upgrades, this.upgrades, (item, saved) => {
