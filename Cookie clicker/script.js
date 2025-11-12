@@ -1,32 +1,27 @@
-// ===== NUMBER FORMATTING UTILITY =====
-class NumberFormatter {
-    static format(num) {
-        if (num < 1000) return Math.floor(num).toString();
-        if (num < 1000000) return (num / 1000).toFixed(1).replace('.0', '') + 'K';
-        if (num < 1000000000) return (num / 1000000).toFixed(1).replace('.0', '') + 'M';
-        if (num < 1000000000000) return (num / 1000000000).toFixed(1).replace('.0', '') + 'B';
-        return (num / 1000000000000).toFixed(1).replace('.0', '') + 'T';
-    }
-}
-
 // ===== SIMPLE GAME STORAGE =====
+// Beheert het opslaan en laden van speldata
 class Storage {
+    // Slaat data op in browser localStorage
     static save(key, data) {
         localStorage.setItem(key, JSON.stringify(data));
     }
     
+    // Laadt data uit browser localStorage
     static load(key) {
         const data = localStorage.getItem(key);
         return data ? JSON.parse(data) : null;
     }
     
+    // Verwijdert data uit browser localStorage
     static remove(key) {
         localStorage.removeItem(key);
     }
 }
 
 // ===== SIMPLE ACHIEVEMENT =====
+// Beheert prestaties die spelers kunnen behalen
 class Achievement {
+    // Maakt een nieuwe prestatie aan
     constructor(id, name, icon, type, target) {
         this.id = id;
         this.name = name;
@@ -35,10 +30,12 @@ class Achievement {
         this.unlocked = false;
     }
     
+    // Controleert of prestatie behaald is (ChatGPT hulp bij switch logic)
     check(game) {
         if (this.unlocked) return false;
         
         let current = 0;
+        // Switch statement om verschillende prestatie types te checken
         switch (this.type) {
             case 'clicks': current = game.totalClicks; break;
             case 'flowers': current = game.totalFlowers; break;
@@ -46,9 +43,10 @@ class Achievement {
             case 'themes': current = game.unlockedThemes; break;
             case 'events': current = game.totalEvents; break;
             case 'perSecond': current = game.perSecond; break;
-            case 'time': current = (Date.now() - game.startTime) / 60000; break;
+            case 'time': current = (Date.now() - game.startTime) / 60000; break; // Tijd in minuten
         }
         
+        // Als doel bereikt is, unlock prestatie
         if (current >= this.target) {
             this.unlocked = true;
             this.showNotification();
@@ -57,16 +55,19 @@ class Achievement {
         return false;
     }
     
+    // Toont melding dat prestatie behaald is
     showNotification() {
         Achievement.showNotificationMessage(this.name);
     }
     
+    // Toont prestatie melding op scherm (ChatGPT hulp bij DOM manipulatie)
     static showNotificationMessage(message) {
         const notification = document.getElementById('achievementNotification');
         const nameElement = document.getElementById('notificationName');
         if (notification && nameElement) {
             nameElement.textContent = message;
             notification.classList.add('show');
+            // Verberg melding na 3 seconden
             setTimeout(() => notification.classList.remove('show'), 3000);
         }
     }
@@ -82,38 +83,45 @@ class GameEvent {
         this.duration = duration;
         this.cooldown = cooldown;
         this.effect = effect;
-        this.active = false;
         this.unlocked = false;
+        this.active = false;
         this.timeLeft = 0;
         this.cooldownLeft = 0;
-    }
-    
-    setupEventHandlers() {
-        const element = document.getElementById(`${this.id}-event`);
+        
+        // Koppel click event aan HTML element
+        const element = document.getElementById(`${id}-event`);
         if (element) {
             element.onclick = () => this.activate();
         }
     }
     
+    // Activeert het event als mogelijk
     activate() {
         if (!this.canActivate()) return false;
         
         window.game.count -= this.cost;
-        window.game.totalEvents++;
-        window.game.updateDisplay();
-        
         this.active = true;
         this.timeLeft = this.duration;
+        this.cooldownLeft = 0;
+        
         this.updateUI();
+        window.game.updateDisplay();
+        window.game.save();
         
         return true;
     }
     
+    // Controleert of event geactiveerd kan worden
     canActivate() {
-        return this.unlocked && !this.active && this.cooldownLeft <= 0 && window.game.count >= this.cost;
+        return this.unlocked && 
+               !this.active && 
+               this.cooldownLeft <= 0 && 
+               window.game.count >= this.cost;
     }
     
+    // Update event timers elke frame (ChatGPT hulp bij timer logic)
     update(deltaTime) {
+        // Als event actief is, tel tijd af
         if (this.active && this.timeLeft > 0) {
             this.timeLeft -= deltaTime;
             if (this.timeLeft <= 0) {
@@ -122,14 +130,16 @@ class GameEvent {
             }
         }
         
+        // Als in cooldown, tel cooldown af
         if (this.cooldownLeft > 0) {
             this.cooldownLeft -= deltaTime;
-            if (this.cooldownLeft <= 0) this.cooldownLeft = 0;
+            if (this.cooldownLeft < 0) this.cooldownLeft = 0;
         }
         
         this.updateUI();
     }
     
+    // Update de UI elementen van het event (ChatGPT hulp bij tijd formatting)
     updateUI() {
         const element = document.getElementById(`${this.id}-event`);
         const timer = document.getElementById(`${this.id}-timer`);
@@ -141,10 +151,12 @@ class GameEvent {
         
         if (timer) {
             if (this.active && this.timeLeft > 0) {
+                // Formatteer tijd als MM:SS
                 const min = Math.floor(this.timeLeft / 60);
                 const sec = Math.floor(this.timeLeft % 60);
                 timer.textContent = `${min}:${sec.toString().padStart(2, '0')}`;
             } else if (this.cooldownLeft > 0) {
+                // Formatteer cooldown tijd als MM:SS
                 const min = Math.floor(this.cooldownLeft / 60);
                 const sec = Math.floor(this.cooldownLeft % 60);
                 timer.textContent = `${min}:${sec.toString().padStart(2, '0')}`;
@@ -156,12 +168,12 @@ class GameEvent {
 }
 
 // ===== UPGRADE CONFIGURATION =====
+// Configuratie object met alle upgrade instellingen
 const UPGRADE_CONFIG = {
  
     mousePowerBtn: { cost: 15, type: 'click', value: 1, name: 'Zonnestralen' },
     autoClickerBtn: { cost: 50, type: 'perSecond', value: 0.5, name: 'Automatische groei' },
     fertilizerBtn: { cost: 125, type: 'click', value: 2, name: 'Magische Meststof' },
-<<<<<<< Updated upstream
     beeHiveBtn: { cost: 300, type: 'perSecond', value: 1, name: 'Bijenkorf' },
     rainCloudBtn: { cost: 750, type: 'click', value: 3, name: 'Regenwolk' },
     gardenGnomeBtn: { cost: 1500, type: 'perSecond', value: 2, name: 'Tuinkabouter' },
@@ -177,27 +189,12 @@ const UPGRADE_CONFIG = {
     aartsTuinkabouter: { cost: 10000, type: 'multiplier', target: 'gardenGnomeBtn', value: 2, name: 'Aarts Tuinkabouter' },
     prismaLensBtn: { cost: 15000, type: 'multiplier', target: 'sunlightLensBtn', value: 2, name: 'Prisma Lens' },
     tijdMeesterBtn: { cost: 25000, type: 'multiplier', target: 'timeAcceleratorBtn', value: 2, name: 'Tijd Meester' }
-=======
-    beeHiveBtn: { cost: 300, type: 'perSecond', value: 0.3, name: 'Bijenkorf' },
-    rainCloudBtn: { cost: 750, type: 'click', value: 3, name: 'Regenwolk' },
-    gardenGnomeBtn: { cost: 1500, type: 'perSecond', value: 0.8, name: 'Tuinkabouter' },
-    sunlightLensBtn: { cost: 3000, type: 'click', value: 5, name: 'Zonlicht Lens' },
-    timeAcceleratorBtn: { cost: 6000, type: 'perSecond', value: 1.5, name: 'Tijd Versneller' },
-    cosmicSeedBtn: { cost: 12000, type: 'click', value: 10, name: 'Kosmisch Zaad' },
-    
-    turboZonnestralenBtn: { cost: 500, type: 'multiplier', target: 'mousePowerBtn', value: 1.2, name: 'Turbo Zonnestralen' },
-    superGroeiBtn: { cost: 1200, type: 'multiplier', target: 'autoClickerBtn', value: 1.3, name: 'Super Groei' },
-    megaMeststofBtn: { cost: 2500, type: 'multiplier', target: 'fertilizerBtn', value: 1.2, name: 'Mega Meststof' },
-    koninginneBijBtn: { cost: 4000, type: 'multiplier', target: 'beeHiveBtn', value: 1.4, name: 'Koningin Bij' },
-    stormWolkBtn: { cost: 6500, type: 'multiplier', target: 'rainCloudBtn', value: 1.3, name: 'Storm Wolk' },
-    aartsTuinkabouter: { cost: 10000, type: 'multiplier', target: 'gardenGnomeBtn', value: 1.5, name: 'Aarts Tuinkabouter' },
-    prismaLensBtn: { cost: 15000, type: 'multiplier', target: 'sunlightLensBtn', value: 1.4, name: 'Prisma Lens' },
-    tijdMeesterBtn: { cost: 20000, type: 'multiplier', target: 'timeAcceleratorBtn', value: 1.6, name: 'Tijd Meester' }
->>>>>>> Stashed changes
 };
 
 // ===== SIMPLE UPGRADE =====
+// Beheert upgrades die spelers kunnen kopen
 class Upgrade {
+    // Maakt nieuwe upgrade aan vanuit config
     constructor(id, config) {
         this.id = id;
         this.cost = config.cost;
@@ -207,22 +204,16 @@ class Upgrade {
         this.name = config.name;
         this.purchased = false;
         this.multiplier = 1;
-<<<<<<< Updated upstream
         this.multiplierApplied = false;
         
-        // Setup click handler
+        // Koppel click event aan HTML element
         const element = document.getElementById(id);
-=======
-    }
-    
-    setupEventHandlers() {
-        const element = document.getElementById(this.id);
->>>>>>> Stashed changes
         if (element) {
             element.onclick = () => this.purchase();
         }
     }
     
+    // Koopt de upgrade als speler genoeg geld heeft
     purchase() {
         if (this.purchased || window.game.count < this.cost) return false;
         
@@ -239,17 +230,21 @@ class Upgrade {
         return true;
     }
     
+    // Past upgrade effect toe op spel stats (ChatGPT hulp bij multiplier logic)
     applyEffect() {
         const game = window.game;
         
         switch (this.type) {
             case 'click':
+                // Verhoog klik waarde
                 game.perClick += this.value;
                 break;
             case 'perSecond':
+                // Verhoog automatische generatie
                 game.perSecond += this.value;
                 break;
             case 'multiplier':
+                // Multiplier upgrade voor andere upgrades
                 const targetUpgrade = game.upgrades.find(u => u.id === this.target);
                 if (targetUpgrade && targetUpgrade.purchased && !this.multiplierApplied) {
                     this.multiplierApplied = true;
@@ -264,18 +259,22 @@ class Upgrade {
         }
     }
     
+    // Update UI styling gebaseerd op status
     updateUI() {
         const element = document.getElementById(this.id);
         if (!element) return;
         
         if (this.purchased) {
+            // Toon als gekocht
             element.classList.add('purchased');
             element.style.opacity = '0.5';
             element.style.pointerEvents = 'none';
         } else if (window.game.count >= this.cost) {
+            // Toon als betaalbaar
             element.classList.add('affordable');
             element.classList.remove('unaffordable');
         } else {
+            // Toon als te duur
             element.classList.add('unaffordable');
             element.classList.remove('affordable');
         }
@@ -283,23 +282,25 @@ class Upgrade {
 }
 
 // ===== SIMPLE THEME =====
+// Beheert thema's met visuele en gameplay effecten
 class Theme {
+    // Maakt nieuw thema aan met multiplier bonus
     constructor(id, name, cost, icon, multiplier = 1) {
         this.id = id;
         this.name = name;
         this.cost = cost;
         this.icon = icon;
-        this.multiplier = multiplier;
+        this.multiplier = multiplier; // Bonus voor clicks
         this.unlocked = false;
-    }
-    
-    setupEventHandlers() {
-        const button = document.querySelector(`#${this.id}-unlock .purchase-btn`);
+        
+        // Koppel koop knop aan functie
+        const button = document.querySelector(`#${id}-unlock .purchase-btn`);
         if (button) {
             button.onclick = () => this.purchase();
         }
     }
     
+    // Koopt thema als speler genoeg geld heeft
     purchase() {
         if (this.unlocked || window.game.count < this.cost) return false;
         
@@ -315,6 +316,7 @@ class Theme {
         return true;
     }
     
+    // Update thema UI elementen (ChatGPT hulp bij DOM selectoren)
     updateUI() {
         const unlockItem = document.getElementById(`${this.id}-unlock`);
         const button = unlockItem?.querySelector('.purchase-btn');
@@ -322,6 +324,7 @@ class Theme {
         const lock = document.querySelector(`.theme-${this.id}-option .theme-lock`);
         
         if (this.unlocked) {
+            // Thema is gekocht - enable selectie
             if (unlockItem) unlockItem.classList.add('purchased');
             if (button) {
                 button.textContent = 'Gekocht';
@@ -333,52 +336,59 @@ class Theme {
             }
             if (lock) lock.style.display = 'none';
         } else if (window.game.count >= this.cost) {
+            // Thema is betaalbaar
             if (button) button.disabled = false;
             if (unlockItem) unlockItem.classList.add('affordable');
         } else {
+            // Thema is te duur
             if (button) button.disabled = true;
             if (unlockItem) unlockItem.classList.remove('affordable');
         }
     }
     
+    // Toont melding dat thema gekocht is
     showNotification() {
         Achievement.showNotificationMessage(`Thema Gekocht: ${this.name} ${this.icon}`);
     }
 }
 
 // ===== MAIN GAME =====
+// Hoofdklasse die het hele spel beheert
 class Game {
+    // Initialiseert het spel met alle basis waarden
     constructor() {
-        this.count = 0;
-        this.totalClicks = 0;
-        this.totalFlowers = 0;
-        this.upgradesBought = 0;
-        this.perClick = 1;
-        this.perSecond = 0;
-        this.totalEvents = 0;
-        this.unlockedThemes = 0;
-        this.startTime = Date.now();
-        this.volume = 50;
-        this.currentTheme = 'default';
+        // Basis spel statistieken
+        this.count = 0; // Huidige zonnebloemen
+        this.totalClicks = 0; // Totaal aantal clicks
+        this.totalFlowers = 0; // Totaal gegenereerde bloemen
+        this.upgradesBought = 0; // Aantal gekochte upgrades
+        this.perClick = 1; // Bloemen per klik
+        this.perSecond = 0; // Automatische generatie per seconde
+        this.totalEvents = 0; // Aantal gebruikte events
+        this.unlockedThemes = 0; // Aantal ontgrendelde thema's
+        this.startTime = Date.now(); // Start tijd voor prestaties
+        this.volume = 50; // Audio volume
+        this.currentTheme = 'default'; // Huidig actief thema
         
+        // Cache voor DOM elementen (performance)
         this.domElements = {};
         
-       
-=======
->>>>>>> Stashed changes
+        // Maak alle spel systemen aan
         this.achievements = this.createAchievements();
         this.events = this.createEvents();
         this.themes = this.createThemes();
         this.upgrades = this.createUpgrades();
         
-        // Make globally available
+        // Maak globaal beschikbaar voor HTML
         window.game = this;
         
-        this.load();
-        this.setupUI();
-        this.startGameLoop();
+        // Start het spel
+        this.load(); // Laad opgeslagen data
+        this.setupUI(); // Koppel UI events
+        this.startGameLoop(); // Start game loop
     }
     
+    // Maakt alle prestaties aan die spelers kunnen behalen
     createAchievements() {
         return [
             new Achievement('first-click', 'Eerste Klik', '👆', 'clicks', 1),
@@ -409,16 +419,18 @@ class Game {
         ];
     }
     
+    // Maakt alle game events aan met effecten
     createEvents() {
         return [
-            new GameEvent('golden-hour', 'Gouden Uur', '🌅', 200, 15, 300, {type: 'clickMultiplier', value: 1.5}),
-            new GameEvent('bee-swarm', 'Bijenzwerm', '🐝', 600, 15, 400, {type: 'bonusPerSecond', value: 3}),
-            new GameEvent('rainbow-boost', 'Regenboog Boost', '🌈', 1200, 15, 600, {type: 'clickMultiplier', value: 2.5}),
-            new GameEvent('meteor-shower', 'Meteorenregen', '☄️', 2500, 15, 800, {type: 'randomBonus', value: 0.2}),
-            new GameEvent('fairy-visit', 'Fee Bezoek', '🧚‍♀️', 5000, 15, 1000, {type: 'discount', value: 0.3})
+            new GameEvent('golden-hour', 'Gouden Uur', '🌅', 200, 15, 300, {type: 'clickMultiplier', value: 2}),
+            new GameEvent('bee-swarm', 'Bijenzwerm', '🐝', 600, 15, 400, {type: 'bonusPerSecond', value: 10}),
+            new GameEvent('rainbow-boost', 'Regenboog Boost', '🌈', 1200, 15, 600, {type: 'clickMultiplier', value: 5}),
+            new GameEvent('meteor-shower', 'Meteorenregen', '☄️', 2500, 15, 800, {type: 'randomBonus', value: 0.3}),
+            new GameEvent('fairy-visit', 'Fee Bezoek', '🧚‍♀️', 5000, 15, 1000, {type: 'discount', value: 0.5})
         ];
     }
     
+    // Maakt alle thema's aan met multipliers
     createThemes() {
         return [
             new Theme('storm', 'Storm', 100, '⛈️', 1.2),
@@ -427,6 +439,7 @@ class Game {
         ];
     }
     
+    // Maakt alle upgrades aan vanuit config object
     createUpgrades() {
         const upgrades = [];
         for (const [id, config] of Object.entries(UPGRADE_CONFIG)) {
@@ -435,41 +448,45 @@ class Game {
         return upgrades;
     }
     
+    // Hoofdfunctie die wordt aangeroepen bij elke klik (ChatGPT hulp bij multiplier berekeningen)
     click() {
         let clickValue = this.perClick;
         
-        // Apply event multipliers
+        // Pas event multipliers toe
         for (const event of this.events) {
             if (event.active && event.effect.type === 'clickMultiplier') {
                 clickValue *= event.effect.value;
             }
         }
         
-        // Apply theme multiplier
+        // Pas thema multiplier toe
         const currentTheme = this.themes.find(theme => theme.id === this.currentTheme);
         if (currentTheme && currentTheme.unlocked) {
             clickValue *= currentTheme.multiplier;
         }
         
+        // Update alle counters
         this.count += clickValue;
         this.totalClicks++;
         this.totalFlowers += clickValue;
         
-        // Meteor shower bonus
+        // Speciale meteor shower bonus (ChatGPT hulp bij random logic)
         const meteorEvent = this.events.find(e => e.id === 'meteor-shower');
         if (meteorEvent && meteorEvent.active && Math.random() < meteorEvent.effect.value) {
-            const bonus = Math.floor(Math.random() * 21) + 5;
+            const bonus = Math.floor(Math.random() * 21) + 5; // 5-25 bonus
             this.count += bonus;
             this.totalFlowers += bonus;
             console.log(`Meteor bonus: +${bonus} zonnebloemen!`);
         }
         
+        // Update alles na klik
         this.updateDisplay();
         this.checkAchievements();
         this.checkUnlocks();
         this.save();
     }
     
+    // Controleert alle prestaties of ze behaald zijn
     checkAchievements() {
         for (const achievement of this.achievements) {
             if (achievement.check(this)) {
@@ -478,8 +495,9 @@ class Game {
         }
     }
     
+    // Controleert wat ontgrendeld kan worden en update UI
     checkUnlocks() {
-        // Check event unlocks and update all UI in one loop
+        // Check event unlocks en update UI in één loop
         this.events.forEach(event => {
             if (!event.unlocked && this.totalFlowers >= event.cost) {
                 event.unlocked = true;
@@ -487,15 +505,16 @@ class Game {
             event.updateUI();
         });
         
-        // Check upgrade unlocks (make affordable when you have enough flowers)
+        // Check upgrade unlocks (maak betaalbaar als je genoeg bloemen hebt)
         this.upgrades.forEach(upgrade => {
             upgrade.updateUI();
         });
         
-        // Update theme UI
+        // Update thema UI
         this.themes.forEach(theme => theme.updateUI());
     }
     
+    // Cache DOM elementen voor betere performance (ChatGPT hulp bij optimization)
     cacheDOM() {
         this.domElements = {
             sunflowerCount: document.getElementById('sunflowerCount'),
@@ -507,26 +526,19 @@ class Game {
         };
     }
     
+    // Update alle nummers op het scherm (ChatGPT hulp bij number formatting)
     updateDisplay() {
         if (!this.domElements.sunflowerCount) this.cacheDOM();
         
         const { sunflowerCount, totalFlowers, totalClicks, perSecond, upgradesBought, perClick } = this.domElements;
         
-<<<<<<< Updated upstream
+        // Formatteer nummers netjes zonder lange decimalen
         if (sunflowerCount) sunflowerCount.textContent = Math.floor(this.count);
         if (totalFlowers) totalFlowers.textContent = Math.floor(this.totalFlowers);
         if (totalClicks) totalClicks.textContent = this.totalClicks;
         if (perSecond) perSecond.textContent = Math.round(this.perSecond * 10) / 10;
         if (upgradesBought) upgradesBought.textContent = this.upgradesBought;
         if (perClick) perClick.textContent = Math.round(this.perClick * 10) / 10;
-=======
-        if (sunflowerCount) sunflowerCount.textContent = NumberFormatter.format(this.count);
-        if (totalFlowers) totalFlowers.textContent = NumberFormatter.format(this.totalFlowers);
-        if (totalClicks) totalClicks.textContent = NumberFormatter.format(this.totalClicks);
-        if (perSecond) perSecond.textContent = NumberFormatter.format(this.perSecond);
-        if (upgradesBought) upgradesBought.textContent = this.upgradesBought;
-        if (perClick) perClick.textContent = NumberFormatter.format(this.perClick);
->>>>>>> Stashed changes
     }
     
     updateAchievementUI(achievement) {
@@ -540,23 +552,18 @@ class Game {
     }
     
     setupUI() {
-        // Setup sunflower click
+        // Zet zonnebloem klik op
         const sunflower = document.querySelector('.sunflower-button');
         if (sunflower) {
             sunflower.onclick = () => this.click();
         }
         
-        // Setup event handlers for all game objects
-        this.events.forEach(event => event.setupEventHandlers());
-        this.upgrades.forEach(upgrade => upgrade.setupEventHandlers());
-        this.themes.forEach(theme => theme.setupEventHandlers());
-        
-        // Setup panels
+        // Zet panelen op
         this.setupPanel('settings', 'settingsButton', 'settingsPanel');
         this.setupPanel('stats', 'statsButton', 'statsPanel');
         this.setupPanel('achievements', 'achievementsButton', 'achievementsPanel');
         
-        // Setup volume
+        // Zet volume op
         const volumeSlider = document.getElementById('volumeSlider');
         const volumeValue = document.getElementById('volumeValue');
         if (volumeSlider && volumeValue) {
@@ -569,7 +576,7 @@ class Game {
             };
         }
         
-        // Setup reset
+        // Zet reset op
         const resetBtn = document.getElementById('resetGameBtn');
         if (resetBtn) {
             resetBtn.onclick = () => this.showResetModal();
@@ -583,21 +590,21 @@ class Game {
         const button = document.getElementById(buttonId);
         const panel = document.getElementById(panelId);
         if (button && panel) {
-            // Toggle panel when button is clicked
+            // Schakel paneel om wanneer knop wordt geklikt
             button.onclick = (e) => {
-                e.stopPropagation(); // Prevent document click from immediately closing
+                e.stopPropagation(); // Voorkom dat document klik meteen sluit
                 panel.classList.toggle('show');
             };
             
-            // Close panel when clicking outside
+            // Sluit paneel wanneer buiten wordt geklikt
             document.addEventListener('click', (e) => {
-                // Check if click is outside the panel and button
+                // Controleer of klik buiten paneel en knop is
                 if (!panel.contains(e.target) && !button.contains(e.target)) {
                     panel.classList.remove('show');
                 }
             });
             
-            // Prevent panel clicks from closing the panel
+            // Voorkom dat paneel kliks het paneel sluiten
             panel.addEventListener('click', (e) => {
                 e.stopPropagation();
             });
@@ -635,13 +642,13 @@ class Game {
                     if (themeId === 'default') {
                         this.currentTheme = themeId;
                         this.save();
-                        this.updateDisplay(); // Update display to show new multiplier
+                        this.updateDisplay(); // Update weergave om nieuwe multiplier te tonen
                     } else {
                         const theme = this.themes.find(t => t.id === themeId);
                         if (theme && theme.unlocked) {
                             this.currentTheme = themeId;
                             this.save();
-                            this.updateDisplay(); // Update display to show new multiplier
+                            this.updateDisplay(); // Update weergave om nieuwe multiplier te tonen
                         } else {
                             e.target.checked = false;
                             const currentInput = document.getElementById(`theme-${this.currentTheme}`);
@@ -666,11 +673,11 @@ class Game {
             const deltaTime = (now - lastTime) / 1000;
             lastTime = now;
             
-            // Auto generation
+            // Automatische generatie
             if (this.perSecond > 0) {
                 let totalPerSecond = this.perSecond;
                 
-                // Add event bonuses
+                // Voeg event bonussen toe
                 totalPerSecond += this.events
                     .filter(event => event.active && event.effect.type === 'bonusPerSecond')
                     .reduce((sum, event) => sum + event.effect.value, 0);
@@ -688,7 +695,7 @@ class Game {
                 event.update(deltaTime);
             }
             
-            // Save every 5 seconds
+            // Sla elke 5 seconden op
             if (Math.floor(now / 5000) !== Math.floor((now - 1000) / 5000)) {
                 this.save();
             }
@@ -741,7 +748,7 @@ class Game {
         this.volume = data.volume || 50;
         this.currentTheme = data.currentTheme || 'default';
         
-        // Load all systems data
+        // Laad alle systeem data
         this.loadSystemData(data.achievements, this.achievements, (item, saved) => {
             item.unlocked = saved.unlocked;
         });
@@ -765,12 +772,12 @@ class Game {
             if (item.purchased) item.applyEffect();
         });
         
-        // Update UI after loading
+        // Update UI na het laden
         setTimeout(() => {
             this.updateDisplay();
             this.updateAllUI();
             
-            // Set current theme
+            // Zet huidig thema
             const themeInput = document.getElementById(`theme-${this.currentTheme}`);
             if (themeInput) themeInput.checked = true;
         }, 100);
@@ -788,7 +795,7 @@ class Game {
         this.startTime = Date.now();
         this.currentTheme = 'default';
         
-        // Reset all systems
+        // Reset alle systemen
         this.achievements.forEach(achievement => achievement.unlocked = false);
         this.events.forEach(event => {
             event.unlocked = false;
@@ -815,7 +822,7 @@ class Game {
         console.log('Game reset completed');
     }
     
-    // Helper method for loading system data
+    // Helper methode voor het laden van systeem data
     loadSystemData(savedData, systemArray, applyFunction) {
         if (!savedData) return;
         savedData.forEach(saved => {
@@ -824,7 +831,7 @@ class Game {
         });
     }
     
-    // Helper method for updating all UI elements
+    // Helper methode voor het updaten van alle UI elementen
     updateAllUI() {
         this.achievements.forEach(achievement => {
             if (achievement.unlocked) this.updateAchievementUI(achievement);
