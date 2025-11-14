@@ -1774,10 +1774,8 @@ body:has(#theme-storm:checked) .theme-selector {
 
 #theme-storm:checked ~ * .settings-button,
 #theme-storm:checked ~ * .stats-button,
-#theme-storm:checked ~ * .achievements-button,
 body:has(#theme-storm:checked) .settings-button,
-body:has(#theme-storm:checked) .stats-button,
-body:has(#theme-storm:checked) .achievements-button {
+body:has(#theme-storm:checked) .stats-button {
     background: linear-gradient(145deg, rgba(69, 90, 100, 0.95), rgba(55, 71, 79, 0.85));
     border-color: rgba(96, 125, 139, 0.4);
     color: #B0BEC5;
@@ -1847,7 +1845,6 @@ body:has(#theme-night:checked) .unlock-status {
     color: #9FA8DA;
 }
 
-#theme-night:checked ~ * .theme-selector,
 body:has(#theme-night:checked) .theme-selector {
     background: linear-gradient(145deg, rgba(26, 35, 126, 0.95), rgba(13, 27, 42, 0.85));
     border-color: rgba(63, 81, 181, 0.4);
@@ -1855,10 +1852,8 @@ body:has(#theme-night:checked) .theme-selector {
 
 #theme-night:checked ~ * .settings-button,
 #theme-night:checked ~ * .stats-button,
-#theme-night:checked ~ * .achievements-button,
 body:has(#theme-night:checked) .settings-button,
-body:has(#theme-night:checked) .stats-button,
-body:has(#theme-night:checked) .achievements-button {
+body:has(#theme-night:checked) .stats-button {
     background: linear-gradient(145deg, rgba(26, 35, 126, 0.95), rgba(13, 27, 42, 0.85));
     border-color: rgba(63, 81, 181, 0.4);
     color: #C5CAE9;
@@ -1936,10 +1931,8 @@ body:has(#theme-autumn:checked) .theme-selector {
 
 #theme-autumn:checked ~ * .settings-button,
 #theme-autumn:checked ~ * .stats-button,
-#theme-autumn:checked ~ * .achievements-button,
 body:has(#theme-autumn:checked) .settings-button,
-body:has(#theme-autumn:checked) .stats-button,
-body:has(#theme-autumn:checked) .achievements-button {
+body:has(#theme-autumn:checked) .stats-button {
     background: linear-gradient(145deg, rgba(191, 54, 12, 0.95), rgba(230, 81, 0, 0.85));
     border-color: rgba(255, 87, 34, 0.4);
     color: #FFCCBC;
@@ -1999,33 +1992,6 @@ body:has(#theme-autumn:checked) .achievements-button {
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
 }
 
-/* Achievements Button */
-.achievements-button {
-    position: fixed;
-    top: 10px;
-    right: 140px;
-    z-index: 1001;
-    background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85));
-    backdrop-filter: blur(15px);
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    border: 2px solid rgba(255, 193, 7, 0.3);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    transition: all 0.3s ease;
-    user-select: none;
-}
-
-.achievements-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 15px 35px rgba(255, 193, 7, 0.3);
-}
-
 /* Settings Panel */
 .settings-panel {
     position: fixed;
@@ -2058,49 +2024,6 @@ body:has(#theme-autumn:checked) .achievements-button {
     margin-bottom: 20px;
     text-align: center;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.volume-control {
-    margin-bottom: 15px;
-}
-
-.volume-label {
-    display: block;
-    color: #666;
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 8px;
-}
-
-.volume-slider {
-    width: 100%;
-    height: 6px;
-    border-radius: 3px;
-    background: #ddd;
-    outline: none;
-    -webkit-appearance: none;
-    appearance: none;
-}
-
-.volume-slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: #6366f1;
-    cursor: pointer;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-}
-
-.volume-slider::-moz-range-thumb {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: #6366f1;
-    cursor: pointer;
-    border: none;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
 .volume-value {

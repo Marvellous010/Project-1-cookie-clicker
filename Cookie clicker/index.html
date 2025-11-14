@@ -210,18 +210,10 @@
     </div>
 
    
-    <div class="achievements-button" id="achievementsButton">
-        🏆
-    </div>
-
+   
    
     <div class="settings-panel" id="settingsPanel">
         <h3 class="settings-title">Instellingen</h3>
-        <div class="volume-control">
-            <label class="volume-label" for="volumeSlider">Volume</label>
-            <input type="range" id="volumeSlider" class="volume-slider" min="0" max="100" value="50">
-            <div class="volume-value" id="volumeValue">50%</div>
-        </div>
         <div class="reset-control">
             <button id="resetGameBtn" class="reset-button">
                 <span class="reset-icon">🔄</span>
@@ -274,256 +266,7 @@
     </div>
 
    
-    <div class="achievements-panel" id="achievementsPanel">
-        <h3 class="achievements-panel-title">🏆 Achievements</h3>
-        <div class="achievements-grid">
-            <div class="achievement-item" id="achievement-first-click" data-achieved="false">
-                <span class="achievement-icon">👆</span>
-                <div class="achievement-info">
-                    <span class="achievement-name">Eerste Klik</span>
-                    <span class="achievement-description">Klik voor de eerste keer op de zonnebloem</span>
-                </div>
-                <span class="achievement-status"></span>
-            </div>
-            <div class="achievement-item" id="achievement-hundred-club" data-achieved="false">
-                <span class="achievement-icon">💯</span>
-                <div class="achievement-info">
-                    <span class="achievement-name">Honderd Club</span>
-                    <span class="achievement-description">Verzamel 100 zonnebloemen</span>
-                </div>
-                <span class="achievement-status"></span>
-            </div>
-            <div class="achievement-item" id="achievement-click-master" data-achieved="false">
-                <span class="achievement-icon">🖱️</span>
-                <div class="achievement-info">
-                    <span class="achievement-name">Klik Meester</span>
-                    <span class="achievement-description">Klik 500 keer</span>
-                </div>
-                <span class="achievement-status"></span>
-            </div>
-            <div class="achievement-item" id="achievement-thousand-stars" data-achieved="false">
-                <span class="achievement-icon">⭐</span>
-                <div class="achievement-info">
-                    <span class="achievement-name">Duizend Sterren</span>
-                    <span class="achievement-description">Verzamel 1000 zonnebloemen</span>
-                </div>
-                <span class="achievement-status"></span>
-            </div>
-            <div class="achievement-item" id="achievement-sunflower-tycoon" data-achieved="false">
-                <span class="achievement-icon">🌻</span>
-                <div class="achievement-info">
-                    <span class="achievement-name">Zonnebloem Magnaat</span>
-                    <span class="achievement-description">Verzamel 5000 zonnebloemen</span>
-                </div>
-                <span class="achievement-status"></span>
-            </div>
-            <div class="achievement-item" id="achievement-click-king" data-achieved="false">
-                <span class="achievement-icon">👑</span>
-                <div class="achievement-info">
-                    <span class="achievement-name">Klik Koning</span>
-                    <span class="achievement-description">Klik 2000 keer</span>
-                </div>
-                <span class="achievement-status"></span>
-            </div>
-            <div class="achievement-item" id="achievement-mega-collector" data-achieved="false">
-                <span class="achievement-icon">🏆</span>
-                <div class="achievement-info">
-                    <span class="achievement-name">Mega Verzamelaar</span>
-                    <span class="achievement-description">Verzamel 10000 zonnebloemen</span>
-                </div>
-                <span class="achievement-status"></span>
-            </div>
-            <div class="achievement-item" id="achievement-click-legend" data-achieved="false">
-                <span class="achievement-icon">🌟</span>
-                <div class="achievement-info">
-                    <span class="achievement-name">Klik Legende</span>
-                    <span class="achievement-description">Klik 5000 keer</span>
-                </div>
-                <span class="achievement-status"></span>
-            </div>
-            
-            <!-- Higher Milestone Achievements -->
-            <div class="achievement-item" id="achievement-sunflower-emperor" data-achieved="false">
-                <span class="achievement-icon">👑</span>
-                <div class="achievement-info">
-                    <span class="achievement-name">Zonnebloem Keizer</span>
-                    <span class="achievement-description">Verzamel 25000 zonnebloemen</span>
-                </div>
-                <span class="achievement-status"></span>
-            </div>
-            <div class="achievement-item" id="achievement-click-god" data-achieved="false">
-                <span class="achievement-icon">⚡</span>
-                <div class="achievement-info">
-                    <span class="achievement-name">Klik God</span>
-                    <span class="achievement-description">Klik 10000 keer</span>
-                </div>
-                <span class="achievement-status"></span>
-            </div>
-            <div class="achievement-item" id="achievement-ultimate-collector" data-achieved="false">
-                <span class="achievement-icon">💎</span>
-                <div class="achievement-info">
-                    <span class="achievement-name">Ultieme Verzamelaar</span>
-                    <span class="achievement-description">Verzamel 50000 zonnebloemen</span>
-                </div>
-                <span class="achievement-status"></span>
-            </div>
-            <div class="achievement-item" id="achievement-infinity-clicker" data-achieved="false">
-                <span class="achievement-icon">∞</span>
-                <div class="achievement-info">
-                    <span class="achievement-name">Oneindige Klikker</span>
-                    <span class="achievement-description">Klik 25000 keer</span>
-                </div>
-                <span class="achievement-status"></span>
-            </div>
-            
-            <!-- Upgrade Achievements -->
-            <div class="achievement-item" id="achievement-first-upgrade" data-achieved="false">
-                <span class="achievement-icon">🛒</span>
-                <div class="achievement-info">
-                    <span class="achievement-name">Eerste Upgrade</span>
-                    <span class="achievement-description">Koop je eerste upgrade</span>
-                </div>
-                <span class="achievement-status"></span>
-            </div>
-            <div class="achievement-item" id="achievement-upgrade-enthusiast" data-achieved="false">
-                <span class="achievement-icon">📈</span>
-                <div class="achievement-info">
-                    <span class="achievement-name">Upgrade Liefhebber</span>
-                    <span class="achievement-description">Koop 5 upgrades</span>
-                </div>
-                <span class="achievement-status"></span>
-            </div>
-            <div class="achievement-item" id="achievement-upgrade-master" data-achieved="false">
-                <span class="achievement-icon">🎯</span>
-                <div class="achievement-info">
-                    <span class="achievement-name">Upgrade Meester</span>
-                    <span class="achievement-description">Koop 15 upgrades</span>
-                </div>
-                <span class="achievement-status"></span>
-            </div>
-            <div class="achievement-item" id="achievement-upgrade-collector" data-achieved="false">
-                <span class="achievement-icon">🏪</span>
-                <div class="achievement-info">
-                    <span class="achievement-name">Upgrade Verzamelaar</span>
-                    <span class="achievement-description">Koop 25 upgrades</span>
-                </div>
-                <span class="achievement-status"></span>
-            </div>
-            
-            <!-- Theme Achievements -->
-            <div class="achievement-item" id="achievement-style-explorer" data-achieved="false">
-                <span class="achievement-icon">🎨</span>
-                <div class="achievement-info">
-                    <span class="achievement-name">Stijl Ontdekkingsreiziger</span>
-                    <span class="achievement-description">Unlock je eerste thema</span>
-                </div>
-                <span class="achievement-status"></span>
-            </div>
-            <div class="achievement-item" id="achievement-theme-collector" data-achieved="false">
-                <span class="achievement-icon">🌈</span>
-                <div class="achievement-info">
-                    <span class="achievement-name">Thema Verzamelaar</span>
-                    <span class="achievement-description">Unlock 2 verschillende themas</span>
-                </div>
-                <span class="achievement-status"></span>
-            </div>
-            <div class="achievement-item" id="achievement-fashion-master" data-achieved="false">
-                <span class="achievement-icon">✨</span>
-                <div class="achievement-info">
-                    <span class="achievement-name">Mode Meester</span>
-                    <span class="achievement-description">Unlock alle themas</span>
-                </div>
-                <span class="achievement-status"></span>
-            </div>
-            
-            <!-- Event Achievements -->
-            <div class="achievement-item" id="achievement-event-starter" data-achieved="false">
-                <span class="achievement-icon">🎉</span>
-                <div class="achievement-info">
-                    <span class="achievement-name">Event Starter</span>
-                    <span class="achievement-description">Activeer je eerste event</span>
-                </div>
-                <span class="achievement-status"></span>
-            </div>
-            <div class="achievement-item" id="achievement-event-enthusiast" data-achieved="false">
-                <span class="achievement-icon">🎊</span>
-                <div class="achievement-info">
-                    <span class="achievement-name">Event Liefhebber</span>
-                    <span class="achievement-description">Activeer 5 events</span>
-                </div>
-                <span class="achievement-status"></span>
-            </div>
-            <div class="achievement-item" id="achievement-event-master" data-achieved="false">
-                <span class="achievement-icon">🎆</span>
-                <div class="achievement-info">
-                    <span class="achievement-name">Event Meester</span>
-                    <span class="achievement-description">Activeer 15 events</span>
-                </div>
-                <span class="achievement-status"></span>
-            </div>
-            <div class="achievement-item" id="achievement-golden-hour-fan" data-achieved="false">
-                <span class="achievement-icon">🌅</span>
-                <div class="achievement-info">
-                    <span class="achievement-name">Gouden Uur Fan</span>
-                    <span class="achievement-description">Activeer Gouden Uur 3 keer</span>
-                </div>
-                <span class="achievement-status"></span>
-            </div>
-            <div class="achievement-item" id="achievement-bee-friend" data-achieved="false">
-                <span class="achievement-icon">🐝</span>
-                <div class="achievement-info">
-                    <span class="achievement-name">Bijenvriend</span>
-                    <span class="achievement-description">Activeer Bijenzwerm 3 keer</span>
-                </div>
-                <span class="achievement-status"></span>
-            </div>
-            
-            <!-- Special Achievements -->
-            <div class="achievement-item" id="achievement-speed-demon" data-achieved="false">
-                <span class="achievement-icon">💨</span>
-                <div class="achievement-info">
-                    <span class="achievement-name">Snelheidsduivel</span>
-                    <span class="achievement-description">Verzamel 1000 zonnebloemen in 5 minuten</span>
-                </div>
-                <span class="achievement-status"></span>
-            </div>
-            <div class="achievement-item" id="achievement-efficiency-expert" data-achieved="false">
-                <span class="achievement-icon">⚙️</span>
-                <div class="achievement-info">
-                    <span class="achievement-name">Efficiëntie Expert</span>
-                    <span class="achievement-description">Bereik 50 zonnebloemen per seconde</span>
-                </div>
-                <span class="achievement-status"></span>
-            </div>
-            <div class="achievement-item" id="achievement-patient-gardener" data-achieved="false">
-                <span class="achievement-icon">🕐</span>
-                <div class="achievement-info">
-                    <span class="achievement-name">Geduldige Tuinier</span>
-                    <span class="achievement-description">Speel 30 minuten</span>
-                </div>
-                <span class="achievement-status"></span>
-            </div>
-            <div class="achievement-item" id="achievement-dedicated-farmer" data-achieved="false">
-                <span class="achievement-icon">👨‍🌾</span>
-                <div class="achievement-info">
-                    <span class="achievement-name">Toegewijde Boer</span>
-                    <span class="achievement-description">Speel 2 uur</span>
-                </div>
-                <span class="achievement-status"></span>
-            </div>
-        </div>
-    </div>
 
-    <!-- Achievement Notification -->
-    <div class="achievement-notification" id="achievementNotification">
-        <div class="notification-content">
-            <span class="notification-icon">🏆</span>
-            <div class="notification-text">
-                <span class="notification-title">Achievement Unlocked!</span>
-                <span class="notification-name" id="notificationName"></span>
-            </div>
-        </div>
-    </div>
 
     <!-- Reset Confirmation Modal -->
     <div class="modal-overlay" id="resetModal">
@@ -536,7 +279,7 @@
                 <p class="modal-warning">Dit zal <strong>ALLE</strong> voortgang permanent verwijderen:</p>
                 <ul class="modal-list">
                     <li>🌻 Alle zonnebloemen</li>
-                    <li>🏆 Alle achievements</li>
+
                     <li>🛒 Alle upgrades</li>
                     <li>🏷️ Plant naam</li>
                     <li>📊 Statistieken</li>
@@ -802,63 +545,6 @@
                                 <div class="event-progress-bar" id="bee-swarm-progress"></div>
                             </div>
                         </div>
-                        
-                        <!-- Rainbow Boost Event -->
-                        <div class="event-item" id="rainbow-boost-event" data-active="false" data-unlocked="false" data-required-flowers="1200">
-                            <div class="event-header">
-                                <span class="event-icon">🌈</span>
-                                <div class="event-info">
-                                    <span class="event-name">Regenboog Boost</span>
-                                    <span class="event-description">5x click multiplier + extra geluk!</span>
-                                    <span class="event-requirement">Vereist: 1200 zonnebloemen</span>
-                                </div>
-                                <div class="event-status">
-                                    <div class="event-timer" id="rainbow-boost-timer">--:--</div>
-                                    <div class="event-lock">🔒</div>
-                                </div>
-                            </div>
-                            <div class="event-progress">
-                                <div class="event-progress-bar" id="rainbow-boost-progress"></div>
-                            </div>
-                        </div>
-                        
-                        <!-- Meteor Shower Event -->
-                        <div class="event-item" id="meteor-shower-event" data-active="false" data-unlocked="false" data-required-flowers="2500">
-                            <div class="event-header">
-                                <span class="event-icon">☄️</span>
-                                <div class="event-info">
-                                    <span class="event-name">Meteorenregen</span>
-                                    <span class="event-description">Willekeurige zonnebloem explosies!</span>
-                                    <span class="event-requirement">Vereist: 2500 zonnebloemen</span>
-                                </div>
-                                <div class="event-status">
-                                    <div class="event-timer" id="meteor-shower-timer">--:--</div>
-                                    <div class="event-lock">🔒</div>
-                                </div>
-                            </div>
-                            <div class="event-progress">
-                                <div class="event-progress-bar" id="meteor-shower-progress"></div>
-                            </div>
-                        </div>
-                        
-                        <!-- Fairy Visit Event -->
-                        <div class="event-item" id="fairy-visit-event" data-active="false" data-unlocked="false" data-required-flowers="5000">
-                            <div class="event-header">
-                                <span class="event-icon">🧚‍♀️</span>
-                                <div class="event-info">
-                                    <span class="event-name">Fee Bezoek</span>
-                                    <span class="event-description">Alle upgrades 50% goedkoper!</span>
-                                    <span class="event-requirement">Vereist: 5000 zonnebloemen</span>
-                                </div>
-                                <div class="event-status">
-                                    <div class="event-timer" id="fairy-visit-timer">--:--</div>
-                                    <div class="event-lock">🔒</div>
-                                </div>
-                            </div>
-                            <div class="event-progress">
-                                <div class="event-progress-bar" id="fairy-visit-progress"></div>
-                            </div>
-                        </div>
                     </div>
                 </div>
                 
@@ -869,7 +555,7 @@
                             <span class="unlock-icon">⛈️</span>
                             <div class="unlock-info">
                                 <span class="unlock-name">Storm Thema</span>
-                                <span class="unlock-description">+2x click multiplier (wanneer actief)</span>
+                              
                             </div>
                             <div class="unlock-purchase">
                                 <span class="unlock-cost">100 🌻</span>
@@ -880,7 +566,7 @@
                             <span class="unlock-icon">🌙</span>
                             <div class="unlock-info">
                                 <span class="unlock-name">Nacht Thema</span>
-                                <span class="unlock-description">+4x click multiplier (wanneer actief)</span>
+                              
                             </div>
                             <div class="unlock-purchase">
                                 <span class="unlock-cost">250 🌻</span>
@@ -891,7 +577,7 @@
                             <span class="unlock-icon">🍂</span>
                             <div class="unlock-info">
                                 <span class="unlock-name">Herfst Thema</span>
-                                <span class="unlock-description">+8x click multiplier (wanneer actief)</span>
+                               
                             </div>
                             <div class="unlock-purchase">
                                 <span class="unlock-cost">500 🌻</span>

@@ -3,13 +3,19 @@
 class Storage {
     // Slaat data op in browser localStorage
     static save(key, data) {
-        localStorage.setItem(key, JSON.stringify(data));
+        const jsonString = JSON.stringify(data);
+        localStorage.setItem(key, jsonString);
     }
     
     // Laadt data uit browser localStorage
     static load(key) {
-        const data = localStorage.getItem(key);
-        return data ? JSON.parse(data) : null;
+        const savedData = localStorage.getItem(key);
+        
+        if (savedData) {
+            return JSON.parse(savedData);
+        } else {
+            return null;
+        }
     }
     
     // Verwijdert data uit browser localStorage
@@ -18,62 +24,7 @@ class Storage {
     }
 }
 
-// ===== SIMPLE ACHIEVEMENT =====
-// Beheert prestaties die spelers kunnen behalen
-class Achievement {
-    // Maakt een nieuwe prestatie aan
-    constructor(id, name, icon, type, target) {
-        this.id = id;
-        this.name = name;
-        this.type = type;
-        this.target = target;
-        this.unlocked = false;
-    }
-    
-    // Controleert of prestatie behaald is (ChatGPT hulp bij switch logic)
-    check(game) {
-        if (this.unlocked) return false;
-        
-        let current = 0;
-        // Switch statement om verschillende prestatie types te checken
-        switch (this.type) {
-            case 'clicks': current = game.totalClicks; break;
-            case 'flowers': current = game.totalFlowers; break;
-            case 'upgrades': current = game.upgradesBought; break;
-            case 'themes': current = game.unlockedThemes; break;
-            case 'events': current = game.totalEvents; break;
-            case 'perSecond': current = game.perSecond; break;
-            case 'time': current = (Date.now() - game.startTime) / 60000; break; // Tijd in minuten
-        }
-        
-        // Als doel bereikt is, unlock prestatie
-        if (current >= this.target) {
-            this.unlocked = true;
-            this.showNotification();
-            return true;
-        }
-        return false;
-    }
-    
-    // Toont melding dat prestatie behaald is
-    showNotification() {
-        Achievement.showNotificationMessage(this.name);
-    }
-    
-    // Toont prestatie melding op scherm (ChatGPT hulp bij DOM manipulatie)
-    static showNotificationMessage(message) {
-        const notification = document.getElementById('achievementNotification');
-        const nameElement = document.getElementById('notificationName');
-        if (notification && nameElement) {
-            nameElement.textContent = message;
-            notification.classList.add('show');
-            // Verberg melding na 3 seconden
-            setTimeout(() => notification.classList.remove('show'), 3000);
-        }
-    }
-}
-
-// ===== SIMPLE EVENT =====
+// ===== EVENT =====
 class GameEvent {
     constructor(id, name, icon, cost, duration, cooldown, effect) {
         this.id = id;
@@ -170,7 +121,6 @@ class GameEvent {
 // ===== UPGRADE CONFIGURATION =====
 // Configuratie object met alle upgrade instellingen
 const UPGRADE_CONFIG = {
- 
     mousePowerBtn: { cost: 15, type: 'click', value: 1, name: 'Zonnestralen' },
     autoClickerBtn: { cost: 50, type: 'perSecond', value: 0.5, name: 'Automatische groei' },
     fertilizerBtn: { cost: 125, type: 'click', value: 2, name: 'Magische Meststof' },
@@ -224,13 +174,12 @@ class Upgrade {
         this.applyEffect();
         this.updateUI();
         window.game.updateDisplay();
-        window.game.checkAchievements();
         window.game.save();
         
         return true;
     }
     
-    // Past upgrade effect toe op spel stats (ChatGPT hulp bij multiplier logic)
+    // Past upgrade effect toe op spel stats
     applyEffect() {
         const game = window.game;
         
@@ -282,15 +231,14 @@ class Upgrade {
 }
 
 // ===== SIMPLE THEME =====
-// Beheert thema's met visuele en gameplay effecten
+// Beheert thema's (alleen visueel, geen gameplay effecten)
 class Theme {
-    // Maakt nieuw thema aan met multiplier bonus
-    constructor(id, name, cost, icon, multiplier = 1) {
+    // Maakt nieuw thema aan
+    constructor(id, name, cost, icon) {
         this.id = id;
         this.name = name;
         this.cost = cost;
         this.icon = icon;
-        this.multiplier = multiplier; // Bonus voor clicks
         this.unlocked = false;
         
         // Koppel koop knop aan functie
@@ -311,7 +259,6 @@ class Theme {
         
         window.game.updateDisplay();
         this.updateUI();
-        this.showNotification();
         
         return true;
     }
@@ -346,10 +293,6 @@ class Theme {
         }
     }
     
-    // Toont melding dat thema gekocht is
-    showNotification() {
-        Achievement.showNotificationMessage(`Thema Gekocht: ${this.name} ${this.icon}`);
-    }
 }
 
 // ===== MAIN GAME =====
@@ -367,14 +310,12 @@ class Game {
         this.totalEvents = 0; // Aantal gebruikte events
         this.unlockedThemes = 0; // Aantal ontgrendelde thema's
         this.startTime = Date.now(); // Start tijd voor prestaties
-        this.volume = 50; // Audio volume
         this.currentTheme = 'default'; // Huidig actief thema
         
         // Cache voor DOM elementen (performance)
         this.domElements = {};
         
         // Maak alle spel systemen aan
-        this.achievements = this.createAchievements();
         this.events = this.createEvents();
         this.themes = this.createThemes();
         this.upgrades = this.createUpgrades();
@@ -388,54 +329,20 @@ class Game {
         this.startGameLoop(); // Start game loop
     }
     
-    // Maakt alle prestaties aan die spelers kunnen behalen
-    createAchievements() {
-        return [
-            new Achievement('first-click', 'Eerste Klik', '👆', 'clicks', 1),
-            new Achievement('hundred-club', 'Honderd Club', '💯', 'flowers', 100),
-            new Achievement('click-master', 'Klik Meester', '🖱️', 'clicks', 500),
-            new Achievement('thousand-stars', 'Duizend Sterren', '⭐', 'flowers', 1000),
-            new Achievement('click-king', 'Klik Koning', '👑', 'clicks', 2000),
-            new Achievement('sunflower-tycoon', 'Zonnebloem Magnaat', '🌻', 'flowers', 5000),
-            new Achievement('click-legend', 'Klik Legende', '🌟', 'clicks', 5000),
-            new Achievement('mega-collector', 'Mega Verzamelaar', '🏆', 'flowers', 10000),
-            new Achievement('click-god', 'Klik God', '⚡', 'clicks', 10000),
-            new Achievement('sunflower-emperor', 'Zonnebloem Keizer', '👑', 'flowers', 25000),
-            new Achievement('infinity-clicker', 'Oneindige Klikker', '∞', 'clicks', 25000),
-            new Achievement('ultimate-collector', 'Ultieme Verzamelaar', '💎', 'flowers', 50000),
-            new Achievement('first-upgrade', 'Eerste Upgrade', '🛒', 'upgrades', 1),
-            new Achievement('upgrade-enthusiast', 'Upgrade Liefhebber', '📈', 'upgrades', 5),
-            new Achievement('upgrade-master', 'Upgrade Meester', '🎯', 'upgrades', 15),
-            new Achievement('upgrade-collector', 'Upgrade Verzamelaar', '🏪', 'upgrades', 25),
-            new Achievement('style-explorer', 'Stijl Ontdekkingsreiziger', '🎨', 'themes', 1),
-            new Achievement('theme-collector', 'Thema Verzamelaar', '🌈', 'themes', 2),
-            new Achievement('fashion-master', 'Mode Meester', '✨', 'themes', 3),
-            new Achievement('event-starter', 'Event Starter', '🎉', 'events', 1),
-            new Achievement('event-enthusiast', 'Event Liefhebber', '🎊', 'events', 5),
-            new Achievement('event-master', 'Event Meester', '🎆', 'events', 15),
-            new Achievement('efficiency-expert', 'Efficiëntie Expert', '⚙️', 'perSecond', 50),
-            new Achievement('patient-gardener', 'Geduldige Tuinier', '🕐', 'time', 30),
-            new Achievement('dedicated-farmer', 'Toegewijde Boer', '👨‍🌾', 'time', 120)
-        ];
-    }
-    
     // Maakt alle game events aan met effecten
     createEvents() {
         return [
             new GameEvent('golden-hour', 'Gouden Uur', '🌅', 200, 15, 300, {type: 'clickMultiplier', value: 2}),
-            new GameEvent('bee-swarm', 'Bijenzwerm', '🐝', 600, 15, 400, {type: 'bonusPerSecond', value: 10}),
-            new GameEvent('rainbow-boost', 'Regenboog Boost', '🌈', 1200, 15, 600, {type: 'clickMultiplier', value: 5}),
-            new GameEvent('meteor-shower', 'Meteorenregen', '☄️', 2500, 15, 800, {type: 'randomBonus', value: 0.3}),
-            new GameEvent('fairy-visit', 'Fee Bezoek', '🧚‍♀️', 5000, 15, 1000, {type: 'discount', value: 0.5})
+            new GameEvent('bee-swarm', 'Bijenzwerm', '🐝', 600, 15, 400, {type: 'bonusPerSecond', value: 10})
         ];
     }
     
-    // Maakt alle thema's aan met multipliers
+    // Maakt alle thema's aan (alleen visueel)
     createThemes() {
         return [
-            new Theme('storm', 'Storm', 100, '⛈️', 1.2),
-            new Theme('night', 'Nacht', 250, '🌙', 1.5),
-            new Theme('autumn', 'Herfst', 500, '🍂', 2.0)
+            new Theme('storm', 'Storm', 100, '⛈️'),
+            new Theme('night', 'Nacht', 250, '🌙'),
+            new Theme('autumn', 'Herfst', 500, '🍂')
         ];
     }
     
@@ -459,40 +366,15 @@ class Game {
             }
         }
         
-        // Pas thema multiplier toe
-        const currentTheme = this.themes.find(theme => theme.id === this.currentTheme);
-        if (currentTheme && currentTheme.unlocked) {
-            clickValue *= currentTheme.multiplier;
-        }
-        
         // Update alle counters
         this.count += clickValue;
         this.totalClicks++;
         this.totalFlowers += clickValue;
         
-        // Speciale meteor shower bonus (ChatGPT hulp bij random logic)
-        const meteorEvent = this.events.find(e => e.id === 'meteor-shower');
-        if (meteorEvent && meteorEvent.active && Math.random() < meteorEvent.effect.value) {
-            const bonus = Math.floor(Math.random() * 21) + 5; // 5-25 bonus
-            this.count += bonus;
-            this.totalFlowers += bonus;
-            console.log(`Meteor bonus: +${bonus} zonnebloemen!`);
-        }
-        
         // Update alles na klik
         this.updateDisplay();
-        this.checkAchievements();
         this.checkUnlocks();
         this.save();
-    }
-    
-    // Controleert alle prestaties of ze behaald zijn
-    checkAchievements() {
-        for (const achievement of this.achievements) {
-            if (achievement.check(this)) {
-                this.updateAchievementUI(achievement);
-            }
-        }
     }
     
     // Controleert wat ontgrendeld kan worden en update UI
@@ -541,16 +423,6 @@ class Game {
         if (perClick) perClick.textContent = Math.round(this.perClick * 10) / 10;
     }
     
-    updateAchievementUI(achievement) {
-        const element = document.getElementById(`achievement-${achievement.id}`);
-        if (element) {
-            element.classList.add('achieved');
-            element.setAttribute('data-achieved', 'true');
-            const status = element.querySelector('.achievement-status');
-            if (status) status.textContent = '✅';
-        }
-    }
-    
     setupUI() {
         // Zet zonnebloem klik op
         const sunflower = document.querySelector('.sunflower-button');
@@ -561,20 +433,6 @@ class Game {
         // Zet panelen op
         this.setupPanel('settings', 'settingsButton', 'settingsPanel');
         this.setupPanel('stats', 'statsButton', 'statsPanel');
-        this.setupPanel('achievements', 'achievementsButton', 'achievementsPanel');
-        
-        // Zet volume op
-        const volumeSlider = document.getElementById('volumeSlider');
-        const volumeValue = document.getElementById('volumeValue');
-        if (volumeSlider && volumeValue) {
-            volumeSlider.value = this.volume;
-            volumeValue.textContent = this.volume + '%';
-            volumeSlider.oninput = (e) => {
-                this.volume = parseInt(e.target.value);
-                volumeValue.textContent = this.volume + '%';
-                this.save();
-            };
-        }
         
         // Zet reset op
         const resetBtn = document.getElementById('resetGameBtn');
@@ -642,13 +500,13 @@ class Game {
                     if (themeId === 'default') {
                         this.currentTheme = themeId;
                         this.save();
-                        this.updateDisplay(); // Update weergave om nieuwe multiplier te tonen
+                        this.updateDisplay();
                     } else {
                         const theme = this.themes.find(t => t.id === themeId);
                         if (theme && theme.unlocked) {
                             this.currentTheme = themeId;
                             this.save();
-                            this.updateDisplay(); // Update weergave om nieuwe multiplier te tonen
+                            this.updateDisplay();
                         } else {
                             e.target.checked = false;
                             const currentInput = document.getElementById(`theme-${this.currentTheme}`);
@@ -686,7 +544,6 @@ class Game {
                 this.count += increment;
                 this.totalFlowers += increment;
                 this.updateDisplay();
-                this.checkAchievements();
                 this.checkUnlocks();
             }
             
@@ -717,9 +574,7 @@ class Game {
             totalEvents: this.totalEvents,
             unlockedThemes: this.unlockedThemes,
             startTime: this.startTime,
-            volume: this.volume,
             currentTheme: this.currentTheme,
-            achievements: this.achievements.map(a => ({id: a.id, unlocked: a.unlocked})),
             events: this.events.map(e => ({
                 id: e.id, 
                 unlocked: e.unlocked, 
@@ -727,7 +582,7 @@ class Game {
                 timeLeft: e.timeLeft, 
                 cooldownLeft: e.cooldownLeft
             })),
-            themes: this.themes.map(t => ({id: t.id, unlocked: t.unlocked, multiplier: t.multiplier})),
+            themes: this.themes.map(t => ({id: t.id, unlocked: t.unlocked})),
             upgrades: this.upgrades.map(u => ({id: u.id, purchased: u.purchased, multiplier: u.multiplier, multiplierApplied: u.multiplierApplied}))
         });
     }
@@ -745,14 +600,9 @@ class Game {
         this.totalEvents = data.totalEvents || 0;
         this.unlockedThemes = data.unlockedThemes || 0;
         this.startTime = data.startTime || Date.now();
-        this.volume = data.volume || 50;
         this.currentTheme = data.currentTheme || 'default';
         
         // Laad alle systeem data
-        this.loadSystemData(data.achievements, this.achievements, (item, saved) => {
-            item.unlocked = saved.unlocked;
-        });
-        
         this.loadSystemData(data.events, this.events, (item, saved) => {
             item.unlocked = saved.unlocked;
             item.active = saved.active;
@@ -762,7 +612,6 @@ class Game {
         
         this.loadSystemData(data.themes, this.themes, (item, saved) => {
             item.unlocked = saved.unlocked;
-            if (saved.multiplier) item.multiplier = saved.multiplier;
         });
         
         this.loadSystemData(data.upgrades, this.upgrades, (item, saved) => {
@@ -796,7 +645,6 @@ class Game {
         this.currentTheme = 'default';
         
         // Reset alle systemen
-        this.achievements.forEach(achievement => achievement.unlocked = false);
         this.events.forEach(event => {
             event.unlocked = false;
             event.active = false;
@@ -833,9 +681,6 @@ class Game {
     
     // Helper methode voor het updaten van alle UI elementen
     updateAllUI() {
-        this.achievements.forEach(achievement => {
-            if (achievement.unlocked) this.updateAchievementUI(achievement);
-        });
         this.events.forEach(event => event.updateUI());
         this.themes.forEach(theme => theme.updateUI());
         this.upgrades.forEach(upgrade => upgrade.updateUI());
