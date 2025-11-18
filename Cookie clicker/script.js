@@ -155,9 +155,16 @@ class Upgrade {
         this.purchased = false;
         this.multiplier = 1;
         this.multiplierApplied = false;
+<<<<<<< Updated upstream
         
         // Koppel click event aan HTML element
         const element = document.getElementById(id);
+=======
+    }
+    
+    setupEventHandlers() {
+        const element = document.getElementById(this.id);
+>>>>>>> Stashed changes
         if (element) {
             element.onclick = () => this.purchase();
         }
@@ -315,12 +322,21 @@ class Game {
         // Cache voor DOM elementen (performance)
         this.domElements = {};
         
+<<<<<<< Updated upstream
         // Maak alle spel systemen aan
+=======
+        this.soundManager = new SoundManager();
+        
+        this.achievements = this.createAchievements();
+>>>>>>> Stashed changes
         this.events = this.createEvents();
         this.themes = this.createThemes();
         this.upgrades = this.createUpgrades();
         
+<<<<<<< Updated upstream
         // Maak globaal beschikbaar voor HTML
+=======
+>>>>>>> Stashed changes
         window.game = this;
         
         // Start het spel
@@ -359,7 +375,10 @@ class Game {
     click() {
         let clickValue = this.perClick;
         
+<<<<<<< Updated upstream
         // Pas event multipliers toe
+=======
+>>>>>>> Stashed changes
         for (const event of this.events) {
             if (event.active && event.effect.type === 'clickMultiplier') {
                 clickValue *= event.effect.value;
@@ -371,7 +390,18 @@ class Game {
         this.totalClicks++;
         this.totalFlowers += clickValue;
         
+<<<<<<< Updated upstream
         // Update alles na klik
+=======
+        const meteorEvent = this.events.find(e => e.id === 'meteor-shower');
+        if (meteorEvent && meteorEvent.active && Math.random() < meteorEvent.effect.value) {
+            const bonus = Math.floor(Math.random() * 21) + 5;
+            this.count += bonus;
+            this.totalFlowers += bonus;
+            console.log(`Meteor bonus: +${bonus} zonnebloemen!`);
+        }
+        
+>>>>>>> Stashed changes
         this.updateDisplay();
         this.checkUnlocks();
         this.save();
@@ -379,7 +409,10 @@ class Game {
     
     // Controleert wat ontgrendeld kan worden en update UI
     checkUnlocks() {
+<<<<<<< Updated upstream
         // Check event unlocks en update UI in één loop
+=======
+>>>>>>> Stashed changes
         this.events.forEach(event => {
             if (!event.unlocked && this.totalFlowers >= event.cost) {
                 event.unlocked = true;
@@ -387,12 +420,18 @@ class Game {
             event.updateUI();
         });
         
+<<<<<<< Updated upstream
         // Check upgrade unlocks (maak betaalbaar als je genoeg bloemen hebt)
+=======
+>>>>>>> Stashed changes
         this.upgrades.forEach(upgrade => {
             upgrade.updateUI();
         });
         
+<<<<<<< Updated upstream
         // Update thema UI
+=======
+>>>>>>> Stashed changes
         this.themes.forEach(theme => theme.updateUI());
     }
     
@@ -414,6 +453,7 @@ class Game {
         
         const { sunflowerCount, totalFlowers, totalClicks, perSecond, upgradesBought, perClick } = this.domElements;
         
+<<<<<<< Updated upstream
         // Formatteer nummers netjes zonder lange decimalen
         if (sunflowerCount) sunflowerCount.textContent = Math.floor(this.count);
         if (totalFlowers) totalFlowers.textContent = Math.floor(this.totalFlowers);
@@ -421,6 +461,24 @@ class Game {
         if (perSecond) perSecond.textContent = Math.round(this.perSecond * 10) / 10;
         if (upgradesBought) upgradesBought.textContent = this.upgradesBought;
         if (perClick) perClick.textContent = Math.round(this.perClick * 10) / 10;
+=======
+        if (sunflowerCount) sunflowerCount.textContent = NumberFormatter.format(this.count);
+        if (totalFlowers) totalFlowers.textContent = NumberFormatter.format(this.totalFlowers);
+        if (totalClicks) totalClicks.textContent = NumberFormatter.format(this.totalClicks);
+        if (perSecond) perSecond.textContent = NumberFormatter.format(this.perSecond);
+        if (upgradesBought) upgradesBought.textContent = this.upgradesBought;
+        if (perClick) perClick.textContent = NumberFormatter.format(this.perClick);
+    }
+    
+    updateAchievementUI(achievement) {
+        const element = document.getElementById(`achievement-${achievement.id}`);
+        if (element) {
+            element.classList.add('achieved');
+            element.setAttribute('data-achieved', 'true');
+            const status = element.querySelector('.achievement-status');
+            if (status) status.textContent = '✅';
+        }
+>>>>>>> Stashed changes
     }
     
     setupUI() {
